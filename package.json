@@ -1,6 +1,6 @@
 {
   "name": "freedcamp-script-runner",
-  "version": "1.0.4",
+  "version": "1.0.3",
   "description": "Runs the FcScripts.md file",
   "main": "index.js",
   "repository": "https://github.com/agrublev/freedcamp-script-runner.git",
@@ -8,7 +8,10 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "fsr": "node index.js"
+    "fsr": "node index.js",
+    "deploy": "run-s version pub",
+    "version": "npm version patch",
+    "pub": "npm publish"
   },
   "bin": {
     "fsr": "./index.js"
@@ -30,6 +33,7 @@
     "yargs": "^13.2.2"
   },
   "devDependencies": {
+    "npm-run-all": "^4.1.5",
     "prettier": "^1.16.4"
   }
 }
