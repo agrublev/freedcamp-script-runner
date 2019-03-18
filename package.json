@@ -1,6 +1,6 @@
 {
   "name": "freedcamp-script-runner",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Runs the FcScripts.md file",
   "main": "index.js",
   "repository": "https://github.com/agrublev/freedcamp-script-runner.git",
@@ -13,7 +13,7 @@
   "bin": {
     "fsr": "./index.js"
   },
-  "devDependencies": {
+  "dependencies": {
     "chalk": "^2.4.2",
     "execa": "^1.0.0",
     "fancy-log": "^1.3.3",
@@ -28,5 +28,8 @@
     "require-from-string": "^2.0.2",
     "rexrex": "^1.3.0",
     "yargs": "^13.2.2"
+  },
+  "devDependencies": {
+    "prettier": "^1.16.4"
   }
 }

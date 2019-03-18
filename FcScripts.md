@@ -15,7 +15,7 @@
 ## run
 
 ```bash
-echo 'start'; sleep 4; echo 'done'
+echo 'start'; sleep 2; echo 'done'
 ```
 
 
