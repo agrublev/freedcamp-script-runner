@@ -8,6 +8,9 @@ const kill = async () => {
         process.exit(0);
     }
 };
+// kill().then(() => {
+//     console.log("DONE");
+// });
 module.exports = kill;
 //
 // fkill([1337, 'Safari', ':8080']);
