@@ -1,46 +1,3 @@
-<!-- toc -->
-
-- [Group1](#group1)
-  * [script1](#script1)
-  * [script2:js](#script2js)
-- [Group2](#group2)
-  * [group:js](#groupjs)
-  * [crazy](#crazy)
-
-<!-- tocstop -->
-
-# Group1
-
-## script1
-
-Described script 1
-
-```bash
-parcel ./indec.html --no-cache
-```
-
-## script2:js
-
-```js
-const chalk = require("chalk");
-console.log(`${chalk.underline.bold("RUNS JSUNS JSUNS JSUNS JSUNS JSUNS JSUNS JS\n\nUNS JSUNS JSUNS JSUNS JSUNS JS\n\n")}`);
-setTimeout(()=>{console.log("RUNS JSUNS JSUNS JSUNS JSUNS JSUNS JSUNS JS\n\nUNS JSUNS JSUNS JSUNS JSUNS JS\n\nJSUNS JSUNS JSUNS JSUNS JSUNS JSUNS JS\n\nUNS JSUNS JSUNS JSUNS JSUNS JS\n\nJSUNS JSUNS JSUNS JSUNS JSUNS JSUNS JS\n\nUNS JSUNS JSUNS JSUNS JSUNS JS\n\nJS");},4000);
-console.log("RUNS JS");
-```
-
-# Group2
-           
-## group:js
-
-Only one script here with bash
-
-```bash
-node src/console.js
-```
-
-## crazy
-
-```js
 const chalk = require("chalk");
 const sample = arr => arr[Math.floor(Math.random() * arr.length)];
 const quotes = [
@@ -54,7 +11,7 @@ const quotes = [
     "I'm not infatuated with frivoith frivoith frivoith frivoith frivoith frivoith frivoith frivolousness. We're just good friends. - Tom Robbins",
     "In fiction, when you paint yourself into a corner, you can write a pair of suction cups onto the bottoms of your shoes and walk up the wall and out the skylight and see the sun breaking through the clouds. In nonfiction, you don't have that luxury. - Tom Robbins"
 ];
-let sxy;
+
 const getOption = st => {
     // if (Math.random() > 0.5) {
     //     st = st + sample(quotes) + sample(quotes) + sample(quotes);
@@ -71,7 +28,7 @@ const getOption = st => {
 let isMil = 0;
 const theRun = async () => {
     return new Promise(resolve => {
-        sxy = setInterval(() => {
+        setInterval(() => {
             const qt = sample(quotes);
             console.log(new Date() + " ------- ----- ---- \n");
             console.log(getOption(qt));
@@ -79,10 +36,8 @@ const theRun = async () => {
             console.log("----- ---- \n");
             console.log("----- ---- \n");
             console.log("----- ---- \n");
-            if (isMil === 30) {
-            	clearInterval(sxy);
-            	console.log("DONE DONE DONE");
-            	resolve();
+            if (isMil === 1000000) {
+                resolve();
             } else {
                 isMil += 10;
             }
@@ -91,4 +46,3 @@ const theRun = async () => {
 };
 
 theRun();
-```
