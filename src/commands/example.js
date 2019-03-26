@@ -7,7 +7,6 @@ const notifier = require("node-notifier");
 //
 // // Notify using the built-in convenience method
 // notifierz.notify();
-// console.log(notifierz);
 
 class ExampleCommand extends Command {
     async run() {

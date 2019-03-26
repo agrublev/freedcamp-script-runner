@@ -2,22 +2,21 @@ const fs = require("fs-extra");
 const chalk = require("chalk");
 
 /**
- * Read json file
+ * Write file
  * @param f - file name with directory
+ * @param contents - text inside the file
  * @return {Promise<void>}
  * @example
 const file = "/tmp/this/path/does/not/exist/file.json";
-outputJson(file);
+writeFile(file);
  */
-async function readJson(f) {
+async function writeFile(f, contents = "") {
     try {
-        const packageObj = await fs.readJson(f);
-        console.log(`${chalk.green.underline("File")} ${chalk.bold(f)} read!`);
-        return packageObj;
+        await fs.outputFile(f, contents);
+        console.log(`${chalk.green.underline("File")} ${chalk.bold(f)} written!`);
     } catch (err) {
         console.error(err);
-        return {};
     }
 }
 
-module.exports = readJson;
+module.exports = writeFile;

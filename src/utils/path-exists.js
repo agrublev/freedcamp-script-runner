@@ -12,7 +12,6 @@ const chalk = require("chalk");
 async function pathExists(f) {
     const exists = await fs.pathExists(f);
 
-    console.log(exists);
     return exists;
 }
 

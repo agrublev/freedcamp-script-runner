@@ -19,8 +19,19 @@ h.versionUpdater = () => {
 
     // Notify using the built-in convenience method
     notifier.notify();
-    console.log(notifier.update);
     // updateNotifier({ pkg }).notify();
+};
+
+h.setTitle = title => {
+    process.stdout.write(String.fromCharCode(27) + "]0;" + title + String.fromCharCode(7));
+};
+
+h.clear = (hard = false) => {
+    process.stdout.write("\x1b[2J");
+    process.stdout.write("\x1b[0f");
+    if (hard) {
+        process.stdout.write("\033c");
+    }
 };
 
 module.exports = h;

@@ -1,3 +1,5 @@
 .idea
 node_modules
 .secret.json
+freedcamp-script-runner-v*.tgz
+.fsr

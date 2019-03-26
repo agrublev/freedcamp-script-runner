@@ -1,44 +1,53 @@
 <!-- toc -->
 
 - [Group1](#group1)
-  * [script1](#script1)
-  * [script2:js](#script2js)
-- [Group2](#group2)
-  * [group:js](#groupjs)
-  * [crazy](#crazy)
+  * [parcel:script](#parcelscript)
+  * [script:js](#scriptjs)
+- [Groups2](#groups2)
+  * [console:js](#consolejs)
+  * [input:js-](#inputjs-)
+  * [crazy:javascript](#crazyjavascript)
 
 <!-- tocstop -->
 
 # Group1
 
-## script1
+Explained G 1
+
+## parcel:script
 
 Described script 1
 
 ```bash
-parcel ./indec.html --no-cache
+parcel ./index.html --no-cache
 ```
 
-## script2:js
+## script:js
 
 ```js
 const chalk = require("chalk");
-console.log(`${chalk.underline.bold("RUNS JSUNS JSUNS JSUNS JSUNS JSUNS JSUNS JS\n\nUNS JSUNS JSUNS JSUNS JSUNS JS\n\n")}`);
-setTimeout(()=>{console.log("RUNS JSUNS JSUNS JSUNS JSUNS JSUNS JSUNS JS\n\nUNS JSUNS JSUNS JSUNS JSUNS JS\n\nJSUNS JSUNS JSUNS JSUNS JSUNS JSUNS JS\n\nUNS JSUNS JSUNS JSUNS JSUNS JS\n\nJSUNS JSUNS JSUNS JSUNS JSUNS JSUNS JS\n\nUNS JSUNS JSUNS JSUNS JSUNS JS\n\nJS");},4000);
-console.log("RUNS JS");
+console.log(`${chalk.underline.bold("RUNS JS\n\nasJ2s2zs1S")}`);
 ```
 
-# Group2
+# Groups2
            
-## group:js
+## console:js
 
 Only one script here with bash
 
 ```bash
-node src/console.js
+node src/helpers/exampleLogTimeout.js
 ```
 
-## crazy
+## input:js-
+
+Get some input from user
+
+```bash
+node src/helpers/exampleInput.js
+```
+
+## crazy:javascript
 
 ```js
 const chalk = require("chalk");

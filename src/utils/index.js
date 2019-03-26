@@ -26,7 +26,6 @@ vorpal
     .alias("d")
     .option("-d, --debug", "Debugs")
     .action(function(args, cb) {
-        console.log(args);
         const self = this;
         return this.prompt(
             {

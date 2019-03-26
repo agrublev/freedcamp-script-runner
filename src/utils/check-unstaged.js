@@ -11,7 +11,6 @@ module.exports = new Promise((resolve, reject) => {
         results.forEach(e => {
             namedObj[e.filename] = e;
         });
-        console.log(namedObj);
 
         resolve(results);
 
