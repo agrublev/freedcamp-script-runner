@@ -1,7 +1,21 @@
 const { Command, flags } = require("@oclif/command");
+const notifier = require("node-notifier");
+// const updateNotifier = require("update-notifier");
+// const pkg = require("../../package.json");
+// // Checks for available update and returns an instance
+// const notifierz = updateNotifier({ pkg });
+//
+// // Notify using the built-in convenience method
+// notifierz.notify();
+// console.log(notifierz);
 
 class ExampleCommand extends Command {
     async run() {
+        notifier.notify({
+            title: "My notification",
+            message: "Hello!"
+        });
+
         const { args, flags } = this.parse(ExampleCommand);
         const name = flags.name;
         const isFirst = args.isFirst;
@@ -45,5 +59,5 @@ ExampleCommand.flags = {
 // ExampleCommand.examples = ["$ fexa bye --name=test", "$ fexa bye isFirst"];
 
 ExampleCommand.strict = false;
-
+ExampleCommand.aliases = ["e"];
 module.exports = ExampleCommand;

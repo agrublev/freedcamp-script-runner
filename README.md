@@ -22,7 +22,7 @@ $ npm install -g freedcamp-script-runner
 $ fsr COMMAND
 running command...
 $ fsr (-v|--version|version)
-freedcamp-script-runner/1.0.9 darwin-x64 node-v10.13.0
+freedcamp-script-runner/1.1.12 darwin-x64 node-v10.13.0
 $ fsr --help [COMMAND]
 USAGE
   $ fsr COMMAND
@@ -31,10 +31,35 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`fsr autocomplete [SHELL]`](#fsr-autocomplete-shell)
 * [`fsr example [ISFIRST] [ISSECOND]`](#fsr-example-isfirst-issecond)
 * [`fsr goodbye`](#fsr-goodbye)
 * [`fsr hello`](#fsr-hello)
 * [`fsr help [COMMAND]`](#fsr-help-command)
+* [`fsr update [CHANNEL]`](#fsr-update-channel)
+
+## `fsr autocomplete [SHELL]`
+
+display autocomplete installation instructions
+
+```
+USAGE
+  $ fsr autocomplete [SHELL]
+
+ARGUMENTS
+  SHELL  shell type
+
+OPTIONS
+  -r, --refresh-cache  Refresh cache (ignores displaying instructions)
+
+EXAMPLES
+  $ fsr autocomplete
+  $ fsr autocomplete bash
+  $ fsr autocomplete zsh
+  $ fsr autocomplete --refresh-cache
+```
+
+_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v0.1.0/src/commands/autocomplete/index.ts)_
 
 ## `fsr example [ISFIRST] [ISSECOND]`
 
@@ -55,9 +80,12 @@ OPTIONS
 DESCRIPTION
   ...
   Example extra
+
+ALIASES
+  $ fsr e
 ```
 
-_See code: [src/commands/example.js](https://github.com/agrublev/freedcamp-script-runner/blob/v1.0.9/src/commands/example.js)_
+_See code: [src/commands/example.js](https://github.com/agrublev/freedcamp-script-runner/blob/v1.1.12/src/commands/example.js)_
 
 ## `fsr goodbye`
 
@@ -75,7 +103,7 @@ DESCRIPTION
   Extra documentation goes here
 ```
 
-_See code: [src/commands/goodbye.js](https://github.com/agrublev/freedcamp-script-runner/blob/v1.0.9/src/commands/goodbye.js)_
+_See code: [src/commands/goodbye.js](https://github.com/agrublev/freedcamp-script-runner/blob/v1.1.12/src/commands/goodbye.js)_
 
 ## `fsr hello`
 
@@ -93,7 +121,7 @@ DESCRIPTION
   Extra documentation goes here
 ```
 
-_See code: [src/commands/hello.js](https://github.com/agrublev/freedcamp-script-runner/blob/v1.0.9/src/commands/hello.js)_
+_See code: [src/commands/hello.js](https://github.com/agrublev/freedcamp-script-runner/blob/v1.1.12/src/commands/hello.js)_
 
 ## `fsr help [COMMAND]`
 
@@ -111,4 +139,15 @@ OPTIONS
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.6/src/commands/help.ts)_
+
+## `fsr update [CHANNEL]`
+
+update the fsr CLI
+
+```
+USAGE
+  $ fsr update [CHANNEL]
+```
+
+_See code: [@oclif/plugin-update](https://github.com/oclif/plugin-update/blob/v1.3.9/src/commands/update.ts)_
 <!-- commandsstop -->
