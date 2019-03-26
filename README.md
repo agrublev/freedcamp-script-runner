@@ -22,7 +22,7 @@ $ npm install -g freedcamp-script-runner
 $ fsr COMMAND
 running command...
 $ fsr (-v|--version|version)
-freedcamp-script-runner/1.1.13 darwin-x64 node-v10.13.0
+freedcamp-script-runner/1.1.14 darwin-x64 node-v10.13.0
 $ fsr --help [COMMAND]
 USAGE
   $ fsr COMMAND
@@ -32,11 +32,8 @@ USAGE
 # Commands
 <!-- commands -->
 * [`fsr autocomplete [SHELL]`](#fsr-autocomplete-shell)
-* [`fsr example [ISFIRST] [ISSECOND]`](#fsr-example-isfirst-issecond)
-* [`fsr goodbye`](#fsr-goodbye)
-* [`fsr hello`](#fsr-hello)
 * [`fsr help [COMMAND]`](#fsr-help-command)
-* [`fsr update [CHANNEL]`](#fsr-update-channel)
+* [`fsr start [ISFIRST] [ISSECOND]`](#fsr-start-isfirst-issecond)
 
 ## `fsr autocomplete [SHELL]`
 
@@ -61,68 +58,6 @@ EXAMPLES
 
 _See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v0.1.0/src/commands/autocomplete/index.ts)_
 
-## `fsr example [ISFIRST] [ISSECOND]`
-
-Example command yall
-
-```
-USAGE
-  $ fsr example [ISFIRST] [ISSECOND]
-
-ARGUMENTS
-  ISFIRST   This is if isFirst was passed or not returns boolean with default false
-  ISSECOND
-
-OPTIONS
-  -n, --name=name  [default: flagDef] The name
-  -s, --should     Should do it?
-
-DESCRIPTION
-  ...
-  Example extra
-
-ALIASES
-  $ fsr e
-```
-
-_See code: [src/commands/example.js](https://github.com/agrublev/freedcamp-script-runner/blob/v1.1.13/src/commands/example.js)_
-
-## `fsr goodbye`
-
-Describe the command here
-
-```
-USAGE
-  $ fsr goodbye
-
-OPTIONS
-  -n, --name=name  name to print
-
-DESCRIPTION
-  ...
-  Extra documentation goes here
-```
-
-_See code: [src/commands/goodbye.js](https://github.com/agrublev/freedcamp-script-runner/blob/v1.1.13/src/commands/goodbye.js)_
-
-## `fsr hello`
-
-Describe the command here
-
-```
-USAGE
-  $ fsr hello
-
-OPTIONS
-  -n, --name=name  name to print
-
-DESCRIPTION
-  ...
-  Extra documentation goes here
-```
-
-_See code: [src/commands/hello.js](https://github.com/agrublev/freedcamp-script-runner/blob/v1.1.13/src/commands/hello.js)_
-
 ## `fsr help [COMMAND]`
 
 display help for fsr
@@ -140,14 +75,29 @@ OPTIONS
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.6/src/commands/help.ts)_
 
-## `fsr update [CHANNEL]`
+## `fsr start [ISFIRST] [ISSECOND]`
 
-update the fsr CLI
+Start the task picker
 
 ```
 USAGE
-  $ fsr update [CHANNEL]
+  $ fsr start [ISFIRST] [ISSECOND]
+
+ARGUMENTS
+  ISFIRST   This is if isFirst was passed or not returns boolean with default false
+  ISSECOND
+
+OPTIONS
+  -n, --name=name  [default: flagDef] The name
+  -s, --should     Should do it?
+
+DESCRIPTION
+  ...
+  Picking a task to run!
+
+ALIASES
+  $ fsr e
 ```
 
-_See code: [@oclif/plugin-update](https://github.com/oclif/plugin-update/blob/v1.3.9/src/commands/update.ts)_
+_See code: [src/commands/start.js](https://github.com/agrublev/freedcamp-script-runner/blob/v1.1.14/src/commands/start.js)_
 <!-- commandsstop -->

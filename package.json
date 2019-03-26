@@ -26,7 +26,7 @@
     "scripts": {
         "fsr": "node bin/run",
         "fsr:d": "DEBUG=* node bin/run",
-        "predeploy": "echo '52'; prettier src --write",
+        "predeploy": "prettier src --write",
         "deploy": "run-s pack version pub",
         "version": "node publish.js",
         "pub": "npm publish",

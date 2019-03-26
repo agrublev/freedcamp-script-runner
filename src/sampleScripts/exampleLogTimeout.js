@@ -1,55 +1,3 @@
-<!-- toc -->
-
-- [Group1](#group1)
-  * [parcel:script](#parcelscript)
-  * [script:js](#scriptjs)
-- [Groups2](#groups2)
-  * [console:js](#consolejs)
-  * [input:js-](#inputjs-)
-  * [crazy:javascript](#crazyjavascript)
-
-<!-- tocstop -->
-
-# Group1
-
-Explained G 1
-
-## parcel:script
-
-Described script 1
-
-```bash
-parcel ./index.html --no-cache
-```
-
-## script:js
-
-```js
-const chalk = require("chalk");
-console.log(`${chalk.underline.bold("RUNS JS\n\nasJ2s2zs1S")}`);
-```
-
-# Groups2
-           
-## console:js
-
-Only one script here with bash
-
-```bash
-node src/sampleScripts/exampleLogTimeout.js
-```
-
-## input:js-
-
-Get some input from user
-
-```bash
-node src/sampleScripts/exampleInput.js
-```
-
-## crazy:javascript
-
-```js
 const chalk = require("chalk");
 const sample = arr => arr[Math.floor(Math.random() * arr.length)];
 const quotes = [
@@ -65,9 +13,6 @@ const quotes = [
 ];
 let sxy;
 const getOption = st => {
-    // if (Math.random() > 0.5) {
-    //     st = st + sample(quotes) + sample(quotes) + sample(quotes);
-    // }
     let options = [
         chalk.blue(st),
         chalk.underline.green(st),
@@ -82,22 +27,30 @@ const theRun = async () => {
     return new Promise(resolve => {
         sxy = setInterval(() => {
             const qt = sample(quotes);
-            console.log(new Date() + " ------- ----- ---- \n");
-            console.log(getOption(qt));
-            console.log(new Date() + " ------- ----- ---- \n");
-            console.log("----- ---- \n");
-            console.log("----- ---- \n");
-            console.log("----- ---- \n");
-            if (isMil === 30) {
-            	clearInterval(sxy);
-            	console.log("DONE DONE DONE");
-            	resolve();
+            console.log(
+                `${isMil / 10}${chalk.green(new Date() + " ------- ----- ----")}${isMil /
+                    10} - ${isMil / 10} - ${isMil / 10}`
+            );
+            console.log(getOption(qt),`${isMil/10}`);
+            if (isMil === 210) {
+                clearInterval(sxy);
+                console.log("DONE DONE DONE");
+                resolve();
             } else {
                 isMil += 10;
             }
-        }, 1000);
+        }, 750);
     });
 };
 
 theRun();
-```
+// const chalk = require("chalk");
+// let rand = [
+//     `${chalk.red.underline.bold("JSUNS JSUNS JSUNS JSUNS JSUNS JS")}`,
+//     `${chalk.green("RUNS JSUNS JSUNS JSUNS JSUNS JSUNS JSUNS JasdasdsJS")}`
+// ];
+// console.log();
+// setInterval(() => {
+//     console.log();
+// }, 4000);
+// console.log("RUNS JS");
