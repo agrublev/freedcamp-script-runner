@@ -1,6 +1,6 @@
 {
-  "tabWidth":4,
-  "parser":"babylon",
+  "tabWidth": 4,
+  "parser": "babylon",
   "printWidth": 100,
   "singleQuote": false,
   "bracketSpacing": true,
