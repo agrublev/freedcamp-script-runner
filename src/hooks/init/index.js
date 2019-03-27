@@ -4,7 +4,7 @@ const updateConfig = require("../../utils/configFromScriptsFile.js");
 module.exports = async function(options) {
     process.stdout.write("\x1b[2J");
     process.stdout.write("\x1b[0f");
-
+    //
     await configManager.init();
     // console.log(`Example Init hook running before ${options.id}`);
 

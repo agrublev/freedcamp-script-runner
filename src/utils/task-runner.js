@@ -10,6 +10,7 @@ const runTask = async (name, conf = false) => {
     let output;
     let startTime = Date.now();
     let input = name.slice(-1) === "-";
+    let task = {};
     let tasks = [];
     if (conf !== false) {
         conf.set("tasks." + name + ".lastRan", startTime);
@@ -60,6 +61,14 @@ const runTask = async (name, conf = false) => {
                     )} ${code}`.trim()
                 );
             });
+            output.stderr.on("data", code => {
+                code = code + "";
+                console.log(
+                    `${chalk.bgHex("#181c24").hex("#a72e32")(
+                        moment().format("HH:MM:SS") + "ERR :"
+                    )} ${code}`.trim()
+                );
+            });
         }
         return new Promise((resolve, reject) => {
             output.on("close", code => {
@@ -69,7 +78,7 @@ const runTask = async (name, conf = false) => {
                     resolve();
                 } else {
                     // console.log(`${chalk.bold.green("Finished in " + prettyMs(elapsed), code)}`);
-                    reject(`task "${conf === false ? name : task.name}" exited with code ${code}`);
+                    reject(`task exited with code ${code}`);
                 }
             });
         });
