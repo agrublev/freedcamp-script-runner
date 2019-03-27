@@ -1,5 +1,5 @@
 require("simple-git")()
     .add("./*")
-    .commit("v1.1.20")
+    .commit("TST")
     // .addRemote("origin", "some-repo-url")
     .push([], () => console.log("done"));
