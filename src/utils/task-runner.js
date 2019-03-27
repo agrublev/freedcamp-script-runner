@@ -10,10 +10,11 @@ const runTask = async (name, conf = false) => {
     let output;
     let startTime = Date.now();
     let input = name.slice(-1) === "-";
+    let tasks = [];
     if (conf !== false) {
         conf.set("tasks." + name + ".lastRan", startTime);
         await conf.updateConfigFile();
-        let tasks = conf.get("tasks");
+        tasks = conf.get("tasks");
     }
     let command =
         conf === false ? name : tasks[name].file ? "node " + tasks[name].file : tasks[name].script;

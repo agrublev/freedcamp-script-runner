@@ -23,7 +23,6 @@ function advancedInput(msg, items) {
             function finish(ez) {
                 term.grabInput(false);
                 term.clear();
-                console.log(ez, keyName);
 
                 resolve(ez);
             }
@@ -51,10 +50,10 @@ function advancedInput(msg, items) {
                     selectedLeftPadding: "✓",
                     exitOnUnexpectedKey: true,
                     continueOnSubmit: true,
-                    displayText: e => e.displayText
+                    displayText: e => e.displayText //,
                     //itemMaxWidth: 20 ,
-                    // style: term.white, //white.bgBlack //.bgBlack.white
-                    // selectedStyle: term.black.bgWhite.underline //term.dim.blue.bgGreen
+                    // style: term.bgBlack.white, //white.bgBlack //.bgBlack.white
+                    // selectedStyle: term.bgWhite//term.dim.blue.bgGreen
                 };
 
                 term.singleColumnMenu(items, options, function(error, response) {
@@ -76,7 +75,7 @@ function advancedInput(msg, items) {
                     });
             }
             // term.clear();
-            term.underline.bold.cyan(`${msg}`);
+            term.underline.bold.cyan(`${msg}\n`);
 
             menu();
             // asyncMenu();

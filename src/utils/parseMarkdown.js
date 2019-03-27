@@ -9,14 +9,18 @@ let parse = function(mdContent) {
 
     let categories = [];
     let tempItem = {};
-    js.forEach(item => {
+    js.forEach((item, indx) => {
         if (!tempItem.title && item.depth === 1) {
             tempItem.title = item.text;
+            let nxt = js[indx + 1];
+            tempItem.description = nxt && nxt.type === "paragraph" ? nxt.text : "";
             tempItem.subitems = [];
         } else if (tempItem.title && item.depth === 1) {
             categories.push(tempItem);
             tempItem = {};
             tempItem.title = item.text;
+            let nxt = js[indx + 1];
+            tempItem.description = nxt && nxt.type === "paragraph" ? nxt.text : "";
             tempItem.subitems = [];
         } else {
             tempItem.subitems.push(item);

@@ -1,82 +1,48 @@
+#!/usr/bin/env node
 const moment = require("moment");
 const { Command, flags } = require("@oclif/command");
 const configManager = require("../utils/config-manager.js");
-const inquirer = require("inquirer");
+const chalk = require("chalk");
 const runTask = require("../utils/task-runner.js");
 const advancedInput = require("../utils/advanced-input.js");
 const viewMoreText = `~~ view more ~~`;
+const fixedWidthString = require("fixed-width-string");
+const stringWidth = require("string-width");
 
 async function inputChoices2(choiceCategories, conf, latestTasks) {
     advancedInput("Select an recent item or a category:", choiceCategories).then(async e => {
-        // console.log(e);
         // if (e.type !== "more") {
-            let moreIndex = choiceCategories.indexOf(viewMoreText);
-            if (moreIndex === e.ind) {
-                inquirer
-                    .prompt([
-                        {
-                            type: "list",
-                            name: "taskToRun",
-                            message: "Which task do you want to run",
-                            choices: latestTasks
-                        }
-                    ])
-                    .then(async ({ taskToRun }) => {
-                        taskToRun = taskToRun.split("~")[0].trim();
-                        await runTask(taskToRun, configManager);
-                    });
-            } else if (e.ind < moreIndex) {
-                // console.log("RUN ME", e);
-                let taskToRun = e.txt.split("~")[0].trim();
+        let moreIndex = choiceCategories.indexOf(viewMoreText);
+        if (moreIndex === e.ind) {
+            advancedInput("Which task do you want to run:", latestTasks).then(async e => {
+                let taskToRun = latestTasks[e.ind].split("~")[0].trim();
                 await runTask(taskToRun, configManager);
-            } else {
-                console.log("CATEEEEEE", e);
-                let category = e.txt;
-                let catIndex = conf.categories.findIndex(e => e.title === category);
-                let taskList = Object.keys(conf.categories[catIndex].tasks).map(task => {
-                    let tmpTask = conf.categories[catIndex].tasks[task];
-                    tmpTask.name = task;
-                    return tmpTask;
-                });
-                let taskNames = taskList.map(
-                    task =>
-                        `${task.name} ${
-                            task.description
-                                ? "~" + task.description.replace(/\n/g, " ").trim()
-                                : ""
-                        }`
-                );
-                inquirer
-                    .prompt([
-                        {
-                            type: "list",
-                            name: "taskToRun",
-                            message: "Which task do you want to run",
-                            choices: taskNames
-                        }
-                    ])
-                    .then(async ({ taskToRun }) => {
-                        taskToRun = taskToRun.split("~")[0].trim();
-                        await runTask(taskToRun, configManager);
-                    });
+            });
+        } else if (e.ind < moreIndex) {
+            let taskToRun = e.txt.split("~")[0].trim();
+            await runTask(taskToRun, configManager);
+        } else {
+            let category = e.txt;
+            let catIndex = conf.categories.findIndex(e => category.includes(e.title));
+            if (catIndex === -1) {
+                throw new Error("Seems no category found!");
             }
-        // } else {
-        //     console.log("MORE MORE", e);
-        //     inquirer
-        //         .prompt([
-        //             {
-        //                 type: "rawlist",
-        //                 name: "action",
-        //                 message: "What to do",
-        //                 choices: ["bookmark", "clear"]
-        //             }
-        //         ])
-        //         .then(async ({ action }) => {
-        //             // taskToRun = taskToRun.split("~")[0].trim();
-        //             // await runTask(taskToRun, configManager);
-        //             console.warn("-- Console action", action);
-        //         });
-        // }
+            let taskList = Object.keys(conf.categories[catIndex].tasks).map(task => {
+                let tmpTask = conf.categories[catIndex].tasks[task];
+                tmpTask.name = task;
+                return tmpTask;
+            });
+            let taskNames = taskList.map(
+                task =>
+                    `${task.name} ${
+                        task.description ? "~" + task.description.replace(/\n/g, " ").trim() : ""
+                    }`
+            );
+            advancedInput("Which task do you want to run:", taskNames).then(async e => {
+                let taskToRun = taskNames[e.ind].split("~")[0].trim();
+                await runTask(taskToRun, configManager);
+            });
+        }
     });
 }
 
@@ -110,7 +76,26 @@ class StartCommand extends Command {
                     ? recentTasks.concat(viewMoreText)
                     : recentTasks
                 : [];
-        let choiceCategories = [...recentTasks, ...conf.categories.map(e => e.title)];
+        let lengthMax = 0;
+        let limit = process.stdout.columns;
+        let cats = conf.categories.map(e => {
+            let ln = `${chalk.bold(e.title)}`;
+            lengthMax = lengthMax < stringWidth(ln) ? stringWidth(ln) : lengthMax;
+            ln += `${e.description ? "~~" + chalk.dim(e.description.trim()) : ""}`;
+            return ln;
+        });
+        lengthMax += 15;
+
+        let choiceCategories = [
+            ...recentTasks,
+            ...cats.map(e => {
+                let z = e.split("~~");
+                let lef = z[0].padEnd(lengthMax, " ");
+                let rig = z[1]; //;.padStart(z[1].length + sep, " ");
+                //process.stdout.columns - 5
+                return fixedWidthString(lef + rig, limit);
+            })
+        ];
         await inputChoices2(choiceCategories, conf, latestTasks);
     }
 }

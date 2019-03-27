@@ -23,7 +23,7 @@ async function pub() {
                         .add("./*")
                         .commit(`VERSION ${pack.version}\n${commitmsg}`)
                         .push(["-u"], () => console.log("done"))
-                        .addTag(`${pack.version}`, () => console.warn("-- Console TAGGED", 52))
+                        .addTag(`${pack.version}`, () => console.warn(""))
                         .pushTags("origin", () => {
                             console.warn("-- Console 3", 3);
                         });
