@@ -2,7 +2,7 @@
 
 You write a beautiful & documented Markdown file, we run it for you. And you have a lot of flexibility!
 
-Example **.fscripts.md** file:
+Example **.fscripts.md** file :
 
 ````markdown
 # Group 1
