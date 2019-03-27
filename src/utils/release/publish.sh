@@ -2,4 +2,4 @@
 
 npm version patch -f
 npm publish
-npm i -g freedcamp-script-runner@latest
+#npm i -g freedcamp-script-runner@latest
