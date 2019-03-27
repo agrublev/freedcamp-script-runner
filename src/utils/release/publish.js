@@ -1,7 +1,7 @@
 var inquirer = require("inquirer");
 const chalk = require("chalk");
-const runTask = require("./src/utils/task-runner.js");
-const { readJson } = require("./src/utils/index.js");
+const runTask = require("../task-runner.js");
+const { readJson } = require("../index.js");
 
 async function pub() {
     // await runTask("sh publish.sh --");
