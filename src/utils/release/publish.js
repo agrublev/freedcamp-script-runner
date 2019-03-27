@@ -19,7 +19,7 @@ async function pub() {
                         name: "commitmsg"
                     }
                 ])
-                .then(({ commitmsg }) => {
+                .then(async ({ commitmsg }) => {
                     commitmsg;
                     require("simple-git")()
                         .add("./*")
@@ -29,7 +29,7 @@ ${commitmsg}`
                         )
                         .push(["-u"], () => console.log("done"))
                         .addTag(`${pack.version}`, () => console.warn("-- Console TAGGED", 52));
-                    require("simple-git")().push(["-u"], () => console.log("done"));
+                    await require("simple-git")().push("origin", "master");
                 });
         })
         .catch(e => {
