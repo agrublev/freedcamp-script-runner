@@ -4,7 +4,7 @@ const runTask = require("../task-runner.js");
 const { readJson } = require("../index.js");
 
 async function pub() {
-    // await runTask("sh publish.sh --");
+     runTask("sh publish.sh --");
     let pack = await readJson("package.json");
     // console.log(pack.version);
     inquirer

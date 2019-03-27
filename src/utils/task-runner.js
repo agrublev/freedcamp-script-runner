@@ -68,7 +68,7 @@ const runTask = async (name, conf = false) => {
                     resolve();
                 } else {
                     // console.log(`${chalk.bold.green("Finished in " + prettyMs(elapsed), code)}`);
-                    reject(`task "${task.name}" exited with code ${code}`);
+                    reject(`task "${conf === false ? name : task.name}" exited with code ${code}`);
                 }
             });
         });
