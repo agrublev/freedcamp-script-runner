@@ -3,7 +3,7 @@
 
     [Angel Grablev](mailto:agrublev@gmail.com) - Wed, 27 Mar 2019 04:44:55 -0700
     
-    EAD -&gt; refs/heads/master, refs/remotes/origin/master, refs/remotes/origin/HEAD
+    
     
 
 * __VERSION 1.1.26__
