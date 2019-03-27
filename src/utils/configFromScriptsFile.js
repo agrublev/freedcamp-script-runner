@@ -1,17 +1,16 @@
 const parseScriptsFile = require("./parseScriptFile.js");
-const ensureDir = require("../utils/ensure-dir.js");
-const writeFile = require("../utils/write-file.js");
+const {writeFile ,ensureDir} = require("../utils/index.js");
 const chalk = require("chalk");
 
 const path = require("path");
 const rootDir = path.join(process.cwd(), "./");
 const fs = require("fs");
 const util = require("util");
-const scriptsMdFile = path.join(process.cwd(), "FcScripts.md");
+const scriptsMdFile = path.join(process.cwd(), ".fscripts.md");
 const toc = require("markdown-toc");
 
 async function updateConfig(conf) {
-    let getLastUpdateMd = fs.statSync(path.join(rootDir, "./FcScripts.md"));
+    let getLastUpdateMd = fs.statSync(path.join(rootDir, "./.fscripts.md"));
     getLastUpdateMd = new Date(util.inspect(getLastUpdateMd.mtime)).getTime();
     let confLastUpdatedMd = conf.get("lastUpdateConfig");
     let timeDiffOfUpdates = getLastUpdateMd - confLastUpdatedMd;

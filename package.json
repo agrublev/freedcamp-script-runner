@@ -1,17 +1,20 @@
 {
     "name": "freedcamp-script-runner",
-    "version": "1.1.14",
+    "version": "1.1.15",
     "description": "The ultimate project executor!",
     "main": "index.js",
-    "repository": "https://github.com/agrublev/freedcamp-script-runner.git",
-    "author": "Angel Grablev <agrublev@gmail.com>",
-    "license": "MIT",
-    "private": false,
+    "fscripts": {
+        "encryptedFiles": [
+            "config.json"
+        ]
+    },
     "oclif": {
         "commands": "./src/commands",
         "bin": "fsr",
         "hooks": {
-            "init": "./src/init.js"
+            "init": [
+                "./src/hooks/init/index.js"
+            ]
         },
         "plugins": [
             "@oclif/plugin-help",
@@ -41,17 +44,6 @@
         "o:test": "nyc mocha --forbid-only \"test/**/*.test.js\"",
         "o:version": "oclif-dev readme && git add README.md"
     },
-    "husky": {
-        "hooks": {
-            "pre-commit": "lint-staged"
-        }
-    },
-    "lint-staged": {
-        "src/*.{js,jsx}": [
-            "prettier --write",
-            "git add"
-        ]
-    },
     "bin": {
         "fsr": "./bin/run",
         "fzr": "./index.js",
@@ -74,8 +66,7 @@
         "chalk": "^2.4.2",
         "changed-git-files": "^0.0.1",
         "cli-ux": "^5.2.1",
-        "cmdify": "^0.0.4",
-        "colors": "^0.6.2",
+        "colors": "^1.3.3",
         "conf": "^3.0.0",
         "crypto-js": "^3.1.9-1",
         "elegant-spinner": "^1.0.1",
@@ -84,10 +75,9 @@
         "fkill": "^6.0.0",
         "fs-extra": "^7.0.1",
         "fuzzy": "^0.1.3",
-        "globby": "^8",
+        "globby": "^9.1.0",
         "indent-string": "^3.2.0",
         "inquirer": "^6.2.2",
-        "inquirer-checkbox-plus-prompt": "^1.0.1",
         "joycon": "^2.2.4",
         "log-symbols": "^2.2.0",
         "log-update": "^3.1.0",
@@ -110,7 +100,6 @@
         "traverse": "^0.6.6",
         "update-notifier": "^2.5.0",
         "vorpal": "^1.12.0",
-        "wrap-ansi": "^5.0.0",
         "yargs": "^13.2.2"
     },
     "devDependencies": {
@@ -141,14 +130,15 @@
         "execa": "^1.0.0",
         "fancy-log": "^1.3.3",
         "get-stream": "^5.0.0",
-        "husky": "^1.3.1",
-        "lint-staged": "^8.1.5",
         "micromatch": "^3.1.10",
         "mocha": "^5",
         "npm-run-all": "^4.1.5",
         "npm-version-bump": "^1.0.0",
         "nyc": "^13",
-        "prettier": "^1.16.4",
-        "xo": "^0.24.0"
-    }
+        "prettier": "^1.16.4"
+    },
+    "license": "MIT",
+    "private": false,
+    "repository": "https://github.com/agrublev/freedcamp-script-runner.git",
+    "author": "Angel Grablev <agrublev@gmail.com>"
 }

@@ -1,7 +1,6 @@
 const Conf = require("conf");
 const cM = {};
-const writeFile = require("../utils/write-file.js");
-const pathExists = require("../utils/path-exists.js");
+const { writeFile, pathExists } = require("../utils/index.js");
 const path = require("path");
 const projectDir = process.cwd();
 const configPath = path.join(projectDir, ".fsr/config.json");

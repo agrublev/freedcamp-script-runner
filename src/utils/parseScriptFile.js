@@ -10,12 +10,12 @@ const joyRead = new JoyCon({
     stopDir: path.dirname(process.cwd())
 });
 const parseScriptFile = async () => {
-    const { path: filepath, data } = joyRead.loadSync(["FcScripts.md"]);
+    const { path: filepath, data } = joyRead.loadSync([".fscripts.md"]);
     if (!filepath) {
-        console.warn(`${chalk.bold.red("You're missing the FcScripts.md file!")}`);
+        console.warn(`${chalk.bold.red("You're missing the .fscripts.md file!")}`);
         return null;
     } else {
-        console.warn(`${chalk.bold.green("Located FcScripts.md file!")}`);
+        console.warn(`${chalk.bold.green("Located .fscripts.md file!")}`);
         let newContent = data.replace(/(<!-- toc -->(\s|\S)*?<!-- tocstop -->)/g, "").trim();
 
         return md2json.parse(newContent);
