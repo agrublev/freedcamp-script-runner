@@ -5,51 +5,47 @@ const runTask = require("../task-runner.js");
 const { readJson } = require("../index.js");
 
 async function pub() {
-    //     runTask("sh " + path.join(__dirname, "publish.sh") + " --")
-    //         .then(async () => {
-    //             let pack = await readJson("package.json");
-    //             // console.log(pack.version);
-    //             inquirer
-    //                 .prompt([
-    //                     {
-    //                         type: "input",
-    //                         message: chalk.bold.hex("#38be18")(
-    //                             `What's new this version ${pack.version}: `
-    //                         ),
-    //                         name: "commitmsg"
-    //                     }
-    //                 ])
-    //                 .then(async ({ commitmsg }) => {
-    //                     commitmsg;
-    //                     require("simple-git")()
-    //                         .add("./*")
-    //                         .commit(
-    //                             `VERSION ${pack.version}
-    // ${commitmsg}`
-    //                         )
-    //                         .push(["-u"], () => console.log("done"))
-    //                         .addTag(`${pack.version}`, () => console.warn("-- Console TAGGED", 52))
-    //                         .pushTags("origin", () => {
-    //                             console.warn("-- Console 3", 3);
-    //                         });
-    //                     // await require("simple-git")()
-    //                 });
-    //         })
-    //         .catch(e => {
-    //             console.warn("-- Console ERR", e);
-    //         });
-    let pack = { version: "1.5.522" };
-    let commitmsg = "%@%@";
-    require("simple-git")()
-        .add("./*")
-        .commit(
-            `VERSION ${pack.version}
-${commitmsg}`
-        )
-        .push(["-u"], () => console.log("done"))
-        .addTag(`${pack.version}`, () => console.warn("-- Console TAGGED", 52))
-        .pushTags("origin", () => {
-            console.warn("-- Console 3", 3);
+    runTask("sh " + path.join(__dirname, "publish.sh") + " --")
+        .then(async () => {
+            let pack = await readJson("package.json");
+            // console.log(pack.version);
+            inquirer
+                .prompt([
+                    {
+                        type: "input",
+                        message: chalk.bold.hex("#38be18")(
+                            `What's new this version ${pack.version}: `
+                        ),
+                        name: "commitmsg"
+                    }
+                ])
+                .then(async ({ commitmsg }) => {
+                    require("simple-git")()
+                        .add("./*")
+                        .commit(`VERSION ${pack.version}\n${commitmsg}`)
+                        .push(["-u"], () => console.log("done"))
+                        .addTag(`${pack.version}`, () => console.warn("-- Console TAGGED", 52))
+                        .pushTags("origin", () => {
+                            console.warn("-- Console 3", 3);
+                        });
+                    // await require("simple-git")()
+                });
+        })
+        .catch(e => {
+            console.warn("-- Console ERR", e);
         });
+    // let pack = { version: "1.5.522" };
+    // let commitmsg = "%@%@";
+    //     require("simple-git")()
+    //         .add("./*")
+    //         .commit(
+    //             `VERSION ${pack.version}
+    // ${commitmsg}`
+    //         )
+    //         .push(["-u"], () => console.log("done"))
+    //         .addTag(`${pack.version}`, () => console.warn("-- Console TAGGED", 52))
+    //         .pushTags("origin", () => {
+    //             console.warn("-- Console 3", 3);
+    //         });
 }
 pub();
