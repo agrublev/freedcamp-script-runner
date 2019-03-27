@@ -4,9 +4,9 @@ const runTask = require("./src/utils/task-runner.js");
 const { readJson } = require("./src/utils/index.js");
 
 async function pub() {
-    await runTask("sh publish.sh --");
+    // await runTask("sh publish.sh --");
     let pack = await readJson("package.json");
-    // console.log(pack.version);
+    // console.log(pack.sversion);
     inquirer
         .prompt([
             {
@@ -23,8 +23,8 @@ async function pub() {
                     `VERSION ${pack.version}
 ${commitmsg}`
                 )
-                .addTag(`VERSION ${pack.version}`, () => console.warn("-- Console TAGGED", 52))
-                .push(["-u"], () => console.log("done"));
+                .push(["-u"], () => console.log("done"))
+                .addTag(`VERSION ${pack.version}`, () => console.warn("-- Console TAGGED", 52));
         });
 }
 pub();
