@@ -120,6 +120,7 @@
         "promise-queue": "^2.2.5",
         "rc": "^1.2.8",
         "semver": "^5.4.1",
+        "simple-git": "^1.110.0",
         "spdx-correct": "^2.0.4",
         "spdx-satisfies": "^0.1.3"
     },
