@@ -58,6 +58,7 @@ module.exports = function walkDependencies(dependencies) {
   const packages = {};
   const queue = new Queue(20, Infinity);
   return new Promise((resolve) => {
+      console.warn("-- Console WHAT", 889898899898);
     walk(dependencies, packages, queue, resolve);
   });
 };

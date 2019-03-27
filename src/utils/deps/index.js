@@ -28,4 +28,4 @@ async function t(dep) {
     });
 }
 
-t("antd");
+t("fkit");
