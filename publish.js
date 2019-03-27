@@ -24,7 +24,7 @@ async function pub() {
 ${commitmsg}`
                 )
                 .push(["-u"], () => console.log("done"))
-                .addTag(`VERSION ${pack.version}`, () => console.warn("-- Console TAGGED", 52));
+                .addTag(`${pack.version}`, () => console.warn("-- Console TAGGED", 52));
         });
 }
 pub();
