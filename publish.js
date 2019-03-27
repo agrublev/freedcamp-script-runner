@@ -1,13 +1,30 @@
-// const exec = require("child_process").exec;
-const bump = require("npm-version-bump");
+var inquirer = require("inquirer");
+const chalk = require("chalk");
+const runTask = require("./src/utils/task-runner.js");
+const { readJson } = require("./src/utils/index.js");
 
-const dir = "./";
-const version = "patch";
-
-function precommit(callback) {
-    console.log("TODO PRECOMMIT");
-    //     exec("./build.sh", callback);
+async function pub() {
+    // await runTask("sh publish.sh --");
+    let pack = await readJson("package.json");
+    // console.log(pack.sversion);
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                message: chalk.bold.hex("#38be18")(`What's new this version ${pack.version}: `),
+                name: "commitmsg"
+            }
+        ])
+        .then(({ commitmsg }) => {
+            commitmsg;
+            require("simple-git")()
+                .add("./*")
+                .commit(
+                    `VERSION ${pack.version}
+${commitmsg}`
+                )
+                .push(["-u"], () => console.log("done"))
+                .addTag(`${pack.version}`, () => console.warn("-- Console TAGGED", 52));
+        });
 }
-bump(dir, version, precommit, function(err) {
-    if (err) throw err;
-});
+pub();

@@ -6,14 +6,17 @@ const spawn = require("cross-spawn");
 const boxen = require("boxen");
 const helpers = require("../helpers/index.js");
 
-const runTask = async (name, conf) => {
+const runTask = async (name, conf = false) => {
     let output;
     let startTime = Date.now();
-    conf.set("tasks." + name + ".lastRan", startTime);
-    await conf.updateConfigFile();
     let input = name.slice(-1) === "-";
-    let tasks = conf.get("tasks");
-    let command = tasks[name].file ? "node " + tasks[name].file : tasks[name].script;
+    if (conf !== false) {
+        conf.set("tasks." + name + ".lastRan", startTime);
+        await conf.updateConfigFile();
+        let tasks = conf.get("tasks");
+    }
+    let command =
+        conf === false ? name : tasks[name].file ? "node " + tasks[name].file : tasks[name].script;
     helpers.clear();
     console.log(
         input
