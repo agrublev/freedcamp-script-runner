@@ -4,3 +4,6 @@ node_modules
 freedcamp-script-runner-v*.tgz
 .fsr
 back
+
+config.json
+

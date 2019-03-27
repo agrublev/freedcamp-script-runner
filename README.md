@@ -22,7 +22,7 @@ $ npm install -g freedcamp-script-runner
 $ fsr COMMAND
 running command...
 $ fsr (-v|--version|version)
-freedcamp-script-runner/1.1.14 darwin-x64 node-v10.13.0
+freedcamp-script-runner/1.1.18 darwin-x64 node-v10.13.0
 $ fsr --help [COMMAND]
 USAGE
   $ fsr COMMAND
@@ -32,6 +32,7 @@ USAGE
 # Commands
 <!-- commands -->
 * [`fsr autocomplete [SHELL]`](#fsr-autocomplete-shell)
+* [`fsr config`](#fsr-config)
 * [`fsr help [COMMAND]`](#fsr-help-command)
 * [`fsr start [ISFIRST] [ISSECOND]`](#fsr-start-isfirst-issecond)
 
@@ -57,6 +58,33 @@ EXAMPLES
 ```
 
 _See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v0.1.0/src/commands/autocomplete/index.ts)_
+
+## `fsr config`
+
+Encrypt or decrypt your secret files
+
+```
+USAGE
+  $ fsr config
+
+OPTIONS
+  -d, --direction=direction  direction {encrypt|decrypt}
+
+DESCRIPTION
+  ...
+  You need to list the files in your package.json under fscripts.encryptedFiles
+  "fscripts": {
+       "encryptedFiles": [
+           "config.json"
+       ]
+  },
+
+EXAMPLES
+  $ config --direction decrypt
+  $ config -d encrypt
+```
+
+_See code: [src/commands/config.js](https://github.com/agrublev/freedcamp-script-runner/blob/v1.1.18/src/commands/config.js)_
 
 ## `fsr help [COMMAND]`
 
@@ -99,5 +127,5 @@ ALIASES
   $ fsr e
 ```
 
-_See code: [src/commands/start.js](https://github.com/agrublev/freedcamp-script-runner/blob/v1.1.14/src/commands/start.js)_
+_See code: [src/commands/start.js](https://github.com/agrublev/freedcamp-script-runner/blob/v1.1.18/src/commands/start.js)_
 <!-- commandsstop -->

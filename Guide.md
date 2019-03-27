@@ -2,7 +2,7 @@
 
 You write a beautiful & documented Markdown file, we run it for you. And you have a lot of flexibility!
 
-Example **FcScripts.md** file:
+Example **.fscripts.md** file:
 
 ````markdown
 # Group 1
@@ -49,3 +49,5 @@ fsr run-s start:web start:utils
 ```
 
 ````
+
+## Password for encrypted file is test52

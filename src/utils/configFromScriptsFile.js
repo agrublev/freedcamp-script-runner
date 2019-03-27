@@ -1,5 +1,5 @@
 const parseScriptsFile = require("./parseScriptFile.js");
-const {writeFile ,ensureDir} = require("../utils/index.js");
+const { writeFile, ensureDir } = require("./index.js");
 const chalk = require("chalk");
 
 const path = require("path");
@@ -45,7 +45,7 @@ async function updateConfig(conf) {
             console.error(err);
         }
     } else {
-        console.log(`${chalk.green("Not updating!!")}`);
+        // console.log(`${chalk.green("Not updating!!")}`);
     }
 }
 
