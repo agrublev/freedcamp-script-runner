@@ -8,8 +8,8 @@ async function release() {
         const result = await semanticRelease(
             {
                 // Core options
-                branch: "master"
-                // repositoryUrl: "https://github.com/me/my-package.git",
+                branch: "master",
+                repositoryUrl: "https://github.com/agrublev/freedcamp-script-runner"
                 // Shareable config
                 // extends: "my-shareable-config",
                 // Plugin options
@@ -18,7 +18,7 @@ async function release() {
             },
             {
                 // Run semantic-release from `/path/to/git/repo/root` without having to change local process `cwd` with `process.chdir()`
-                cwd: process.cwd(),
+                cwd: process.cwd()
                 // Pass the variable `MY_ENV_VAR` to semantic-release without having to modify the local `process.env`
                 // env: { ...process.env, MY_ENV_VAR: "MY_ENV_VAR_VALUE" },
                 // Store stdout and stderr to use later instead of writing to `process.stdout` and `process.stderr`
