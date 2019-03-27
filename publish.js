@@ -6,7 +6,7 @@ const { readJson } = require("./src/utils/index.js");
 async function pub() {
     // await runTask("sh publish.sh --");
     let pack = await readJson("package.json");
-    // console.log(pack.sversion);
+    // console.log(pack.version);
     inquirer
         .prompt([
             {
