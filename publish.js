@@ -23,6 +23,7 @@ async function pub() {
                     `VERSION ${pack.version}
 ${commitmsg}`
                 )
+                .addTag(`VERSION ${pack.version}`, () => console.warn("-- Console TAGGED", 52))
                 .push(["-u"], () => console.log("done"));
         });
 }
