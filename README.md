@@ -18,11 +18,11 @@ The best script runner of ALL time!
 # Usage
 <!-- usage -->
 ```sh-session
-$ npm install -g freedcamp-script-runner
+$ npm install -g fscripts
 $ fsr COMMAND
 running command...
 $ fsr (-v|--version|version)
-freedcamp-script-runner/1.1.18 darwin-x64 node-v10.13.0
+fscripts/1.1.18 darwin-x64 node-v10.13.0
 $ fsr --help [COMMAND]
 USAGE
   $ fsr COMMAND
@@ -84,7 +84,7 @@ EXAMPLES
   $ config -d encrypt
 ```
 
-_See code: [src/commands/config.js](https://github.com/agrublev/freedcamp-script-runner/blob/v1.1.18/src/commands/config.js)_
+_See code: [src/commands/config.js](https://github.com/agrublev/fscripts/blob/v1.1.18/src/commands/config.js)_
 
 ## `fsr help [COMMAND]`
 
@@ -127,5 +127,5 @@ ALIASES
   $ fsr e
 ```
 
-_See code: [src/commands/start.js](https://github.com/agrublev/freedcamp-script-runner/blob/v1.1.18/src/commands/start.js)_
+_See code: [src/commands/start.js](https://github.com/agrublev/fscripts/blob/v1.1.18/src/commands/start.js)_
 <!-- commandsstop -->

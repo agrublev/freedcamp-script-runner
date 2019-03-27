@@ -37526,7 +37526,7 @@
             "size": "11121"
         }
     },
-    "freedcamp-script-runner": {
+    "fscripts": {
         "@oclif/command@1.5.12": {
             "name": "@oclif/command",
             "modified": "2019-03-15T21:11:08.948Z",
