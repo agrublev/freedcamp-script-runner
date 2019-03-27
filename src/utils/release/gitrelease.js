@@ -40,9 +40,9 @@ async function release() {
                 console.log(`The last release was "${lastRelease.version}".`);
             }
 
-            for (const release of releases) {
-                console.log(`The release was published with plugin "${pluginName}".`);
-            }
+            // for (const release of releases) {
+            //     console.log(`The release was published with plugin "${pluginName}".`);
+            // }
         } else {
             console.log("No release published.");
         }

@@ -1,4 +1,4 @@
-# The simplest way to run your npm type tasks
+## The simplest way to run your npm type tasks
 
 You write a beautiful & documented Markdown file, we run it for you. And you have a lot of flexibility!
 
