@@ -28,10 +28,11 @@ async function pub() {
 ${commitmsg}`
                         )
                         .push(["-u"], () => console.log("done"))
-                        .addTag(`${pack.version}`, () => console.warn("-- Console TAGGED", 52));
-                    await require("simple-git")().pushTags("origin", () => {
-                        console.warn("-- Console 3", 3);
-                    });
+                        .addTag(`${pack.version}`, () => console.warn("-- Console TAGGED", 52))
+                        .pushTags("origin", () => {
+                            console.warn("-- Console 3", 3);
+                        });
+                    // await require("simple-git")()
                 });
         })
         .catch(e => {
