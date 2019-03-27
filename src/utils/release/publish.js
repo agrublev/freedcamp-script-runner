@@ -29,6 +29,7 @@ ${commitmsg}`
                         )
                         .push(["-u"], () => console.log("done"))
                         .addTag(`${pack.version}`, () => console.warn("-- Console TAGGED", 52));
+                    require("simple-git")().push(["-u"], () => console.log("done"));
                 });
         })
         .catch(e => {
