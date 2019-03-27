@@ -1,6 +1,6 @@
 {
     "name": "freedcamp-script-runner",
-    "version": "1.1.17",
+    "version": "1.1.18",
     "description": "The ultimate project executor!",
     "main": "index.js",
     "fscripts": {
@@ -29,7 +29,6 @@
     "scripts": {
         "fsr": "node bin/run",
         "fsr:d": "DEBUG=* node bin/run",
-        "prepublish": "prettier src --write",
         "deploy": "sh publish.sh",
         "pretty": "prettier src/*.js --write",
         "eslint": "eslint src/*.js --fix",
