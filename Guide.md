@@ -1,6 +1,6 @@
 # The simplest way to run your npm type tasks
 
-You write a beautiful & documented Markdown file, we run it for you. And you have a lot of flexibility!
+You write a beautiful & documented Markdown file, we run it for you. And you have a lot of flexibility! t
 
 Example **.fscripts.md** file:
 
@@ -50,4 +50,4 @@ fsr run-s start:web start:utils
 
 ````
 
-## Password for encrypted file is test52
+## Password for encrypted file is test52 
