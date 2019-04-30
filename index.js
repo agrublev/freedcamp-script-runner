@@ -3,6 +3,7 @@
 const chalk = require("chalk");
 const moment = require("moment");
 const runCLICommand = require("./lib/runCLICommand.js");
+const generateFScripts = require("./lib/generateFScripts.js");
 const parseScriptFile = require("./lib/parseScriptsMd.js");
 const taskList = require("./lib/taskList");
 const path = require("path");
@@ -21,8 +22,8 @@ const scriptsParsed = async () => {
 const startScripts = async () => {
     const FcScripts = await scriptsParsed();
     const recentTasks = config.get("recentTasks", {});
-    console.warn("-- Console REC", recentTasks);
-    let recentTaskArr = Object.keys(recentTasks).map(taskName => {
+    let recentTaskArr = Object.keys(recentTasks)
+        .map(taskName => {
             let task = recentTasks[taskName];
             return { name: taskName, lastExecuted: task.lastExecuted };
         })
@@ -42,7 +43,16 @@ const startScripts = async () => {
         recentTasks[taskToRun].lastExecuted = Date.now();
     }
     config.set("recentTasks", recentTasks);
-    console.log("WILL RUN", taskToRun);
+    let script = FcScripts.allTasks[taskToRun].script;
+    let params = script.split(" ");
+    let type = params.shift();
+    await runCLICommand({
+        task: { name: taskToRun },
+        script: {
+            type: type,
+            rest: params
+        }
+    });
 };
 
 const argv = require("yargs")
@@ -88,7 +98,8 @@ const argv = require("yargs")
     .example(
         `${chalk.rgb(39, 173, 96)("$0 run-s start:web start:desktop")}`,
         `${chalk.rgb(159, 161, 181)("will run task 'start:web' and afterwards 'start:desktop'")}`
-    ).command("clear", "Clear history", () => {}, async function(argv) {
+    )
+    .command("clear", "Clear history", () => {}, async function(argv) {
         let tasks = argv._.slice();
         tasks.shift();
         const FcScripts = await parseScriptFile();
@@ -107,10 +118,9 @@ const argv = require("yargs")
             });
         }
     })
-    .example(
-        `${chalk.rgb(39, 173, 96)("$0 run-s start:web start:desktop")}`,
-        `${chalk.rgb(159, 161, 181)("will run task 'start:web' and afterwards 'start:desktop'")}`
-    )
+    .command("generate", "Clear history", () => {}, async function(argv) {
+        await generateFScripts();
+    })
     .command("run-p", "Run tasks in parallel", () => {}, async function(argv) {
         let tasks = argv._.slice();
         tasks.shift();
@@ -121,6 +131,7 @@ const argv = require("yargs")
             let script = FcScripts.allTasks[taskName].script;
             let params = script.split(" ");
             let type = params.shift();
+
             runCLICommand({
                 task: { name: taskName },
                 script: {

@@ -20,7 +20,7 @@ fsr run-s run:one run:three run:two
 ## run:p
 
 ```bash
-yarn fsr run-p run:one run:two
+fsr run-p run:one run:two
 ```
 
 ## run:one
