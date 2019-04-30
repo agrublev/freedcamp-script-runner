@@ -1,147 +1,38 @@
 {
-    "name": "fscripts",
-    "version": "1.5.5253",
-    "description": "The ultimate project executor!",
-    "main": "index.js",
-    "fscripts": {
-        "encryptedFiles": [
-            "config.json"
-        ]
-    },
-    "oclif": {
-        "commands": "./src/commands",
-        "bin": "fsr",
-        "hooks": {
-            "init": [
-                "./src/hooks/init/index.js"
-            ],
-            "runme": [
-                "./src/hooks/init/unknown.js"
-            ]
-        },
-        "plugins": [
-            "@oclif/plugin-help",
-            "@oclif/plugin-warn-if-update-available",
-            "@oclif/plugin-autocomplete"
-        ],
-        "warn-if-update-available": {
-            "timeoutInDays": 0,
-            "message": "Please consider upgrading!\n<%= config.name %> update available from <%= chalk.greenBright(config.version) %> to <%= chalk.greenBright(latest) %>.\nnpm i -g fscripts@<%= chalk.greenBright(latest) %>"
-        }
-    },
-    "scripts": {
-        "fsr": "node bin/run",
-        "fsr:d": "DEBUG=* node bin/run",
-        "deploy": "node src/utils/release/publish.js",
-        "pretty": "npx prettier src/*.js --write"
-    },
-    "useless": {
-        "eslint": "eslint src/*.js --fix",
-        "pack": "run-s prepack postpack",
-        "postpack": "rm -f oclif.manifest.json",
-        "prepack": "oclif-dev manifest && oclif-dev readme",
-        "o:version": "oclif-dev readme && git add README.md"
-    },
-    "bin": {
-        "fsr": "./bin/run",
-        "fzr": "./index.js",
-        "fs": "./src/index.js"
-    },
-    "files": [
-        "/bin",
-        "!/node_modules",
-        "/src",
-        "/lib"
-    ],
-    "dependencies": {
-        "@oclif/command": "^1",
-        "@oclif/config": "^1",
-        "@oclif/plugin-autocomplete": "^0.1.0",
-        "@oclif/plugin-help": "^2",
-        "@oclif/plugin-warn-if-update-available": "^1.7.0",
-        "blessed": "^0.1.81",
-        "boxen": "^3.0.0",
-        "chalk": "^2.4.2",
-        "changed-git-files": "^0.0.1",
-        "cli-ux": "^5.2.1",
-        "conf": "^3.0.0",
-        "crypto-js": "^3.1.9-1",
-        "elegant-spinner": "^1.0.1",
-        "figures": "^2.0.0",
-        "first-run": "^1.2.0",
-        "fkill": "^6.0.0",
-        "fs-extra": "^7.0.1",
-        "fuzzy": "^0.1.3",
-        "globby": "^9.1.0",
-        "indent-string": "^3.2.0",
-        "inquirer": "^6.2.2",
-        "joycon": "^2.2.4",
-        "log-symbols": "^2.2.0",
-        "log-update": "^3.1.0",
-        "markdown-it": "^8.4.2",
-        "markdown-toc": "^1.2.0",
-        "md-2-json": "^1.0.5",
-        "moment": "^2.24.0",
-        "node-notifier": "^5.4.0",
-        "pretty-data": "^0.40.0",
-        "pretty-ms": "^4.0.0",
-        "require-from-string": "^2.0.2",
-        "rexrex": "^1.3.0",
-        "strip-ansi": "^5.2.0",
-        "tap": "^0.4.9",
-        "terminal-kit": "^1.27.0",
-        "traverse": "^0.6.6",
-        "update-notifier": "^2.5.0",
-        "yargs": "^13.2.2"
-    },
-    "devDependencies": {
-        "@oclif/dev-cli": "^1",
-        "@oclif/test": "^1",
-        "babel-eslint": "^10.0.1",
-        "blob": "^0.0.5",
-        "chai": "^4",
-        "cli-table2": "^0.2.0",
-        "cli-table3": "^0.5.0",
-        "clui": "^0.3.6",
-        "colors": "^1.1.2",
-        "eslint": "^5.15.3",
-        "eslint-config-airbnb": "^17.1.0",
-        "eslint-config-prettier": "^3.1.0",
-        "eslint-plugin-import": "^2.16.0",
-        "eslint-plugin-no-use-extend-native": "^0.4.0",
-        "eslint-plugin-node": "^8.0.1",
-        "eslint-plugin-prettier": "^3.0.0",
-        "eslint-plugin-promise": "^4.0.1",
-        "eslint-plugin-react": "^7.11.1",
-        "fetch-unless-cached": "^2.0.2",
-        "filesize": "^3.5.10",
-        "fixed-width-string": "^1.0.0",
-        "get-folder-size": "^2.0.1",
-        "git-release-notes": "^4.0.1",
-        "inquirer": "^3.2.3",
-        "micromatch": "^3.1.10",
-        "mocha": "^5",
-        "moment": "^2.18.1",
-        "node-fetch": "^1.7.2",
-        "npm-run-all": "^4.1.5",
-        "npm-version-bump": "^1.0.0",
-        "prettier": "^1.16.4",
-        "pretty-bytes": "^5.1.0",
-        "promise-queue": "^2.2.5",
-        "rainbow-gradient": "^1.0.0",
-        "rc": "^1.2.8",
-        "redis-commands": "^1.4.0",
-        "semantic-release": "^15.13.3",
-        "semver": "^5.4.1",
-        "simple-git": "^1.110.0",
-        "spdx-correct": "^2.0.4",
-        "spdx-satisfies": "^0.1.3",
-        "store": "^2.0.12",
-        "stream-buffers": "^3.0.2",
-        "string-width": "^4.0.0"
-    },
-    "license": "MIT",
-    "private": false,
-    "repository": "https://github.com/agrublev/freedcamp-script-runner.git",
-    "author": "Angel Grablev <agrublev@gmail.com>"
+  "name": "freedcamp-script-runner",
+  "version": "1.0.3",
+  "description": "Runs the FcScripts.md file",
+  "main": "index.js",
+  "repository": "https://github.com/agrublev/freedcamp-script-runner.git",
+  "author": "Angel Grablev <agrublev@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "fsr": "node index.js",
+    "run-s": "node index.js run-s"
+  },
+  "bin": {
+    "fsr": "./index.js"
+  },
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "execa": "^1.0.0",
+    "fancy-log": "^1.3.3",
+    "get-stream": "^5.0.0",
+    "inquirer": "^6.2.2",
+    "joycon": "^2.2.4",
+    "markdown-it": "^8.4.2",
+    "marked": "^0.6.2",
+    "md-2-json": "^1.0.5",
+    "micromatch": "^3.1.10",
+    "moment": "^2.24.0",
+    "prepend-file": "^1.3.1",
+    "pretty-ms": "^5.0.0",
+    "require-from-string": "^2.0.2",
+    "rexrex": "^1.3.0",
+    "yargs": "^13.2.2"
+  },
+  "devDependencies": {
+    "prettier": "^1.16.4"
+  }
 }

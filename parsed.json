@@ -1,0 +1,33 @@
+{
+  "categories": [
+    {
+      "title": "Group 1",
+      "description": "",
+      "tasks": [
+        "Object"
+      ]
+    }
+  ],
+  "allTasks": {
+    "run": {
+      "script": "echo 'start'; sleep 2; echo 'done'",
+      "type": "bash"
+    },
+    "run:s": {
+      "script": "run-s run:one run:two",
+      "type": "bash"
+    },
+    "run:p": {
+      "script": "yarn fsr run-p run:one run:two",
+      "type": "bash"
+    },
+    "run:one": {
+      "script": "echo one",
+      "type": "js"
+    },
+    "run:two": {
+      "script": "console.log(\"TWOOOO ~ ~ ~\");",
+      "type": "js"
+    }
+  }
+}
