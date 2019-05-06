@@ -83,16 +83,24 @@ const argv = require("yargs")
 
         for (let t in tasks) {
             let taskName = tasks[t];
-            let script = FcScripts.allTasks[taskName].script;
-            let params = script.split(" ");
-            let type = params.shift();
-            await runCLICommand({
-                task: { name: taskName },
-                script: {
-                    type: type,
-                    rest: params
-                }
-            });
+            if (FcScripts.allTasks[taskName] === undefined) {
+                console.log(
+                    `${chalk.red.underline(
+                        "Skipping task " + taskName + ", as it cannot be found in .md file"
+                    )}`
+                );
+            } else {
+                let script = FcScripts.allTasks[taskName].script;
+                let params = script.split(" ");
+                let type = params.shift();
+                await runCLICommand({
+                    task: { name: taskName },
+                    script: {
+                        type: type,
+                        rest: params
+                    }
+                });
+            }
         }
     })
     .example(

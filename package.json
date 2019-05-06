@@ -1,38 +1,39 @@
 {
-  "name": "fscripts",
-  "version": "2.0.4",
-  "description": "Runs the fscripts.md file",
-  "main": "index.js",
-  "repository": "https://github.com/agrublev/freedcamp-script-runner.git",
-  "author": "Angel Grablev <agrublev@gmail.com>",
-  "license": "MIT",
-  "private": false,
-  "scripts": {
-    "fsr": "node index.js",
-    "run-s": "node index.js run-s"
-  },
-  "bin": {
-    "fsr": "./index.js"
-  },
-  "dependencies": {
-    "boxen": "^3.1.0",
-    "chalk": "^2.4.2",
-    "conf": "^4.0.2",
-    "fancy-log": "^1.3.3",
-    "fs-extra": "^7.0.1",
-    "inquirer": "^6.2.2",
-    "joycon": "^2.2.4",
-    "markdown-it": "^8.4.2",
-    "marked": "^0.6.2",
-    "md-2-json": "^1.0.5",
-    "moment": "^2.24.0",
-    "prepend-file": "^1.3.1",
-    "pretty-ms": "^5.0.0",
-    "require-from-string": "^2.0.2",
-    "rexrex": "^1.3.0",
-    "yargs": "^13.2.2"
-  },
-  "devDependencies": {
-    "prettier": "^1.16.4"
-  }
+    "name": "fscripts",
+    "version": "2.0.6",
+    "description": "Runs the fscripts.md file",
+    "main": "./index.js",
+    "repository": "https://github.com/agrublev/freedcamp-script-runner.git",
+    "author": "Angel Grablev <agrublev@gmail.com>",
+    "license": "MIT",
+    "private": false,
+    "scripts": {
+        "fsr": "node index.js",
+        "run-s": "node index.js run-s",
+        "build": "parcel build index.js"
+    },
+    "bin": {
+        "fsr": "./index.js"
+    },
+    "dependencies": {
+        "boxen": "^3.1.0",
+        "chalk": "^2.4.2",
+        "conf": "^4.0.2",
+        "fancy-log": "^1.3.3",
+        "fs-extra": "^7.0.1",
+        "inquirer": "^6.2.2",
+        "joycon": "^2.2.4",
+        "markdown-it": "^8.4.2",
+        "marked": "^0.6.2",
+        "md-2-json": "^1.0.5",
+        "moment": "^2.24.0",
+        "prepend-file": "^1.3.1",
+        "pretty-ms": "^5.0.0",
+        "require-from-string": "^2.0.2",
+        "rexrex": "^1.3.0",
+        "yargs": "^13.2.2"
+    },
+    "devDependencies": {
+        "prettier": "^1.16.4"
+    }
 }
