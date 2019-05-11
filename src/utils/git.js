@@ -1,4 +1,4 @@
 require("simple-git")()
     .add("./*")
-    .commit("TST")
+    .commit("Version")
     .push(["-u"], () => console.log("done"));
