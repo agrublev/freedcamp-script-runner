@@ -33,8 +33,10 @@ const argv = require("yargs")
     })
     .example(`${taskName("$0 list")}`, `${textDescription("Show you all tasks you can run")}`)
     .command("run", "Run a specific task", () => {}, async function(argv) {
-        let task = argv._[1];
-        await runCLICommand({ task: { name: task }, script: { type: "fsr", rest: [task] } }, true);
+        let tasks = argv._.slice();
+        tasks.shift();
+        const FcScripts = await parseScriptFile();
+        await runSequence(tasks, FcScripts);
     })
     .example(`${taskName("$0 run start:web")}`, `${textDescription("Run task 'start:web'")}`)
     .command("run-s", "Run a set of tasks one after another", () => {}, async function(argv) {

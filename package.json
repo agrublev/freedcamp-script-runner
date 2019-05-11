@@ -1,6 +1,6 @@
 {
     "name": "fscripts",
-    "version": "3.2.5",
+    "version": "3.3.0",
     "description": "Runs the fscripts.md file",
     "main": "./index.js",
     "repository": "https://github.com/agrublev/freedcamp-script-runner.git",
