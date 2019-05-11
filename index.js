@@ -18,7 +18,9 @@ const argv = require("yargs")
     .command("", "Choose a script runner command", yargs => {}, async function() {})
     .example(`${taskName("$0")}`, `${textDescription("Choose a script runner command")}`)
     .command("start", "Choose category then task to run", yargs => {}, async function() {
-        await startScripts();
+        if ((await startScripts()) === false) {
+            await startPackageScripts();
+        }
     })
     .example(`${taskName("$0 start")}`, `${textDescription("Open a task selection selector")}`)
     .command("scripts", "Choose a script from package.json", yargs => {}, async function() {
@@ -82,9 +84,7 @@ const argv = require("yargs")
     )
     .example(
         `${taskName("$0 toc")}`,
-        `${textDescription(
-            "Generate updated Table of Contents on top of the fscripts.md file"
-        )}`
+        `${textDescription("Generate updated Table of Contents on top of the fscripts.md file")}`
     ).argv;
 
 if (argv._.length === 0) {
