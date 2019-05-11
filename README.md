@@ -3,129 +3,61 @@ Freedcamp Script Runner
 
 The best script runner of ALL time!
 
-[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/@oclif/example-multi-js.svg)](https://npmjs.org/package/@oclif/example-multi-js)
-[![CircleCI](https://circleci.com/gh/oclif/example-multi-js/tree/master.svg?style=shield)](https://circleci.com/gh/oclif/example-multi-js/tree/master)
-[![Appveyor CI](https://ci.appveyor.com/api/projects/status/github/oclif/example-multi-js?branch=master&svg=true)](https://ci.appveyor.com/project/oclif/example-multi-js/branch/master)
-[![Codecov](https://codecov.io/gh/oclif/example-multi-js/branch/master/graph/badge.svg)](https://codecov.io/gh/oclif/example-multi-js)
-[![Downloads/week](https://img.shields.io/npm/dw/@oclif/example-multi-js.svg)](https://npmjs.org/package/@oclif/example-multi-js)
-[![License](https://img.shields.io/npm/l/@oclif/example-multi-js.svg)](https://github.com/oclif/example-multi-js/blob/master/package.json)
+# Installation
 
-<!-- toc -->
-* [Usage](#usage)
-* [Commands](#commands)
-<!-- tocstop -->
+```bash
+yarn add -D fscripts
+```
+
+We recommend to add the following line to your `package.json`
+
+```json5
+{
+    "scripts": {
+        "fsr": "fsr",
+        "start": "fsr start",
+        "list": "fsr list"
+    }
+}
+```
+
 # Usage
-<!-- usage -->
-```sh-session
-$ npm install -g fscripts
-$ fsr COMMAND
-running command...
-$ fsr (-v|--version|version)
-fscripts/1.1.18 darwin-x64 node-v10.13.0
-$ fsr --help [COMMAND]
-USAGE
-  $ fsr COMMAND
-...
+
+```bash
+fsr <command> [options]
 ```
-<!-- usagestop -->
+
 # Commands
-<!-- commands -->
-* [`fsr autocomplete [SHELL]`](#fsr-autocomplete-shell)
-* [`fsr config`](#fsr-config)
-* [`fsr help [COMMAND]`](#fsr-help-command)
-* [`fsr start [ISFIRST] [ISSECOND]`](#fsr-start-isfirst-issecond)
 
-## `fsr autocomplete [SHELL]`
+```bash
+fsr           Choose a script runner command
+fsr start     Choose category then task to run
+fsr scripts   Choose a script from package.json
+fsr list      Select any task with text autocompletion
+fsr run       Run a specific task
+fsr run-s     Run a set of tasks one after another
+fsr run-p     Run tasks in parallel
+fsr clear     Clear recent task history
+fsr generate  Generate a sample fscripts.md file from the package.json
+fsr toc       Generate updated Table of Contents on top of the fscripts.md file
 
-display autocomplete installation instructions
 
-```
-USAGE
-  $ fsr autocomplete [SHELL]
-
-ARGUMENTS
-  SHELL  shell type
-
-OPTIONS
-  -r, --refresh-cache  Refresh cache (ignores displaying instructions)
-
-EXAMPLES
-  $ fsr autocomplete
-  $ fsr autocomplete bash
-  $ fsr autocomplete zsh
-  $ fsr autocomplete --refresh-cache
+Options:
+--help     Show help                                                 
+--version  Show version number                                       
 ```
 
-_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v0.1.0/src/commands/autocomplete/index.ts)_
-
-## `fsr config`
-
-Encrypt or decrypt your secret files
-
-```
-USAGE
-  $ fsr config
-
-OPTIONS
-  -d, --direction=direction  direction {encrypt|decrypt}
-
-DESCRIPTION
-  ...
-  You need to list the files in your package.json under fscripts.encryptedFiles
-  "fscripts": {
-       "encryptedFiles": [
-           "config.json"
-       ]
-  },
-
-EXAMPLES
-  $ config --direction decrypt
-  $ config -d encrypt
+# Examples
+```bash
+fsr                                 Choose a script runner command
+fsr start                           Open a task selection selector
+fsr scripts                         Choose a script from package.json
+fsr list                            Show you all tasks you can run
+fsr run start:web                   Run task 'start:web'
+fsr run-s start:web start:desktop   Run task 'start:web' and afterwards 'start:desktop'
+fsr run-p start:web start:desktop   Run task 'start:web' and at the same time 'start:desktop'
+fsr clear                           Clear your recently run tasks
+fsr generate                        Generates a sample.fscripts.md you can use as template for your fscripts file
+fsr toc                             Generate updated Table of Contents on top of the fscripts.md file
 ```
 
-_See code: [src/commands/config.js](https://github.com/agrublev/fscripts/blob/v1.1.18/src/commands/config.js)_
-
-## `fsr help [COMMAND]`
-
-display help for fsr
-
-```
-USAGE
-  $ fsr help [COMMAND]
-
-ARGUMENTS
-  COMMAND  command to show help for
-
-OPTIONS
-  --all  see all commands in CLI
-```
-
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.6/src/commands/help.ts)_
-
-## `fsr start [ISFIRST] [ISSECOND]`
-
-Start the task picker
-
-```
-USAGE
-  $ fsr start [ISFIRST] [ISSECOND]
-
-ARGUMENTS
-  ISFIRST   This is if isFirst was passed or not returns boolean with default false
-  ISSECOND
-
-OPTIONS
-  -n, --name=name  [default: flagDef] The name
-  -s, --should     Should do it?
-
-DESCRIPTION
-  ...
-  Picking a task to run!
-
-ALIASES
-  $ fsr e
-```
-
-_See code: [src/commands/start.js](https://github.com/agrublev/fscripts/blob/v1.1.18/src/commands/start.js)_
-<!-- commandsstop -->
