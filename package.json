@@ -43,8 +43,10 @@
     },
     "devDependencies": {
         "git-release-notes": "^4.0.1",
+        "github-basic": "^6.0.0",
         "inquirer-fuzzy-path": "^2.0.3",
         "prettier": "^1.16.4",
+        "pull-request": "^3.0.0",
         "semantic-release": "^15.13.12",
         "simple-git": "^1.113.0"
     }
