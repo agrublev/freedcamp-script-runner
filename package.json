@@ -1,6 +1,6 @@
 {
     "name": "fscripts",
-    "version": "3.3.0",
+    "version": "3.3.3",
     "description": "Runs the fscripts.md file",
     "main": "./index.js",
     "repository": "https://github.com/agrublev/freedcamp-script-runner.git",
@@ -15,6 +15,9 @@
     "bin": {
         "fsr": "./index.js"
     },
+    "peerDependencies": {
+        "chalk": "^2.4.2"
+    },
     "dependencies": {
         "better-md-2-json": "^1.0.6",
         "boxen": "^3.1.0",
@@ -27,6 +30,7 @@
         "inquirer": "^6.2.2",
         "joycon": "^2.2.4",
         "markdown-it": "^8.4.2",
+        "markdown-toc": "^1.2.0",
         "marked": "^0.6.2",
         "md-2-json": "^1.0.5",
         "micromatch": "^4.0.2",
@@ -35,10 +39,13 @@
         "pretty-ms": "^5.0.0",
         "require-from-string": "^2.0.2",
         "rexrex": "^1.3.0",
-        "markdown-toc": "^1.2.0",
         "yargs": "^13.2.2"
     },
     "devDependencies": {
-        "prettier": "^1.16.4"
+        "git-release-notes": "^4.0.1",
+        "inquirer-fuzzy-path": "^2.0.3",
+        "prettier": "^1.16.4",
+        "semantic-release": "^15.13.12",
+        "simple-git": "^1.113.0"
     }
 }
