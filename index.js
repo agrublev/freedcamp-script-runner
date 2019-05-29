@@ -12,8 +12,12 @@ const { startPackageScripts, startScripts, clearRecent } = require("./lib/startS
 const taskName = chalk.rgb(39, 173, 96).bold.underline;
 const textDescription = chalk.rgb(159, 161, 181);
 const optionList = require("./lib/optionList");
+const validateNotInDev = require("./lib/git/validateNotDev.js");
 
-const argv = require("yargs")
+(async () => {
+    await validateNotInDev();
+
+    const argv = require("yargs")
     .usage("Usage: $0 <command> [options]")
     .command("", "Choose a script runner command", yargs => {}, async function() {})
     .example(`${taskName("$0")}`, `${textDescription("Choose a script runner command")}`)
@@ -90,16 +94,18 @@ const argv = require("yargs")
         `${textDescription("Generate updated Table of Contents on top of the fscripts.md file")}`
     ).argv;
 
-if (argv._.length === 0) {
-    (async function() {
-        const choice = await optionList();
-        if (choice) {
-            await runCLICommand(
-                { task: { name: choice }, script: { type: "fsr", rest: [choice] } },
-                true
-            );
-        } else {
-            console.log(chalk.green.bold("See you soon!"));
-        }
-    })();
-}
+    if (argv._.length === 0) {
+        (async function() {
+            const choice = await optionList();
+            if (choice) {
+                await runCLICommand(
+                    { task: { name: choice }, script: { type: "fsr", rest: [choice] } },
+                    true
+                );
+            } else {
+                console.log(chalk.green.bold("See you soon!"));
+            }
+        })();
+    }
+
+})();
