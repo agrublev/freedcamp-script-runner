@@ -7,11 +7,11 @@
 
 # Run
 
-Running
+Running things **bold style** baby __under__ asdas
 
 ## run:s
 
-Explain sequence
+Explain sequence with **bold** stuifff and more **boldss** s
 
 ```bash
 fsr run-s run:one run:three run:two

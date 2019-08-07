@@ -1,6 +1,6 @@
 {
     "name": "fscripts",
-    "version": "3.3.5",
+    "version": "3.3.8",
     "description": "Runs the fscripts.md file",
     "main": "./index.js",
     "repository": "https://github.com/agrublev/freedcamp-script-runner.git",
@@ -10,7 +10,7 @@
     "scripts": {
         "fsr": "node index.js",
         "run-s": "node index.js run-s",
-        "build": "parcel build index.js"
+        "build": "parcel build index.js --target node"
     },
     "bin": {
         "fsr": "./index.js"

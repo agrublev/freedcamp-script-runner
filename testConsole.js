@@ -1,7 +1,9 @@
 const chalk = require("chalk");
+const argv = require("yargs").argv;
 
 (async function() {
-    console.log(`${chalk.green("PRE --- TEST 52")}`);
+
+    console.log(`${chalk.green("PRE --- TEST 52")} ${process.argv.slice(2)} ${JSON.stringify(argv)}`);
 
     await new Promise(resolve => {
         setTimeout(() => {

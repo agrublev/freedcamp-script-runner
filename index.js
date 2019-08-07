@@ -37,10 +37,24 @@ const validateNotInDev = require("./lib/git/validateNotDev.js");
     })
     .example(`${taskName("$0 list")}`, `${textDescription("Show you all tasks you can run")}`)
     .command("run", "Run a specific task", () => {}, async function(argv) {
-        let tasks = argv._.slice();
-        tasks.shift();
+        let task = argv._[1];
         const FcScripts = await parseScriptFile();
-        await runSequence(tasks, FcScripts);
+        let taskIndex = FcScripts.allTasks.findIndex(t => t.name === task);
+        let taskData = FcScripts.allTasks[taskIndex];
+        let runCommand = taskData["script"].split(" ");
+        let type = runCommand.shift();
+        let params = runCommand.join(" ");
+        let args = Object.keys(argv)
+            .filter(e => e !== "_" && e !== "$0")
+            .map(e => ` --${e}=${argv[e]}`);
+        params += " " + args.join(" ");
+        await runCLICommand({
+            task: { name: task },
+            script: {
+                type: type,
+                rest: params.split(" ")
+            }
+        });
     })
     .example(`${taskName("$0 run start:web")}`, `${textDescription("Run task 'start:web'")}`)
     .command("run-s", "Run a set of tasks one after another", () => {}, async function(argv) {
