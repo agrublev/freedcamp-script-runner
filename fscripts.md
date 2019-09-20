@@ -1,13 +1,21 @@
-- [Group 1](#group-1)
-  * [run](#run)
+- [Run](#run)
+  * [decrypt](#decrypt)
   * [run:s](#runs)
   * [run:p](#runp)
   * [run:one](#runone)
   * [run:two](#runtwo)
+  * [run:three](#runthree)
+<!-- end toc -->
 
 # Run
 
-Running things **bold style** baby __under__ asdas
+## decrypt
+
+Run encryption/decrytion with password "fscripts" to get file .config.json to become config.json
+
+```bash
+node lib/encryption/decryptConfig.js
+```
 
 ## run:s
 
