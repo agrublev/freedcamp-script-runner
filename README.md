@@ -1,5 +1,4 @@
-Freedcamp Script Runner
-=======================
+# Freedcamp Script Runner
 
 The best script runner of ALL time!
 
@@ -13,10 +12,10 @@ We recommend to add the following line to your `package.json`
 
 ```json5
 {
-    "scripts": {
-        "fsr": "fsr",
-        "start": "fsr start",
-        "list": "fsr list"
+    scripts: {
+        fsr: "fsr",
+        start: "fsr start",
+        list: "fsr list"
     }
 }
 ```
@@ -43,15 +42,17 @@ fsr toc       Generate updated Table of Contents on top of the fscripts.md file
 
 
 Options:
---help     Show help                                                 
---version  Show version number                                       
+--help     Show help
+--version  Show version number
 ```
 
 # Examples
+
 ```bash
 fsr                                 Choose a script runner command
 fsr start                           Open a task selection selector
 fsr scripts                         Choose a script from package.json
+fsr upgrade                         Upgrade all dependencies from package.json, except ones inside the fscripts.ignore-upgrade
 fsr list                            Show you all tasks you can run
 fsr run start:web                   Run task 'start:web'
 fsr run-s start:web start:desktop   Run task 'start:web' and afterwards 'start:desktop'
@@ -60,4 +61,3 @@ fsr clear                           Clear your recently run tasks
 fsr generate                        Generates a sample.fscripts.md you can use as template for your fscripts file
 fsr toc                             Generate updated Table of Contents on top of the fscripts.md file
 ```
-

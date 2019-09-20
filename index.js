@@ -1,10 +1,11 @@
 #!/usr/bin/env node
-
+const bump = require("./lib/release/bump.js");
 const chalk = require("chalk");
 const generateFScripts = require("./lib/generateFScripts.js");
 const parseScriptFile = require("./lib/parseScriptsMd.js");
 // const parseScriptPackage = require("./lib/parseScriptsPackage");
 const generateToc = require("./lib/generateToc");
+const upgradePackages = require("./lib/upgradePackages");
 const runSequence = require("./lib/runSequence");
 const runParallel = require("./lib/runParallel");
 const runCLICommand = require("./lib/runCLICommand");
@@ -20,14 +21,28 @@ const encrypt = require("./lib/encryption/encryption");
 
     const argv = require("yargs")
         .usage("Usage: $0 <command> [options]")
+
+        /**
+         *  fsr
+         */
         .command("", "Choose a script runner command", yargs => {}, async function() {})
         .example(`${taskName("$0")}`, `${textDescription("Choose a script runner command")}`)
+
+        /**
+         * fsr
+         * start --
+         */
         .command("start", "Choose category then task to run", yargs => {}, async function() {
             if ((await startScripts()) === false) {
                 await startPackageScripts();
             }
         })
         .example(`${taskName("$0 start")}`, `${textDescription("Open a task selection selector")}`)
+
+        /**
+         * fsr
+         * scripts --
+         */
         .command("scripts", "Choose a script from package.json", yargs => {}, async function() {
             await startPackageScripts();
         })
@@ -35,6 +50,11 @@ const encrypt = require("./lib/encryption/encryption");
             `${taskName("$0 scripts")}`,
             `${textDescription("Choose a script from package.json")}`
         )
+
+        /**
+         * fsr
+         * list --
+         */
         .command("list", "Select any task with text autocompletion", () => {}, async function(
             argv
         ) {
@@ -42,6 +62,11 @@ const encrypt = require("./lib/encryption/encryption");
             // const tasks = await scriptsParsed().allTasks;
         })
         .example(`${taskName("$0 list")}`, `${textDescription("Show you all tasks you can run")}`)
+
+        /**
+         * fsr
+         * run --
+         */
         .command("run", "Run a specific task", () => {}, async function(argv) {
             let task = argv._[1];
             const FcScripts = await parseScriptFile();
@@ -63,6 +88,36 @@ const encrypt = require("./lib/encryption/encryption");
             });
         })
         .example(`${taskName("$0 run start:web")}`, `${textDescription("Run task 'start:web'")}`)
+
+        /**
+         * fsr
+         * upgrade --
+         */
+        .command(
+            "upgrade",
+            "Upgrade all your packages except ones specified by 'ignore-upgrade':[]",
+            () => {},
+            async function(argv) {
+                let task = argv._[1];
+                await upgradePackages();
+            }
+        )
+        .example(`${taskName("$0 upgrade")}`, `${textDescription("Upgraded!")}`)
+
+        /**
+         * fsr
+         * bump --
+         */
+        .command("bump", "Bump package.json and beautify it!", () => {}, async function(argv) {
+            let task = argv._[1];
+            await bump();
+        })
+        .example(`${taskName("$0 bump")}`, `${textDescription("BUMPED AND PRETTY!")}`)
+
+        /**
+         * fsr
+         * run-s --
+         */
         .command("run-s", "Run a set of tasks one after another", () => {}, async function(argv) {
             let tasks = argv._.slice();
             tasks.shift();
@@ -73,6 +128,11 @@ const encrypt = require("./lib/encryption/encryption");
             `${taskName("$0 run-s start:web start:desktop")}`,
             `${textDescription("Run task 'start:web' and afterwards 'start:desktop'")}`
         )
+
+        /**
+         * fsr
+         * run-p --
+         */
         .command("run-p", "Run tasks in parallel", () => {}, async function(argv) {
             let tasks = argv._.slice();
             tasks.shift();
@@ -83,6 +143,11 @@ const encrypt = require("./lib/encryption/encryption");
             `${taskName("$0 run-p start:web start:desktop")}`,
             `${textDescription("Run task 'start:web' and at the same time 'start:desktop'")}`
         )
+
+        /**
+         * fsr
+         * encryption --
+         */
         .command("encryption", "Encrypt/Decrypt secret files", () => {}, async function(argv) {
             await encrypt.init();
         })
@@ -90,6 +155,11 @@ const encrypt = require("./lib/encryption/encryption");
             `${taskName("$0 encryption")}`,
             `${textDescription("Encrypt/Decrypt secret files")}`
         )
+
+        /**
+         * fsr
+         * clear --
+         */
         .command("clear", "Clear recent task history", () => {}, async function(argv) {
             await clearRecent();
         })
