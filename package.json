@@ -1,6 +1,6 @@
 {
 	"name": "fscripts",
-	"version": "3.6.6",
+	"version": "3.7.0",
 	"description": "Runs the fscripts.md file",
 	"main": "./index.js",
 	"scripts": {
@@ -56,12 +56,23 @@
 		"yargs": "^14.0.0"
 	},
 	"devDependencies": {
+		"fkill-cli": "^5.2.0",
+		"git-changed-files": "^1.0.0",
 		"git-release-notes": "^5.0.0",
+		"git-state": "^4.1.0",
 		"github-basic": "^6.0.0",
 		"inquirer-fuzzy-path": "^2.1.0",
+		"json-colorz": "^0.2.7",
+		"lodash": "^4.17.15",
+		"mixin-deep": "^2.0.1",
 		"npm-run-all": "^4.1.5",
 		"pull-request": "^3.0.0",
-		"semantic-release": "^15.13.24"
+		"remarkable": "^2.0.0",
+		"semantic-release": "^15.13.24",
+		"set-value": "^3.0.1",
+		"staged-git-files": "^1.2.0",
+		"terminal-tree": "^0.0.3",
+		"underscore.string": "^3.3.5"
 	},
 	"peerDependencies": {
 		"chalk": "^2.4.2"
