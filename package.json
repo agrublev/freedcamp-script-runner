@@ -1,6 +1,6 @@
 {
 	"name": "fscripts",
-	"version": "3.7.24",
+	"version": "3.8.0",
 	"description": "Runs the fscripts.md file",
 	"main": "./index.js",
 	"scripts": {

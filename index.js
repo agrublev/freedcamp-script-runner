@@ -17,8 +17,6 @@ const validateNotInDev = require("./lib/git/validateNotDev.js");
 const encrypt = require("./lib/encryption/encryption");
 
 (async () => {
-    await validateNotInDev();
-
     const argv = require("yargs")
         .usage("Usage: $0 <command> [options]")
 
@@ -27,6 +25,19 @@ const encrypt = require("./lib/encryption/encryption");
          */
         .command("", "Choose a script runner command", yargs => {}, async function() {})
         .example(`${taskName("$0")}`, `${textDescription("Choose a script runner command")}`)
+
+        /**
+         *  fsr
+         */
+        .command(
+            "branch",
+            "Create new branch instead of Development",
+            yargs => {},
+            async function() {
+                await validateNotInDev();
+            }
+        )
+        .example(`${taskName("$0")}`, `${textDescription("Validates branch and creates new")}`)
 
         /**
          * fsr
