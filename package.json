@@ -9,7 +9,8 @@
 		"release:build": "parcel build index.js --target node --no-cache",
 		"release:bump": "yarn fsr bump",
 		"release:publish": "node lib/release/publish.js",
-		"run-s": "node index.js run-s"
+		"run-s": "node index.js run-s",
+        "test": "echo 'yolo'"
 	},
 	"fscripts": {
 		"encryptedFiles": [
