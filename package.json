@@ -1,6 +1,6 @@
 {
 	"name": "fscripts",
-	"version": "3.8.1",
+	"version": "3.8.2",
 	"description": "Runs the fscripts.md file",
 	"main": "./index.js",
 	"scripts": {
@@ -10,7 +10,7 @@
 		"release:bump": "yarn fsr bump",
 		"release:publish": "node lib/release/publish.js",
 		"run-s": "node index.js run-s",
-        "test": "echo 'yolo'"
+		"test": "echo 'yolo'"
 	},
 	"fscripts": {
 		"encryptedFiles": [
@@ -61,12 +61,12 @@
 		"yargs": "^14.0.0"
 	},
 	"devDependencies": {
-        "np": "^5.1.0",
-        "fkill-cli": "^5.2.0",
+		"fkill-cli": "^5.2.0",
 		"inquirer-fuzzy-path": "^2.1.0",
 		"json-colorz": "^0.2.7",
 		"lodash": "^4.17.15",
 		"mixin-deep": "^2.0.1",
+		"np": "^5.1.0",
 		"npm-run-all": "^4.1.5",
 		"pull-request": "^3.0.0",
 		"remarkable": "^2.0.0",
