@@ -1,14 +1,14 @@
 {
 	"name": "fscripts",
-	"version": "4.0.1",
+	"version": "4.0.2",
 	"description": "Runs the fscripts.md file",
 	"main": "./index.js",
 	"scripts": {
 		"fsr": "node index.js",
 		"release": "run-s release:bump release:build release:publish",
-		"release:combined": "np --any-branch",
 		"release:build": "parcel build index.js --target node --no-cache",
 		"release:bump": "yarn fsr bump",
+		"release:combined": "np --any-branch",
 		"release:publish": "node lib/release/publish.js",
 		"run-s": "node index.js run-s",
 		"test": "echo 'yolo'"
@@ -62,6 +62,8 @@
 		"yargs": "^14.0.0"
 	},
 	"devDependencies": {
+		"@babel/cli": "^7.6.2",
+		"@babel/core": "^7.6.2",
 		"fkill-cli": "^5.2.0",
 		"inquirer-fuzzy-path": "^2.1.0",
 		"json-colorz": "^0.2.7",

@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const bump = require("./lib/release/bump.js");
 const chalk = require("chalk");
 const generateFScripts = require("./lib/generateFScripts.js");
