@@ -60,7 +60,8 @@
 		"yargs": "^14.0.0"
 	},
 	"devDependencies": {
-		"fkill-cli": "^5.2.0",
+        "np": "^5.1.0",
+        "fkill-cli": "^5.2.0",
 		"inquirer-fuzzy-path": "^2.1.0",
 		"json-colorz": "^0.2.7",
 		"lodash": "^4.17.15",
