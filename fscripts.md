@@ -1,13 +1,15 @@
-- [Run](#run)
-  * [decrypt](#decrypt)
-  * [run:s](#runs)
-  * [run:p](#runp)
-  * [run:one](#runone)
-  * [run:two](#runtwo)
-  * [run:three](#runthree)
-<!-- end toc -->
+-   [Run](#run)
+    -   [decrypt](#decrypt)
+    -   [run:s](#runs)
+    -   [run:p](#runp)
+    -   [run:one](#runone)
+    -   [run:two](#runtwo)
+    -   [run:three](#runthree)
+        <!-- end toc -->
 
 # Run
+
+Run description here
 
 ## decrypt
 
@@ -44,6 +46,16 @@ node testConsole.js
 ```
 
 ## run:three
+
+```bash
+node testInput.js
+```
+
+# Second
+
+second
+
+## runzz
 
 ```bash
 node testInput.js

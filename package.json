@@ -6,6 +6,7 @@
 	"scripts": {
 		"fsr": "node index.js",
 		"release": "run-s release:bump release:build release:publish",
+		"release:combined": "np --any-branch",
 		"release:build": "parcel build index.js --target node --no-cache",
 		"release:bump": "yarn fsr bump",
 		"release:publish": "node lib/release/publish.js",
