@@ -120,8 +120,9 @@ const encrypt = require("./lib/encryption/encryption");
          * bump --
          */
         .command("bump", "Bump package.json and beautify it!", () => {}, async function(argv) {
-            let task = argv._[1];
-            await bump();
+            let shouldNotPretty = argv.pretty;
+            let type = argv.type;
+            await bump(shouldNotPretty, type);
         })
         .example(`${taskName("$0 bump")}`, `${textDescription("BUMPED AND PRETTY!")}`)
 
