@@ -10,9 +10,9 @@ const textDescription = chalk.rgb(159, 161, 181);
 import optionList from "./lib/optionList";
 import validateNotInDev from "./lib/git/validateNotDev.js";
 import encrypt from "./lib/encryption/encryption";
-import { clear } from "@utils";
+import { clear } from "./lib/utils/index";
 
-require("@utils/console");
+require("./lib/utils/console");
 
 const runCmd = async (app, argsList = []) => {
     const { spawn } = require("child_process");

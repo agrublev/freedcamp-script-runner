@@ -1,8 +1,8 @@
 {
-    "name": "fscripts",
-    "version": "4.1.2",
+    "name": "fscr",
+    "version": "1.2.2",
     "description": "Runs the fscripts.md file",
-    "main": "./index.js",
+    "main": "./dist/index.js",
     "scripts": {
         "start": "run-s build start:run",
         "start:run": "node dist/index.js",
@@ -14,13 +14,18 @@
         "start:basic": "babel-node index.js",
         "fsr": "node dist/index.js",
         "release": "run-s release:bump release:build release:publish",
-        "release:build": "parcel build index.js --target node --no-cache",
+        "release:build": "parcel build index.js --target node --no-cache --bundle-node-modules --no-source-maps",
         "release:bump": "yarn fsr bump",
         "release:combined": "np --any-branch",
         "release:publish": "node lib/release/publish.js",
         "run-s": "node index.js run-s",
         "test": "echo 'yolo'"
     },
+    "files": [
+        "dist",
+        "index.js",
+        "bin"
+    ],
     "fscripts": {
         "encryptedFiles": [
             "config.json"
@@ -34,7 +39,7 @@
     "license": "MIT",
     "author": "Angel Grablev <agrublev@gmail.com>",
     "bin": {
-        "fsr": "./index.js"
+        "fscr": "./bin"
     },
     "dependencies": {
         "better-md-2-json": "^1.0.6",
