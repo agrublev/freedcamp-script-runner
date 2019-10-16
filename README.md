@@ -1,3 +1,10 @@
+- [Freedcamp Script Runner](#freedcamp-script-runner)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Commands](#commands)
+- [Examples](#examples)
+<!-- end toc -->
+
 # Freedcamp Script Runner
 
 The best script runner of ALL time!

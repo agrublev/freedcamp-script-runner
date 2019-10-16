@@ -1,16 +1,16 @@
-import bump from "./lib/release/bump.js";
-import chalk from "chalk";
-import { generateFScripts, generateToc } from "./lib/generators";
-import parseScriptFile from "./lib/parsers/parseScriptsMd.js";
-import upgradePackages from "./lib/upgradePackages";
-import { runSequence, runParallel, runCLICommand } from "./lib/running";
-import { startPackageScripts, startScripts, clearRecent } from "./lib/startScripts.js";
+const bump = require("./lib/release/bump.js");
+const chalk = require("chalk");
+const { generateFScripts, generateToc } = require("./lib/generators");
+const parseScriptFile = require("./lib/parsers/parseScriptsMd.js");
+const upgradePackages = require("./lib/upgradePackages");
+const { runSequence, runParallel, runCLICommand } = require("./lib/running");
+const { startPackageScripts, startScripts, clearRecent } = require("./lib/startScripts.js");
 const taskName = chalk.rgb(39, 173, 96).bold.underline;
 const textDescription = chalk.rgb(159, 161, 181);
-import optionList from "./lib/optionList";
-import validateNotInDev from "./lib/git/validateNotDev.js";
-import encrypt from "./lib/encryption/encryption";
-import { clear } from "./lib/utils/index";
+const optionList = require("./lib/optionList");
+const validateNotInDev = require("./lib/git/validateNotDev.js");
+const encrypt = require("./lib/encryption/encryption");
+const { clear } = require("./lib/utils/index");
 
 require("./lib/utils/console");
 
@@ -111,28 +111,21 @@ const runCmd = async (app, argsList = []) => {
             async function(argv) {
                 let { task } = argv;
                 const { allTasks } = await parseScriptFile();
-
-                let taskData = allTasks.find(t => t.name === task);
-
+                const taskData = allTasks.find(t => t.name === task);
                 if (!taskData) {
-                    console.error("Task not found");
+                    console.error(`${chalk.bold.underline.red("Task not found")}`);
                     return;
                 }
+                let { script, lang } = taskData;
+                let type = script.split(" ");
 
-                let runCommand = taskData["script"].split(" ");
-                let type = runCommand.shift();
-                let params = runCommand.join(" ");
-                let args = Object.keys(argv)
-                    .filter(e => e !== "_" && e !== "$0")
-                    .map(e => ` --${e}=${argv[e]}`);
-                params += " " + args.join(" ");
                 await runCLICommand({
                     task: { name: task },
                     script: {
-                        lang: taskData.lang,
-                        type: type,
-                        full: taskData.script,
-                        rest: params.split(" ")
+                        lang: lang,
+                        type: type.shift(),
+                        full: script,
+                        rest: script.split(" ").slice(1)
                     }
                 });
             }
@@ -187,6 +180,7 @@ const runCmd = async (app, argsList = []) => {
         .command("run-p", "Run tasks in parallel", () => {}, async function(argv) {
             let tasks = argv._.slice();
             tasks.shift();
+
             const FcScripts = await parseScriptFile();
             await runParallel(tasks, FcScripts);
         })
@@ -234,7 +228,8 @@ const runCmd = async (app, argsList = []) => {
             "Generate updated Table of Contents on top of the fscripts.md file",
             () => {},
             async function(argv) {
-                await generateToc();
+                let mdFile = argv._[1];
+                await generateToc(mdFile);
             }
         )
         .example(

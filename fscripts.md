@@ -4,6 +4,7 @@
   * [run:s](#runs)
   * [run:p](#runp)
   * [run:one](#runone)
+  * [run:one:d](#runoned)
   * [run:two](#runtwo)
   * [run:three](#runthree)
 - [Second](#second)
@@ -20,6 +21,8 @@
   * [fivez5](#fivez5)
 - [Five](#five-1)
   * [fivez](#fivez-1)
+- [Six](#six)
+  * [See](#see)
 <!-- end toc -->
 
 # Run
@@ -55,19 +58,25 @@ node lib/encryption/decryptConfig.js
 Explain sequence with **bold** stuifff and more **boldss** s
 
 ```bash
-fsr run-s run:one run:three run:two
+yarn fsr run-s run:one run:one:d node:script run:one  run:one:d run:one run:one:d run:one
 ```
 
 ## run:p
 
 ```bash
-fsr run-p run:one run:two
+yarn fsr run-p run:one run:one:d node:script run:one  run:one:d run:one run:one:d run:one
 ```
 
 ## run:one
 
 ```bash
-echo "~ ~ ONEEE"
+echo "sa90a9ds"
+```
+
+## run:one:d
+
+```bash
+sleep 1
 ```
 
 ## run:two
@@ -97,7 +106,7 @@ node testInput.js
 ## threez
 
 ```bash
-
+echo "FUCK"
 ```
 
 # four
@@ -135,6 +144,15 @@ node testInput.js
 # Five
 
 ## fivez
+
+```bash
+
+```
+
+# Six
+
+## See
+
 
 ```bash
 
