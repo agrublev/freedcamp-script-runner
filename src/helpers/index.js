@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 const firstRun = require("first-run");
 
 const h = {};

@@ -124,7 +124,8 @@ gen.init = async (recalc = false, draw = true) => {
                 return `https://bundlephobia.com/api/size?package=${dep}&record=true`;
             });
             let runOn = depList.concat(depDevList);
-            gen.start(runOn);
+            await gen.start(runOn);
+            gen.drawLines();
         } catch (err) {
             console.error(err);
         }
@@ -237,4 +238,4 @@ gen.drawLines = async () => {
     );
 };
 
-gen.init();
+module.exports = gen;

@@ -1,0 +1,111 @@
+<html>
+<link rel="shortcut icon" href="favicon.ico" sizes="256x256"/>
+<link rel="stylesheet" href="node_modules/xterm/dist/xterm.css"/>
+<title>Terminal App</title>
+<style>
+    body, #terminal {
+        display: flex;
+        flex: auto;
+    }
+</style>
+<script src="node_modules/xterm/dist/xterm.js"></script>
+<script src="node_modules/xterm/dist/addons/fit/fit.js"></script>
+
+<script>
+    const colors = {
+        "color": [
+            "#282a2e",//0
+            "#a54242",//1
+            "#8c9440",//2
+            "#de935f",//3
+            "#5f819d",//4
+            "#85678f",//5
+            "#5e8d87",//6
+            "#707880",//7
+            "#373b41",//8
+            "#cc6666",//9
+            "#b5bd68",//10
+            "#f0c674",//11
+            "#81a2be",//12
+            "#b294bb",//13
+            "#8abeb7",//14
+            "#c5c8c6"//15
+        ],
+        "foreground": "#c5c8c6",
+        "background": "#1d1f21"
+    };
+    Terminal.applyAddon(fit);
+
+    async function run () {
+        const [app, term] = await carlo.loadParams();
+        // Create ui control.
+        const termUI = new Terminal({
+            cursorBlink: true, cursorStyle: "line",
+            fontSize: 12, theme: {
+                foreground: "#c5c8c6",
+                /** The default background color */
+                background: colors.background,
+                /** The cursor color */
+                cursor: colors.color[12],
+                /** The accent color of the cursor (used as the foreground color for a block cursor) */
+                cursorAccent: colors.color[10],
+                /** The selection color (can be transparent) */
+                selection: colors.color[4],
+                /** ANSI black (eg. `\x1b[30m`) */
+                black: colors.color[0],
+                /** ANSI red (eg. `\x1b[31m`) */
+                red: colors.color[1],
+                /** ANSI green (eg. `\x1b[32m`) */
+                green: colors.color[2],
+                /** ANSI yellow (eg. `\x1b[33m`) */
+                yellow: colors.color[3],
+                /** ANSI blue (eg. `\x1b[34m`) */
+                blue: colors.color[4],
+                /** ANSI magenta (eg. `\x1b[35m`) */
+                magenta: colors.color[5],
+                /** ANSI cyan (eg. `\x1b[36m`) */
+                cyan: colors.color[6],
+                /** ANSI white (eg. `\x1b[37m`) */
+                white: colors.color[7],
+                /** ANSI bright black (eg. `\x1b[1;30m`) */
+                brightBlack: colors.color[8],
+                /** ANSI bright red (eg. `\x1b[1;31m`) */
+                brightRed: colors.color[9],
+                /** ANSI bright green (eg. `\x1b[1;32m`) */
+                brightGreen: colors.color[10],
+                /** ANSI bright yellow (eg. `\x1b[1;33m`) */
+                brightYellow: colors.color[1],
+                /** ANSI bright blue (eg. `\x1b[1;34m`) */
+                brightBlue: colors.color[12],
+                /** ANSI bright magenta (eg. `\x1b[1;35m`) */
+                brightMagenta: colors.color[13],
+                /** ANSI bright cyan (eg. `\x1b[1;36m`) */
+                brightCyan: colors.color[14],
+                /** ANSI bright white (eg. `\x1b[1;37m`) */
+                brightWhite: colors.color[15]
+            }
+        });
+        termUI.open(document.getElementById("terminal"));
+        window.onresize = () => termUI.fit();
+        termUI.writeln("ls -ls");
+        // Wire them together.
+        termUI.on("data", data => term.write(data));
+        term.on("data", rpc.handle(data => termUI.write(data)));
+        termUI.on("resize", size => term.resize(size.cols, size.rows));
+
+        // Init.
+        termUI.fit();
+        termUI.focus();
+        document.addEventListener("keydown", event => {
+            if (event.keyCode === 78 && (event.metaKey || event.ctrlKey)) {  // Ctrl+N
+                app.newWindow();
+                event.preventDefault();
+            }
+        });
+    }
+</script>
+
+<body onload="run()">
+<div id="terminal"></div>
+</body>
+</html>

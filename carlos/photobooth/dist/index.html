@@ -1,0 +1,41 @@
+<html>
+<head>
+    <link rel="shortcut icon" href="/favicon.26242483.ico" sizes="256x256">
+    <title>PhotoBooth App</title>
+    <link src="manifest.json">
+</head>
+<body tabIndex="0">
+<div id="container">
+    <video id="gum" style="width:600px;" playsinline="" autoplay="" muted=""></video>
+
+    <div>
+        <button id="change">Change screen</button>
+        <button id="record" disabled="">Start Recording</button>
+        <button id="play" disabled="">Play</button>
+        <button id="download" disabled="">Download</button>
+    </div>
+
+    <div>
+        <h4>Media Stream Constraints options</h4>
+        <p>Echo cancellation:
+            <input type="checkbox" id="echoCancellation">
+        </p>
+    </div>
+
+    <div>
+        <span id="errorMsg"></span>
+    </div>
+
+    <a href="https://github.com/webrtc/samples/tree/gh-pages/src/content/getusermedia/record" title="View source for this page on GitHub" id="viewSource">View source on GitHub
+    </a>
+    <video id="recorded" style="width:600px;" playsinline="" loop=""></video>
+
+</div>
+
+<canvas id="canvas"></canvas>
+<script src="/run.ca204bba.js">
+</script>
+
+</body>
+
+</html>

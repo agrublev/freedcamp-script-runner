@@ -22,7 +22,7 @@ $ npm install -g fscripts
 $ fsr COMMAND
 running command...
 $ fsr (-v|--version|version)
-fscripts/1.1.18 darwin-x64 node-v10.13.0
+fscripts/1.5.5254 darwin-x64 node-v10.13.0
 $ fsr --help [COMMAND]
 USAGE
   $ fsr COMMAND
@@ -31,10 +31,30 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`fsr auto`](#fsr-auto)
 * [`fsr autocomplete [SHELL]`](#fsr-autocomplete-shell)
 * [`fsr config`](#fsr-config)
+* [`fsr deps`](#fsr-deps)
 * [`fsr help [COMMAND]`](#fsr-help-command)
 * [`fsr start [ISFIRST] [ISSECOND]`](#fsr-start-isfirst-issecond)
+
+## `fsr auto`
+
+Describe the command here
+
+```
+USAGE
+  $ fsr auto
+
+OPTIONS
+  -n, --name=name  name to print
+
+DESCRIPTION
+  ...
+  Extra documentation goes here
+```
+
+_See code: [src/commands/auto.js](https://github.com/agrublev/freedcamp-script-runner/blob/v1.5.5254/src/commands/auto.js)_
 
 ## `fsr autocomplete [SHELL]`
 
@@ -84,7 +104,25 @@ EXAMPLES
   $ config -d encrypt
 ```
 
-_See code: [src/commands/config.js](https://github.com/agrublev/fscripts/blob/v1.1.18/src/commands/config.js)_
+_See code: [src/commands/config.js](https://github.com/agrublev/freedcamp-script-runner/blob/v1.5.5254/src/commands/config.js)_
+
+## `fsr deps`
+
+Describe the command here
+
+```
+USAGE
+  $ fsr deps
+
+OPTIONS
+  -r, --redo  Recalculate all sizes again
+
+DESCRIPTION
+  ...
+  Extra documentation goes here
+```
+
+_See code: [src/commands/deps.js](https://github.com/agrublev/freedcamp-script-runner/blob/v1.5.5254/src/commands/deps.js)_
 
 ## `fsr help [COMMAND]`
 
@@ -127,5 +165,5 @@ ALIASES
   $ fsr e
 ```
 
-_See code: [src/commands/start.js](https://github.com/agrublev/fscripts/blob/v1.1.18/src/commands/start.js)_
+_See code: [src/commands/start.js](https://github.com/agrublev/freedcamp-script-runner/blob/v1.5.5254/src/commands/start.js)_
 <!-- commandsstop -->

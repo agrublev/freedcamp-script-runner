@@ -54,9 +54,9 @@ const fetch = require("node-fetch");
 //     .then(function(stories) {
 //         console.log(stories);
 //     });
-const filesize = require("filesize");
+import filesize from "filesize";
 
-async function asyncForEach(array, callback) {
+async function asyncForEach (array, callback) {
     for (let index = 0; index < array.length; index++) {
         await callback(array[index], index, array);
     }
@@ -76,23 +76,23 @@ const start = async () => {
         async num => {
             let ssss = await new Promise(resolve => {
                 fetch(num) //https://registry.npmjs.org/check
-                    .then(function(response) {
-                        if (response.status >= 400) {
-                            console.warn(response);
-                            throw new Error("Bad response from server");
-                        }
-                        return response.json();
-                    })
-                    .then(function(data) {
-                        let start = parseInt(data.size);
-                        if (data.dependencySizes) {
-                            data.dependencySizes.forEach(sz => {
-                                start += parseInt(sz.approximateSize);
-                            });
-                        }
-                        console.warn("!!!!" + num, filesize(start, { bits: true, base: 10 }));
-                        resolve(data);
-                    });
+                .then(function(response) {
+                    if (response.status >= 400) {
+                        console.warn(response);
+                        throw new Error("Bad response from server");
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    let start = parseInt(data.size);
+                    if (data.dependencySizes) {
+                        data.dependencySizes.forEach(sz => {
+                            start += parseInt(sz.approximateSize);
+                        });
+                    }
+                    console.warn("!!!!" + num, filesize(start, { bits: true, base: 10 }));
+                    resolve(data);
+                });
             });
             console.log(num, filesize(ssss.size));
         }

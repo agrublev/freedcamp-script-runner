@@ -8,8 +8,12 @@ const fs = require("fs");
 const util = require("util");
 const scriptsMdFile = path.join(process.cwd(), ".fscripts.md");
 const toc = require("markdown-toc");
+const configManager = require("./config-manager.js");
 
-async function updateConfig(conf) {
+async function updateConfig() {
+    //conf
+    await configManager.init();
+    let conf = configManager;
     let getLastUpdateMd = fs.statSync(path.join(rootDir, "./.fscripts.md"));
     getLastUpdateMd = new Date(util.inspect(getLastUpdateMd.mtime)).getTime();
     let confLastUpdatedMd = conf.get("lastUpdateConfig");
@@ -32,8 +36,8 @@ async function updateConfig(conf) {
             }
             conf.set("tasks", tasks);
             conf.set("categories", parsedFile.categories);
-
-            await conf.updateConfigFile();
+            //await
+            conf.updateConfigFile();
             let fileMd = fs.readFileSync(scriptsMdFile, "utf8");
             fileMd = fileMd.replace(/(<!-- toc -->(\s|\S)*?<!-- tocstop -->)/g, "").trim();
 

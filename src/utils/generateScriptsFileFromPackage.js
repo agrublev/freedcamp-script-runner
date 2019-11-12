@@ -22,6 +22,7 @@ gen.decrypt = async (pass, encryptedFile, decryptedFile) => {
 gen.init = async () => {
     try {
         gen.packageJson = await readJson(packagePath);
+        console.log("WHAT", gen.packageJson.scripts);
         Object.keys(gen.packageJson.scripts).forEach(scriptName => {
             mdfile += `\n## ${scriptName}\n\nTBD\n\n\`\`\`bash\n${
                 gen.packageJson.scripts[scriptName]
@@ -33,5 +34,4 @@ gen.init = async () => {
     }
 };
 
-gen.init();
-// module.exports = cr;
+module.exports = gen;

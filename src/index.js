@@ -1,8 +1,26 @@
-#!/usr/bin/env node
-const helpers = require("./helpers/index.js");
-helpers.versionUpdater();
+const express = require("express");
 
-// helpers.clearFirstRun();
-//
-// console.log(helpers.isFirstRun());
-//
+const app = express();
+
+app.get("/", async (req, res) => {
+    try {
+        const thing = await Promise.resolve({ one: "t111wo" }); // async/await!
+        return res.json({ ...thing, hello: "world" }); // object-rest-spread!
+    } catch (e) {
+        return res.json({ error: e.message });
+    }
+});
+const port = process.env.PORT || 3000;
+
+app.listen(port, err => {
+    if (err) {
+        console.error(err);
+    }
+
+    if (__DEV__) {
+        // webpack flags!
+        console.log("> in development");
+    }
+
+    console.log(`> listening on port ${port}`);
+});

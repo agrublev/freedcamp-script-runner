@@ -24,25 +24,25 @@ const runTask = async (name, conf = false) => {
         input
             ? chalk.hex("#4b5150")(" Running: ") + chalk.bold.underline.hex("#438b34")(name)
             : boxen(
-                  chalk.hex("#717877")(" Running: ") +
-                      chalk.bold.underline.hex("#438b34")(name) +
-                      chalk.hex("#717877")(" "),
-                  {
-                      padding: 0,
-                      margin: { left: 2, top: 0, bottom: 0, right: 0 },
-                      borderStyle: {
-                          topLeft: chalk.hex("#5a596d")("╔"),
-                          topRight: chalk.hex("#5a596d")("╗"),
-                          bottomLeft: chalk.hex("#5a596d")("╚"),
-                          bottomRight: chalk.hex("#5a596d")("╝"),
-                          horizontal: chalk.hex("#5a596d")("═"),
-                          vertical: chalk.hex("#5a596d")("║")
-                      }, //"round",
-                      // dimBorder: true,
-                      align: "center" //,
-                      // float: "center"
-                  }
-              )
+            chalk.hex("#717877")(" Running: ") +
+            chalk.bold.underline.hex("#438b34")(name) +
+            chalk.hex("#717877")(" "),
+            {
+                padding: 0,
+                margin: { left: 2, top: 0, bottom: 0, right: 0 },
+                borderStyle: {
+                    topLeft: chalk.hex("#5a596d")("╔"),
+                    topRight: chalk.hex("#5a596d")("╗"),
+                    bottomLeft: chalk.hex("#5a596d")("╚"),
+                    bottomRight: chalk.hex("#5a596d")("╝"),
+                    horizontal: chalk.hex("#5a596d")("═"),
+                    vertical: chalk.hex("#5a596d")("║")
+                }, //"round",
+                // dimBorder: true,
+                align: "center" //,
+                // float: "center"
+            }
+            )
     );
     try {
         let pars = command.split(" ");
@@ -63,6 +63,7 @@ const runTask = async (name, conf = false) => {
             });
             output.stderr.on("data", code => {
                 code = code + "";
+
                 console.log(
                     `${chalk.bgHex("#181c24").hex("#a72e32")(
                         moment().format("HH:MM:SS") + "ERR :"

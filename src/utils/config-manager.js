@@ -25,7 +25,9 @@ cM.init = async () => {
 };
 
 cM.set = (key, json) => {
-    cM.config.set(projectDir + "." + key, json);
+    if (json !== undefined && typeof json === "object") {
+        cM.config.set(projectDir + "." + key, json);
+    }
 };
 
 // prettier-ignore
@@ -36,7 +38,9 @@ cM.get = (key, def = "") => {
 
 cM.serialize = () => {
     cM.localConfig = cM.config.get(projectDir);
-    return JSON.parse(JSON.stringify(cM.localConfig)); //
+    if (cM.localConfig) {
+        return JSON.parse(JSON.stringify(cM.localConfig)); //
+    }
 };
 
 cM.updateConfigFile = async () => {
