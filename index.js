@@ -1,22 +1,37 @@
-#!/usr/bin/env node
 const bump = require("./lib/release/bump.js");
 const chalk = require("chalk");
-const generateFScripts = require("./lib/generateFScripts.js");
-const parseScriptFile = require("./lib/parseScriptsMd.js");
-// const parseScriptPackage = require("./lib/parseScriptsPackage");
-const generateToc = require("./lib/generateToc");
+const { generateFScripts, generateToc } = require("./lib/generators");
+const parseScriptFile = require("./lib/parsers/parseScriptsMd.js");
 const upgradePackages = require("./lib/upgradePackages");
-const runSequence = require("./lib/runSequence");
-const runParallel = require("./lib/runParallel");
-const runCLICommand = require("./lib/runCLICommand");
+const { runSequence, runParallel, runCLICommand } = require("./lib/running");
 const { startPackageScripts, startScripts, clearRecent } = require("./lib/startScripts.js");
 const taskName = chalk.rgb(39, 173, 96).bold.underline;
 const textDescription = chalk.rgb(159, 161, 181);
 const optionList = require("./lib/optionList");
 const validateNotInDev = require("./lib/git/validateNotDev.js");
 const encrypt = require("./lib/encryption/encryption");
+const { clear } = require("./lib/utils/index");
+
+require("./lib/utils/console");
+
+const runCmd = async (app, argsList = []) => {
+    const { spawn } = require("child_process");
+    let shell;
+
+    shell = spawn(app, argsList, {
+        stdio: "inherit",
+        cwd: process.cwd(),
+        env: { ...process.env, ...{ FORCE_COLOR: true } }
+    });
+    return new Promise(resolve => {
+        shell.on("close", code => {
+            resolve();
+        });
+    });
+};
 
 (async () => {
+    clear();
     const argv = require("yargs")
         .usage("Usage: $0 <command> [options]")
 
@@ -43,11 +58,17 @@ const encrypt = require("./lib/encryption/encryption");
          * fsr
          * start --
          */
-        .command("start", "Choose category then task to run", yargs => {}, async function() {
-            if ((await startScripts()) === false) {
-                await startPackageScripts();
+        .usage("$0 <task> name:of:task")
+        .command(
+            "start",
+            "Choose category then task to run",
+            yargs => {},
+            async () => {
+                await startScripts(); // if ((await startScripts()) === false) {
+                //     await startPackageScripts();
+                // }
             }
-        })
+        )
         .example(`${taskName("$0 start")}`, `${textDescription("Open a task selection selector")}`)
 
         /**
@@ -78,26 +99,37 @@ const encrypt = require("./lib/encryption/encryption");
          * fsr
          * run --
          */
-        .command("run", "Run a specific task", () => {}, async function(argv) {
-            let task = argv._[1];
-            const FcScripts = await parseScriptFile();
-            let taskIndex = FcScripts.allTasks.findIndex(t => t.name === task);
-            let taskData = FcScripts.allTasks[taskIndex];
-            let runCommand = taskData["script"].split(" ");
-            let type = runCommand.shift();
-            let params = runCommand.join(" ");
-            let args = Object.keys(argv)
-                .filter(e => e !== "_" && e !== "$0")
-                .map(e => ` --${e}=${argv[e]}`);
-            params += " " + args.join(" ");
-            await runCLICommand({
-                task: { name: task },
-                script: {
-                    type: type,
-                    rest: params.split(" ")
+        .command(
+            "run [task]",
+            "Run a specific task",
+            yargs => {
+                yargs.positional("task", {
+                    describe: "name of task to start",
+                    default: ""
+                });
+            },
+            async function(argv) {
+                let { task } = argv;
+                const { allTasks } = await parseScriptFile();
+                const taskData = allTasks.find(t => t.name === task);
+                if (!taskData) {
+                    console.error(`${chalk.bold.underline.red("Task not found")}`);
+                    return;
                 }
-            });
-        })
+                let { script, lang } = taskData;
+                let type = script.split(" ");
+
+                await runCLICommand({
+                    task: { name: task },
+                    script: {
+                        lang: lang,
+                        type: type.shift(),
+                        full: script,
+                        rest: script.split(" ").slice(1)
+                    }
+                });
+            }
+        )
         .example(`${taskName("$0 run start:web")}`, `${textDescription("Run task 'start:web'")}`)
 
         /**
@@ -148,6 +180,7 @@ const encrypt = require("./lib/encryption/encryption");
         .command("run-p", "Run tasks in parallel", () => {}, async function(argv) {
             let tasks = argv._.slice();
             tasks.shift();
+
             const FcScripts = await parseScriptFile();
             await runParallel(tasks, FcScripts);
         })
@@ -195,7 +228,8 @@ const encrypt = require("./lib/encryption/encryption");
             "Generate updated Table of Contents on top of the fscripts.md file",
             () => {},
             async function(argv) {
-                await generateToc();
+                let mdFile = argv._[1];
+                await generateToc(mdFile);
             }
         )
         .example(
@@ -208,11 +242,9 @@ const encrypt = require("./lib/encryption/encryption");
     if (argv._.length === 0) {
         (async function() {
             const choice = await optionList();
+
             if (choice) {
-                await runCLICommand(
-                    { task: { name: choice }, script: { type: "fsr", rest: [choice] } },
-                    true
-                );
+                await runCmd("yarn", ["fsr", choice]);
             } else {
                 console.log(chalk.green.bold("See you soon!"));
             }
