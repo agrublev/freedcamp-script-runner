@@ -16,4 +16,5 @@ const inquirer = require("inquirer");
             console.log(`${chalk.green("CHOSEN ", category)}`);
         });
     console.log(`${chalk.green("POST INPUT")}`);
+    console.log("NODEENV", process.env.INPUT);
 })();

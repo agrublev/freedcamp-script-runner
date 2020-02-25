@@ -117,15 +117,28 @@ const runCmd = async (app, argsList = []) => {
                     return;
                 }
                 let { script, lang } = taskData;
-                let type = script.split(" ");
-
+                let pars = script.split(" ");
+                let type = pars[0];
+                let env = {};
+                if (pars[0].includes("=")) {
+                    let envs = type.split("=");
+                    env[envs[0]] = envs[1];
+                    type = pars[1];
+                    pars.shift();
+                    pars.shift();
+                    script = pars.join(" ");
+                } else {
+                    pars.shift();
+                    script = pars.join(" ");
+                }
                 await runCLICommand({
                     task: { name: task },
                     script: {
                         lang: lang,
-                        type: type.shift(),
+                        env: env,
+                        type: type,
                         full: script,
-                        rest: script.split(" ").slice(1)
+                        rest: script.split(" ")
                     }
                 });
             }
