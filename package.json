@@ -1,6 +1,6 @@
 {
     "name": "fscr",
-    "version": "2.0.4",
+    "version": "5.0.1",
     "description": "Runs the fscripts.md file",
     "main": "./dist/index.js",
     "scripts": {
