@@ -165,9 +165,8 @@ const runCmd = async (app, argsList = []) => {
          * bump --
          */
         .command("bump", "Bump package.json and beautify it!", () => {}, async function(argv) {
-            let shouldNotPretty = argv.pretty;
             let type = argv.type;
-            await bump(shouldNotPretty, type);
+            await bump(type);
         })
         .example(`${taskName("$0 bump")}`, `${textDescription("BUMPED AND PRETTY!")}`)
 

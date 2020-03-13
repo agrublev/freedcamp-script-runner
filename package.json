@@ -1,15 +1,13 @@
 {
     "name": "fscr",
-    "version": "2.0.2",
+    "version": "2.0.4",
     "description": "Runs the fscripts.md file",
     "main": "./dist/index.js",
     "scripts": {
-        "ab:run-s": "parcel build runall/lib/index.js --target node  --no-cache --no-source-maps -o lib.js",
-        "b:run-s": "babel runall/lib/index.js --ignore 'node_modules' -q --no-stdin -o lib.js",
         "prebuild": "rimraf dist/*",
         "build": "run-p build:index build:lib",
-        "build:index": "babel index.js --ignore 'node_modules' -q --no-stdin --out-file dist/index.js",
-        "build:lib": "babel lib --ignore 'node_modules' -q --no-stdin --out-dir dist/lib",
+        "build:index": "babel index.js --ignore 'node_modules' --out-file dist/index.js",
+        "build:lib": "babel lib --ignore 'node_modules' --out-dir dist/lib",
         "fsr": "node dist/index.js",
         "release": "run-s release:bump release:clean release:build release:publish",
         "release:build": "parcel build index.js --target node --no-cache --bundle-node-modules --no-source-maps",
@@ -19,9 +17,9 @@
         "release:publish": "node lib/release/publish.js",
         "start": "run-s build start:run",
         "start:basic": "babel-node index.js",
-        "start:build": "babel-node index.js --ignore 'node_modules' -q --no-stdin",
+        "start:build": "babel-node index.js --ignore 'node_modules'",
         "start:run": "node dist/index.js",
-        "start:watch": "nodemon --watch lib --watch index.js --ext js --exec babel-node index.js --ignore 'node_modules' -q --no-stdin",
+        "start:watch": "nodemon --watch lib --watch index.js --ext js --exec babel-node index.js --ignore 'node_modules'",
         "test1": "echo 'yolo' && sleep 2 && echo 1",
         "test2": "echo '2yolo' && sleep 2 && echo 22",
         "zb:run-s": "parcel build runall/run-s/index.js --target node  --bundle-node-modules --no-cache --no-source-maps -o runs.js"
@@ -82,7 +80,6 @@
         "simple-git": "^1.126.0",
         "sort-object-keys": "^1.1.2",
         "staged-git-files": "^1.2.0",
-        "versiony": "^2.0.1",
         "yargs": "^14.0.0"
     },
     "devDependencies": {
