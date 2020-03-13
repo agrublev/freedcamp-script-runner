@@ -7,4 +7,4 @@ freedcamp-script-runner-v*.tgz
 back
 dist
 config.json
-
+.DS_Store
