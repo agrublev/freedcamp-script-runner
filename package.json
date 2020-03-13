@@ -20,6 +20,7 @@
         "start:build": "babel-node index.js --ignore 'node_modules'",
         "start:run": "node dist/index.js",
         "start:watch": "nodemon --watch lib --watch index.js --ext js --exec babel-node index.js --ignore 'node_modules'",
+        "docs": "npx cli-docs-generator --cli=./bin",
         "test1": "echo 'yolo' && sleep 2 && echo 1",
         "test2": "echo '2yolo' && sleep 2 && echo 22",
         "zb:run-s": "parcel build runall/run-s/index.js --target node  --bundle-node-modules --no-cache --no-source-maps -o runs.js"
