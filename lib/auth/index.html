@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>FC Auth</title>
+    </head>
+    <body>
+        <h2>Login with your Freedcamp email!!</h2>
+        <script
+            src="https://code.jquery.com/jquery-1.12.4.min.js"
+            integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+            crossorigin="anonymous"
+        ></script>
+        <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-remote-config.js"></script>
+        <script>
+            function close_window() {
+                fetch("http://localhost:5252/oauth2callback", {
+                    method: "POST", // or 'PUT'
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ error: true }),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        console.log("Success:", data);
+                        window.close();
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                    });
+            }
+
+            // TODO: Replace the following with your app's Firebase project configuration
+            var firebaseConfig = {
+                apiKey: "AIzaSyDRJsWtXyXRViUo_cmTLhcw6p2_mub5mfA",
+                authDomain: "config-c0c90.firebaseapp.com",
+                databaseURL: "https://config-c0c90.firebaseio.com",
+                projectId: "config-c0c90",
+                storageBucket: "config-c0c90.appspot.com",
+                messagingSenderId: "741778871254",
+                appId: "1:741778871254:web:2d534f788271a898d1ca77",
+            };
+
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+            var db = firebase.firestore();
+
+            var provider = new firebase.auth.GoogleAuthProvider();
+            provider.addScope("https://www.googleapis.com/auth/cloud-platform");
+
+            function getConfig() {
+                return new Promise((resolve) => {
+                    db.collection("config")
+                        .doc("data")
+                        .get()
+                        .then(function (doc) {
+                            fetch("http://localhost:5252/oauth2callback", {
+                                method: "POST", // or 'PUT'
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify(doc.data()),
+                            })
+                                .then((response) => response.json())
+                                .then((data) => {
+                                    console.log("Success:", data);
+                                    window.close();
+                                    resolve();
+                                })
+                                .catch((error) => {
+                                    console.error("Error:", error);
+                                    resolve();
+                                });
+                        })
+                        .catch(function (error) {
+                            $("body").append(`<div>
+<h2>ERROR INVALID LOGIN!</h2>
+<hr/>
+<a href="#" id="tryagain">Try again</a>
+<a href="#" onclick="close_window();return false;">close</a>
+
+</div>`);
+                            console.log("Error getting cached document:", error);
+                        });
+                });
+            }
+
+            $(function () {
+                var user = firebase.auth().currentUser;
+                if (user) {
+                    getConfig();
+                } else {
+                    firebase
+                        .auth()
+                        .setPersistence(firebase.auth.Auth.Persistence.SESSION)
+                        .then(function () {
+                            return firebase
+                                .auth()
+                                .signInWithPopup(provider)
+                                .then(function () {
+                                    getConfig();
+                                })
+                                .catch(function (error) {
+                                    console.error(error);
+                                });
+                        })
+                        .catch(function (error) {
+                            console.error(error);
+                        });
+                }
+
+                $("body").on("click", "#tryagain", function (e) {
+                    e.preventDefault();
+                    firebase
+                        .auth()
+                        .signOut()
+                        .then(function () {
+                            window.location.reload();
+                        })
+                        .catch(function (error) {
+                            // An error happened.
+                        });
+                });
+            });
+        </script>
+    </body>
+</html>

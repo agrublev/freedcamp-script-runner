@@ -8,6 +8,8 @@ var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/de
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
+var _startScripts = require("./lib/startScripts");
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -46,14 +48,12 @@ var encrypt = require("./lib/encryption/encryption");
 var _require4 = require("./lib/utils/index"),
     clear = _require4.clear;
 
+var authConfig = require("./lib/auth/auth-conf");
+
 require("./lib/utils/console");
 
-var runCmd =
-/*#__PURE__*/
-function () {
-  var _ref = (0, _asyncToGenerator2["default"])(
-  /*#__PURE__*/
-  _regenerator["default"].mark(function _callee(app) {
+var runCmd = /*#__PURE__*/function () {
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(app) {
     var argsList,
         _require5,
         spawn,
@@ -92,24 +92,18 @@ function () {
   };
 }();
 
-(0, _asyncToGenerator2["default"])(
-/*#__PURE__*/
-_regenerator["default"].mark(function _callee17() {
+(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee19() {
   var argv;
-  return _regenerator["default"].wrap(function _callee17$(_context17) {
+  return _regenerator["default"].wrap(function _callee19$(_context19) {
     while (1) {
-      switch (_context17.prev = _context17.next) {
+      switch (_context19.prev = _context19.next) {
         case 0:
           clear();
           argv = require("yargs").usage("Usage: $0 <command> [options]")
           /**
            *  fsr
            */
-          .command("", "Choose a script runner command", function (yargs) {},
-          /*#__PURE__*/
-          (0, _asyncToGenerator2["default"])(
-          /*#__PURE__*/
-          _regenerator["default"].mark(function _callee2() {
+          .command("", "Choose a script runner command", function (yargs) {}, /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
             return _regenerator["default"].wrap(function _callee2$(_context2) {
               while (1) {
                 switch (_context2.prev = _context2.next) {
@@ -123,11 +117,7 @@ _regenerator["default"].mark(function _callee17() {
           /**
            *  fsr
            */
-          .command("branch", "Create new branch instead of Development", function (yargs) {},
-          /*#__PURE__*/
-          (0, _asyncToGenerator2["default"])(
-          /*#__PURE__*/
-          _regenerator["default"].mark(function _callee3() {
+          .command("branch", "Create new branch instead of Development", function (yargs) {}, /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
             return _regenerator["default"].wrap(function _callee3$(_context3) {
               while (1) {
                 switch (_context3.prev = _context3.next) {
@@ -146,11 +136,7 @@ _regenerator["default"].mark(function _callee17() {
            * fsr
            * start --
            */
-          .usage("$0 <task> name:of:task").command("start", "Choose category then task to run", function (yargs) {},
-          /*#__PURE__*/
-          (0, _asyncToGenerator2["default"])(
-          /*#__PURE__*/
-          _regenerator["default"].mark(function _callee4() {
+          .usage("$0 <task> name:of:task").command("start", "Choose category then task to run", function (yargs) {}, /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4() {
             return _regenerator["default"].wrap(function _callee4$(_context4) {
               while (1) {
                 switch (_context4.prev = _context4.next) {
@@ -169,11 +155,7 @@ _regenerator["default"].mark(function _callee17() {
            * fsr
            * scripts --
            */
-          .command("scripts", "Choose a script from package.json", function (yargs) {},
-          /*#__PURE__*/
-          (0, _asyncToGenerator2["default"])(
-          /*#__PURE__*/
-          _regenerator["default"].mark(function _callee5() {
+          .command("scripts", "Choose a script from package.json", function (yargs) {}, /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5() {
             return _regenerator["default"].wrap(function _callee5$(_context5) {
               while (1) {
                 switch (_context5.prev = _context5.next) {
@@ -192,12 +174,8 @@ _regenerator["default"].mark(function _callee17() {
            * fsr
            * list --
            */
-          .command("list", "Select any task with text autocompletion", function () {},
-          /*#__PURE__*/
-          function () {
-            var _ref7 = (0, _asyncToGenerator2["default"])(
-            /*#__PURE__*/
-            _regenerator["default"].mark(function _callee6(argv) {
+          .command("list", "Select any task with text autocompletion", function () {}, /*#__PURE__*/function () {
+            var _ref7 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6(argv) {
               return _regenerator["default"].wrap(function _callee6$(_context6) {
                 while (1) {
                   switch (_context6.prev = _context6.next) {
@@ -226,13 +204,9 @@ _regenerator["default"].mark(function _callee17() {
               describe: "name of task to start",
               "default": ""
             });
-          },
-          /*#__PURE__*/
-          function () {
-            var _ref8 = (0, _asyncToGenerator2["default"])(
-            /*#__PURE__*/
-            _regenerator["default"].mark(function _callee7(argv) {
-              var task, _ref9, allTasks, taskData, script, lang, pars, type, env, envs;
+          }, /*#__PURE__*/function () {
+            var _ref8 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee7(argv) {
+              var task, _yield$parseScriptFil, allTasks, taskData, script, lang, pars, type, env, envs;
 
               return _regenerator["default"].wrap(function _callee7$(_context7) {
                 while (1) {
@@ -243,8 +217,8 @@ _regenerator["default"].mark(function _callee17() {
                       return parseScriptFile();
 
                     case 3:
-                      _ref9 = _context7.sent;
-                      allTasks = _ref9.allTasks;
+                      _yield$parseScriptFil = _context7.sent;
+                      allTasks = _yield$parseScriptFil.allTasks;
                       taskData = allTasks.find(function (t) {
                         return t.name === task;
                       });
@@ -305,12 +279,8 @@ _regenerator["default"].mark(function _callee17() {
            * fsr
            * upgrade --
            */
-          .command("upgrade", "Upgrade all your packages except ones specified by 'ignore-upgrade':[]", function () {},
-          /*#__PURE__*/
-          function () {
-            var _ref10 = (0, _asyncToGenerator2["default"])(
-            /*#__PURE__*/
-            _regenerator["default"].mark(function _callee8(argv) {
+          .command("upgrade", "Upgrade all your packages except ones specified by 'ignore-upgrade':[]", function () {}, /*#__PURE__*/function () {
+            var _ref9 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee8(argv) {
               var task;
               return _regenerator["default"].wrap(function _callee8$(_context8) {
                 while (1) {
@@ -329,19 +299,15 @@ _regenerator["default"].mark(function _callee17() {
             }));
 
             return function (_x4) {
-              return _ref10.apply(this, arguments);
+              return _ref9.apply(this, arguments);
             };
           }()).example("".concat(taskName("$0 upgrade")), "".concat(textDescription("Upgraded!")))
           /**
            * fsr
            * bump --
            */
-          .command("bump", "Bump package.json and beautify it!", function () {},
-          /*#__PURE__*/
-          function () {
-            var _ref11 = (0, _asyncToGenerator2["default"])(
-            /*#__PURE__*/
-            _regenerator["default"].mark(function _callee9(argv) {
+          .command("bump", "Bump package.json and beautify it!", function () {}, /*#__PURE__*/function () {
+            var _ref10 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee9(argv) {
               var type;
               return _regenerator["default"].wrap(function _callee9$(_context9) {
                 while (1) {
@@ -360,19 +326,15 @@ _regenerator["default"].mark(function _callee17() {
             }));
 
             return function (_x5) {
-              return _ref11.apply(this, arguments);
+              return _ref10.apply(this, arguments);
             };
           }()).example("".concat(taskName("$0 bump")), "".concat(textDescription("BUMPED AND PRETTY!")))
           /**
            * fsr
            * run-s --
            */
-          .command("run-s", "Run a set of tasks one after another", function () {},
-          /*#__PURE__*/
-          function () {
-            var _ref12 = (0, _asyncToGenerator2["default"])(
-            /*#__PURE__*/
-            _regenerator["default"].mark(function _callee10(argv) {
+          .command("run-s", "Run a set of tasks one after another", function () {}, /*#__PURE__*/function () {
+            var _ref11 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee10(argv) {
               var tasks, FcScripts;
               return _regenerator["default"].wrap(function _callee10$(_context10) {
                 while (1) {
@@ -397,19 +359,15 @@ _regenerator["default"].mark(function _callee17() {
             }));
 
             return function (_x6) {
-              return _ref12.apply(this, arguments);
+              return _ref11.apply(this, arguments);
             };
           }()).example("".concat(taskName("$0 run-s start:web start:desktop")), "".concat(textDescription("Run task 'start:web' and afterwards 'start:desktop'")))
           /**
            * fsr
            * run-p --
            */
-          .command("run-p", "Run tasks in parallel", function () {},
-          /*#__PURE__*/
-          function () {
-            var _ref13 = (0, _asyncToGenerator2["default"])(
-            /*#__PURE__*/
-            _regenerator["default"].mark(function _callee11(argv) {
+          .command("run-p", "Run tasks in parallel", function () {}, /*#__PURE__*/function () {
+            var _ref12 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee11(argv) {
               var tasks, FcScripts;
               return _regenerator["default"].wrap(function _callee11$(_context11) {
                 while (1) {
@@ -434,25 +392,21 @@ _regenerator["default"].mark(function _callee17() {
             }));
 
             return function (_x7) {
-              return _ref13.apply(this, arguments);
+              return _ref12.apply(this, arguments);
             };
           }()).example("".concat(taskName("$0 run-p start:web start:desktop")), "".concat(textDescription("Run task 'start:web' and at the same time 'start:desktop'")))
           /**
            * fsr
-           * encryption --
+           * remote config --
            */
-          .command("encryption", "Encrypt/Decrypt secret files", function () {},
-          /*#__PURE__*/
-          function () {
-            var _ref14 = (0, _asyncToGenerator2["default"])(
-            /*#__PURE__*/
-            _regenerator["default"].mark(function _callee12(argv) {
+          .command("remote", "Get remote configuration", function () {}, /*#__PURE__*/function () {
+            var _ref13 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee12(argv) {
               return _regenerator["default"].wrap(function _callee12$(_context12) {
                 while (1) {
                   switch (_context12.prev = _context12.next) {
                     case 0:
                       _context12.next = 2;
-                      return encrypt.init();
+                      return authConfig()["catch"](console.error);
 
                     case 2:
                     case "end":
@@ -463,25 +417,21 @@ _regenerator["default"].mark(function _callee17() {
             }));
 
             return function (_x8) {
-              return _ref14.apply(this, arguments);
+              return _ref13.apply(this, arguments);
             };
-          }()).example("".concat(taskName("$0 encryption")), "".concat(textDescription("Encrypt/Decrypt secret files")))
+          }()).example("".concat(taskName("$0 remote")), "".concat(textDescription("Get remote config")))
           /**
            * fsr
-           * clear --
+           * encryption --
            */
-          .command("clear", "Clear recent task history", function () {},
-          /*#__PURE__*/
-          function () {
-            var _ref15 = (0, _asyncToGenerator2["default"])(
-            /*#__PURE__*/
-            _regenerator["default"].mark(function _callee13(argv) {
+          .command("encryption", "Encrypt/Decrypt secret files", function () {}, /*#__PURE__*/function () {
+            var _ref14 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee13(argv) {
               return _regenerator["default"].wrap(function _callee13$(_context13) {
                 while (1) {
                   switch (_context13.prev = _context13.next) {
                     case 0:
                       _context13.next = 2;
-                      return clearRecent();
+                      return encrypt.init();
 
                     case 2:
                     case "end":
@@ -492,20 +442,21 @@ _regenerator["default"].mark(function _callee17() {
             }));
 
             return function (_x9) {
-              return _ref15.apply(this, arguments);
+              return _ref14.apply(this, arguments);
             };
-          }()).example("".concat(taskName("$0 clear")), "".concat(textDescription("Clear your recently run tasks"))).command("generate", "Generate a sample fscripts.md file from the package.json", function () {},
-          /*#__PURE__*/
-          function () {
-            var _ref16 = (0, _asyncToGenerator2["default"])(
-            /*#__PURE__*/
-            _regenerator["default"].mark(function _callee14(argv) {
+          }()).example("".concat(taskName("$0 encryption")), "".concat(textDescription("Encrypt/Decrypt secret files")))
+          /**
+           * fsr
+           * clear --
+           */
+          .command("clear", "Clear recent task history", function () {}, /*#__PURE__*/function () {
+            var _ref15 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee14(argv) {
               return _regenerator["default"].wrap(function _callee14$(_context14) {
                 while (1) {
                   switch (_context14.prev = _context14.next) {
                     case 0:
                       _context14.next = 2;
-                      return generateFScripts();
+                      return clearRecent();
 
                     case 2:
                     case "end":
@@ -516,24 +467,28 @@ _regenerator["default"].mark(function _callee17() {
             }));
 
             return function (_x10) {
-              return _ref16.apply(this, arguments);
+              return _ref15.apply(this, arguments);
             };
-          }()).example("".concat(taskName("$0 generate")), "".concat(textDescription("Generates a sample.fscripts.md you can use as template for your fscripts file"))).command("toc", "Generate updated Table of Contents on top of the fscripts.md file", function () {},
-          /*#__PURE__*/
-          function () {
-            var _ref17 = (0, _asyncToGenerator2["default"])(
-            /*#__PURE__*/
-            _regenerator["default"].mark(function _callee15(argv) {
-              var mdFile;
+          }()).example("".concat(taskName("$0 clear")), "".concat(textDescription("Clear your recently run tasks")))
+          /**
+           * fsr
+           * config --
+           */
+          .command("config", "Update a config value", function () {}, /*#__PURE__*/function () {
+            var _ref16 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee15(argv) {
+              var key;
               return _regenerator["default"].wrap(function _callee15$(_context15) {
                 while (1) {
                   switch (_context15.prev = _context15.next) {
                     case 0:
-                      mdFile = argv._[1];
-                      _context15.next = 3;
-                      return generateToc(mdFile);
+                      key = argv._.slice();
+                      console.log("--- INFO ", key[0], key[1]);
+                      key = !key[0] ? false : key[0] === "config" && key[1] ? key[1] : key[0];
+                      console.log("--- INFO2 ", key);
+                      _context15.next = 6;
+                      return (0, _startScripts.updateConfig)(key);
 
-                    case 3:
+                    case 6:
                     case "end":
                       return _context15.stop();
                   }
@@ -542,35 +497,75 @@ _regenerator["default"].mark(function _callee17() {
             }));
 
             return function (_x11) {
-              return _ref17.apply(this, arguments);
+              return _ref16.apply(this, arguments);
             };
-          }()).example("".concat(taskName("$0 toc")), "".concat(textDescription("Generate updated Table of Contents on top of the fscripts.md file"))).argv;
-
-          if (argv._.length === 0) {
-            (0, _asyncToGenerator2["default"])(
-            /*#__PURE__*/
-            _regenerator["default"].mark(function _callee16() {
-              var choice;
+          }()).example("".concat(taskName("$0 config")), "".concat(textDescription("Update a config value"))).command("generate", "Generate a sample fscripts.md file from the package.json", function () {}, /*#__PURE__*/function () {
+            var _ref17 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee16(argv) {
               return _regenerator["default"].wrap(function _callee16$(_context16) {
                 while (1) {
                   switch (_context16.prev = _context16.next) {
                     case 0:
                       _context16.next = 2;
+                      return generateFScripts();
+
+                    case 2:
+                    case "end":
+                      return _context16.stop();
+                  }
+                }
+              }, _callee16);
+            }));
+
+            return function (_x12) {
+              return _ref17.apply(this, arguments);
+            };
+          }()).example("".concat(taskName("$0 generate")), "".concat(textDescription("Generates a sample.fscripts.md you can use as template for your fscripts file"))).command("toc", "Generate updated Table of Contents on top of the fscripts.md file", function () {}, /*#__PURE__*/function () {
+            var _ref18 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee17(argv) {
+              var mdFile;
+              return _regenerator["default"].wrap(function _callee17$(_context17) {
+                while (1) {
+                  switch (_context17.prev = _context17.next) {
+                    case 0:
+                      mdFile = argv._[1];
+                      _context17.next = 3;
+                      return generateToc(mdFile);
+
+                    case 3:
+                    case "end":
+                      return _context17.stop();
+                  }
+                }
+              }, _callee17);
+            }));
+
+            return function (_x13) {
+              return _ref18.apply(this, arguments);
+            };
+          }()).example("".concat(taskName("$0 toc")), "".concat(textDescription("Generate updated Table of Contents on top of the fscripts.md file"))).argv;
+
+          if (argv._.length === 0) {
+            (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee18() {
+              var choice;
+              return _regenerator["default"].wrap(function _callee18$(_context18) {
+                while (1) {
+                  switch (_context18.prev = _context18.next) {
+                    case 0:
+                      _context18.next = 2;
                       return optionList();
 
                     case 2:
-                      choice = _context16.sent;
+                      choice = _context18.sent;
 
                       if (!choice) {
-                        _context16.next = 8;
+                        _context18.next = 8;
                         break;
                       }
 
-                      _context16.next = 6;
+                      _context18.next = 6;
                       return runCmd("yarn", ["fsr", choice]);
 
                     case 6:
-                      _context16.next = 9;
+                      _context18.next = 9;
                       break;
 
                     case 8:
@@ -578,17 +573,17 @@ _regenerator["default"].mark(function _callee17() {
 
                     case 9:
                     case "end":
-                      return _context16.stop();
+                      return _context18.stop();
                   }
                 }
-              }, _callee16);
+              }, _callee18);
             }))();
           }
 
         case 3:
         case "end":
-          return _context17.stop();
+          return _context19.stop();
       }
     }
-  }, _callee17);
+  }, _callee19);
 }))();
