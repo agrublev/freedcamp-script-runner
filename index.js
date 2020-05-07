@@ -24,7 +24,7 @@ const runCmd = async (app, argsList = []) => {
     shell = spawn(app, argsList, {
         stdio: "inherit",
         cwd: process.cwd(),
-        env: { ...process.env, ...{ FORCE_COLOR: true } },
+        env: { ...process.env, ...{ FORCE_COLOR: true } }
     });
     return new Promise((resolve) => {
         shell.on("close", (code) => {
@@ -121,7 +121,7 @@ const runCmd = async (app, argsList = []) => {
             (yargs) => {
                 yargs.positional("task", {
                     describe: "name of task to start",
-                    default: "",
+                    default: ""
                 });
             },
             async function (argv) {
@@ -154,8 +154,8 @@ const runCmd = async (app, argsList = []) => {
                         env: env,
                         type: type,
                         full: script,
-                        rest: script.split(" "),
-                    },
+                        rest: script.split(" ")
+                    }
                 });
             }
         )

@@ -1,6 +1,6 @@
 {
     "name": "fscr",
-    "version": "5.1.0",
+    "version": "5.1.1",
     "description": "Runs the fscripts.md file",
     "main": "./dist/index.js",
     "scripts": {
@@ -9,12 +9,13 @@
         "build:index": "babel index.js --ignore 'node_modules' --out-file dist/index.js",
         "build:lib": "babel lib --ignore 'node_modules' --out-dir dist/lib --copy-files",
         "fsr": "node dist/index.js",
-        "release": "run-s release:bump release:clean release:build release:publish",
+        "release": "run-s release:bump release:clean release:build release:html release:publish",
         "release:build": "parcel build index.js --target node --no-cache --bundle-node-modules --no-source-maps",
         "release:bump": "yarn fsr bump",
         "release:clean": "rimraf dist",
         "release:combined": "np --any-branch",
         "release:publish": "node lib/release/publish.js",
+        "release:html": "cp lib/auth/index.html dist/index.html",
         "start": "run-s build start:run",
         "start:basic": "babel-node index.js",
         "start:build": "babel-node index.js --ignore 'node_modules'",
