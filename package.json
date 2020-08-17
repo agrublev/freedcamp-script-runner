@@ -1,6 +1,6 @@
 {
     "name": "fscr",
-    "version": "5.2.0",
+    "version": "5.2.1",
     "description": "Runs the fscripts.md file",
     "main": "./dist/index.js",
     "scripts": {
@@ -85,8 +85,7 @@
         "shell-quote": "^1.7.2",
         "simple-git": "^1.132.0",
         "sort-object-keys": "^1.1.3",
-        "staged-git-files": "^1.2.0",
-        "yargs": "^14.2.3"
+        "staged-git-files": "^1.2.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.8.4",
@@ -153,7 +152,8 @@
         "semantic-release": "^17.0.4",
         "term-size": "^2.2.0",
         "terminal-tree": "^0.0.3",
-        "underscore.string": "^3.3.5"
+        "underscore.string": "^3.3.5",
+        "yargs": "^14.2.3"
     },
     "peerDependencies": {
         "chalk": "^2.4.2"
