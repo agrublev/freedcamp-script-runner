@@ -50,4 +50,4 @@ fsr run-s start:web start:utils
 
 ````
 
-## Password for encrypted file is test52 
+## Password for encrypted file is 'secret' 
