@@ -1,6 +1,6 @@
 {
     "name": "fscr",
-    "version": "5.2.3",
+    "version": "5.2.4",
     "description": "Runs the fscripts.md file",
     "main": "./dist/index.js",
     "scripts": {
@@ -55,7 +55,6 @@
         "chalk": "^3.0.0",
         "conf": "^6.2.1",
         "cross-spawn": "^7.0.1",
-        "crypto-js": "^4.0.0",
         "detect-indent": "^6.0.0",
         "enquirer": "^2.3.4",
         "fs-extra": "^9.0.0",
