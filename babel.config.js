@@ -7,6 +7,7 @@ module.exports = {
                 useBuiltIns: "entry",
                 corejs: "3.2.1",
                 loose: true,
+                shippedProposals: true,
                 targets: {
                     node: "current"
                 }
@@ -30,12 +31,6 @@ module.exports = {
             }
         ],
         ["@babel/plugin-syntax-class-properties"],
-        [
-            "@babel/plugin-proposal-class-properties",
-            {
-                loose: true
-            }
-        ],
         "@babel/plugin-proposal-export-default-from",
         "@babel/plugin-transform-runtime"
     ]
