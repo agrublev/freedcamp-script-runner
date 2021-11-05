@@ -1,6 +1,6 @@
 {
     "name": "fscr",
-    "version": "5.3.0",
+    "version": "5.3.1",
     "description": "Runs the fscripts.md file",
     "main": "./dist/index.js",
     "scripts": {
@@ -14,7 +14,7 @@
         "release:bump": "yarn fsr bump",
         "release:clean": "rimraf dist",
         "release:combined": "np --any-branch",
-        "release:publish": "node lib/release/publish.js",
+        "release:publish": "npm publish",
         "start": "run-s build start:run",
         "start:basic": "babel-node index.js",
         "start:build": "babel-node index.js --ignore 'node_modules'",
