@@ -1,5 +1,3 @@
-import { updateConfig } from "./lib/startScripts";
-
 const bump = require("./lib/release/bump.js");
 const chalk = require("chalk");
 const { generateFScripts, generateToc } = require("./lib/generators");
@@ -275,22 +273,6 @@ const runCmd = async (app, argsList = []) => {
             }
         )
         .example(`${taskName("$0 clear")}`, `${textDescription("Clear your recently run tasks")}`)
-        /**
-         * fsr
-         * config --
-         */
-        .command(
-            "config",
-            "Update a config value",
-            () => {},
-            async function (argv) {
-                let key = argv._.slice();
-                console.log("--- INFO ", key[0], key[1]);
-                key = !key[0] ? false : key[0] === "config" && key[1] ? key[1] : key[0];
-                console.log("--- INFO2 ", key);
-                await updateConfig(key);
-            }
-        )
         .example(`${taskName("$0 config")}`, `${textDescription("Update a config value")}`)
         .command(
             "generate",
