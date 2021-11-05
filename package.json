@@ -1,6 +1,6 @@
 {
     "name": "fscr",
-    "version": "5.4.0",
+    "version": "5.4.1",
     "description": "Runs the fscripts.md file",
     "main": "./dist/index.js",
     "scripts": {
@@ -50,6 +50,7 @@
         "fsr": "./bin"
     },
     "dependencies": {
+        "@babel/runtime": "^7.9.2",
         "better-md-2-json": "^1.0.6",
         "boxen": "^4.2.0",
         "chalk": "^3.0.0",
@@ -111,7 +112,6 @@
         "@babel/preset-react": "^7.9.1",
         "@babel/preset-typescript": "^7.9.0",
         "@babel/register": "^7.9.0",
-        "@babel/runtime": "^7.9.2",
         "babel-plugin-add-react-displayname": "^0.0.5",
         "babel-plugin-dynamic-import-node": "^2.3.0",
         "babel-plugin-module-resolver": "^4.0.0",
