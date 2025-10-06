@@ -64,6 +64,8 @@ NODE_ENV=RUNSEQ yarn fsr run-s run:one run:one:d node:script run:three  run:one:
 
 ## run:p
 
+Run parallel
+
 ```bash
 yarn fsr run-p run:one run:one:d node:script run:one  run:one:d run:one run:one:d run:one
 ```
