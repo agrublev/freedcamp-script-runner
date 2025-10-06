@@ -1,6 +1,6 @@
 {
     "name": "fscr",
-    "version": "6.2.1",
+    "version": "6.2.2",
     "description": "Runs the fscripts.md file",
     "type": "module",
     "main": "./dist/index.js",
@@ -69,7 +69,6 @@
         "ink-select-input": "^6.2.0",
         "inquirer": "^12.9.6",
         "is-builtin-module": "^5.0.0",
-        "joycon": "^3.1.1",
         "json-colorz": "^0.2.7",
         "markdown-toc": "^1.2.0",
         "marked": "^16.3.0",
