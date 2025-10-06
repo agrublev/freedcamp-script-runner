@@ -122,30 +122,46 @@ const runCmd = async (app, argsList = []) => {
                     return;
                 }
                 let { script, lang } = taskData;
-                let pars = script.split(" ");
-                let type = pars[0];
-                let env = {};
-                if (pars[0].includes("=")) {
-                    let envs = type.split("=");
-                    env[envs[0]] = envs[1];
-                    type = pars[1];
-                    pars.shift();
-                    pars.shift();
-                    script = pars.join(" ");
+
+                if (lang === "javascript") {
+                    // For JavaScript, use the script as-is without parsing
+                    await runCLICommand({
+                        task: { name: task },
+                        script: {
+                            lang: lang,
+                            env: {},
+                            type: "node",
+                            full: script,
+                            rest: []
+                        }
+                    });
                 } else {
-                    pars.shift();
-                    script = pars.join(" ");
-                }
-                await runCLICommand({
-                    task: { name: task },
-                    script: {
-                        lang: lang,
-                        env: env,
-                        type: type,
-                        full: script,
-                        rest: script.split(" ")
+                    // For bash scripts, parse command and environment variables
+                    let pars = script.split(" ");
+                    let type = pars[0];
+                    let env = {};
+                    if (pars[0].includes("=")) {
+                        let envs = type.split("=");
+                        env[envs[0]] = envs[1];
+                        type = pars[1];
+                        pars.shift();
+                        pars.shift();
+                        script = pars.join(" ");
+                    } else {
+                        pars.shift();
+                        script = pars.join(" ");
                     }
-                });
+                    await runCLICommand({
+                        task: { name: task },
+                        script: {
+                            lang: lang,
+                            env: env,
+                            type: type,
+                            full: script,
+                            rest: script.split(" ")
+                        }
+                    });
+                }
             }
         )
         .example(`${taskName("$0 run start:web")}`, `${textDescription("Run task 'start:web'")}`)
