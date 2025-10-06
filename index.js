@@ -39,17 +39,7 @@ const runCmd = async (app, argsList = []) => {
 
         /**
          *  fsr
-         */
-        .command(
-            "",
-            "Choose a script runner command",
-            (yargs) => {},
-            async function () {}
-        )
-        .example(`${taskName("$0")}`, `${textDescription("Choose a script runner command")}`)
-
-        /**
-         *  fsr
+         * branch --
          */
         .command(
             "branch",

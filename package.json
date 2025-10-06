@@ -9,7 +9,6 @@
         "build": "run-p build:index build:lib",
         "build:index": "babel index.js --ignore 'node_modules' --out-file dist/index.js",
         "build:lib": "babel lib --ignore 'node_modules' --out-dir dist/lib --copy-files",
-        "build:combined": "rimraf dist && run-p build:index build:lib && echo '✅ Distributable build complete in dist/'",
         "fsr": "node dist/index.js",
         "release": "run-s release:bump release:clean release:build release:publish",
         "old:release:build": "parcel build index.js --target node --no-cache --no-source-maps",
