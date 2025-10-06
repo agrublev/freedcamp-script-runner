@@ -34,7 +34,7 @@ const runCmd = async (app, argsList = []) => {
 
 (async () => {
     clear();
-    const argv = yargs(process.argv.slice(2))
+    const yargsInstance = yargs(process.argv.slice(2))
         .usage("Usage: $0 <command> [options]")
 
         /**
@@ -293,17 +293,18 @@ const runCmd = async (app, argsList = []) => {
             `${textDescription(
                 "Generate updated Table of Contents on top of the fscripts.md file"
             )}`
-        ).argv;
+        )
+        .help();
 
-    if (argv._.length === 0) {
-        (async function () {
-            const choice = await optionList();
+    const argv = yargsInstance.argv;
 
-            if (choice) {
-                await runCmd("yarn", ["fsr", choice]);
-            } else {
-                console.log(chalk.green.bold("See you soon!"));
-            }
-        })();
+    if (argv && argv._ && argv._.length === 0) {
+        const choice = await optionList();
+
+        if (choice) {
+            await runCmd("yarn", ["fsr", choice]);
+        } else {
+            console.log(chalk.green.bold("See you soon!"));
+        }
     }
 })();
