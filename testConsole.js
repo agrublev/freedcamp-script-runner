@@ -1,5 +1,6 @@
-const chalk = require("chalk");
-const argv = require("yargs").argv;
+import chalk from "chalk";
+import yargs from "yargs";
+const argv = yargs(process.argv.slice(2)).argv;
 
 (async function() {
 

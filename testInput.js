@@ -1,5 +1,5 @@
-const chalk = require("chalk");
-const inquirer = require("inquirer");
+import chalk from "chalk";
+import inquirer from "inquirer";
 
 (async function() {
     console.log(`${chalk.green("PRE INPUT")}\n`);

@@ -1,22 +1,23 @@
-const bump = require("./lib/release/bump.js");
-const chalk = require("chalk");
-const { generateFScripts, generateToc } = require("./lib/generators");
-const parseScriptFile = require("./lib/parsers/parseScriptsMd.js");
-const upgradePackages = require("./lib/upgradePackages");
-const { runSequence, runParallel, runCLICommand } = require("./lib/running");
-const { startPackageScripts, startScripts, clearRecent } = require("./lib/startScripts.js");
+import bump from "./lib/release/bump.js";
+import chalk from "chalk";
+import { generateFScripts, generateToc } from "./lib/generators/index.js";
+import parseScriptFile from "./lib/parsers/parseScriptsMd.js";
+import upgradePackages from "./lib/upgradePackages.js";
+import { runSequence, runParallel, runCLICommand } from "./lib/running/index.js";
+import { startPackageScripts, startScripts, clearRecent } from "./lib/startScripts.js";
 const taskName = chalk.rgb(39, 173, 96).bold.underline;
 const textDescription = chalk.rgb(159, 161, 181);
-const optionList = require("./lib/optionList");
-const validateNotInDev = require("./lib/git/validateNotDev.js");
-const encrypt = require("./lib/encryption/encryption");
-const { clear } = require("./lib/utils/index");
-const authConfig = require("./lib/auth/auth-conf");
+import optionList from "./lib/optionList.js";
+import validateNotInDev from "./lib/git/validateNotDev.js";
+import encrypt from "./lib/encryption/encryption.js";
+import { clear } from "./lib/utils/index.js";
+import authConfig from "./lib/auth/auth-conf.js";
+import { spawn } from "child_process";
+import yargs from "yargs";
 
-require("./lib/utils/console");
+import "./lib/utils/console.js";
 
 const runCmd = async (app, argsList = []) => {
-    const { spawn } = require("child_process");
     let shell;
 
     shell = spawn(app, argsList, {
@@ -33,7 +34,7 @@ const runCmd = async (app, argsList = []) => {
 
 (async () => {
     clear();
-    const argv = require("yargs")
+    const argv = yargs(process.argv.slice(2))
         .usage("Usage: $0 <command> [options]")
 
         /**
