@@ -22,6 +22,9 @@
         "start:run": "node dist/index.js",
         "start:watch": "nodemon --watch lib --watch index.js --ext js --exec babel-node index.js --ignore 'node_modules' -I",
         "component": "babel lib/components --out-dir dist/components --extensions \".js,.jsx\"",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "test:ui": "vitest --ui",
         "docs": "npx cli-docs-generator --cli=./bin",
         "test1": "echo 'yolo' && sleep 2 && echo 1",
         "test2": "echo '2yolo' && sleep 2 && echo 22"
@@ -98,6 +101,7 @@
         "@babel/preset-env": "^7.9.0",
         "@babel/preset-react": "^7.9.1",
         "babel-plugin-module-resolver": "^5.0.2",
+        "execa": "8.0.1",
         "fancy-log": "^2.0.0",
         "fkill-cli": "^8.0.0",
         "ink-tab": "^5.2.0",
@@ -117,6 +121,7 @@
         "strip-ansi": "^7.1.2",
         "terminal-tree": "^0.0.3",
         "underscore.string": "^3.3.5",
+        "vitest": "^3.2.4",
         "yargs": "^18.0.0"
     },
     "peerDependencies": {

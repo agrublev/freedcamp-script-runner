@@ -1,5 +1,6 @@
 - [Run](#run)
   * [node:script](#nodescript)
+  * [say:hello](#sayhello)
   * [decrypt](#decrypt)
   * [run:s](#runs)
   * [run:p](#runp)
@@ -7,22 +8,11 @@
   * [run:one:d](#runoned)
   * [run:two](#runtwo)
   * [run:three](#runthree)
-- [Second](#second)
-  * [runzz](#runzz)
+- [Samples](#samples)
+  * [console:sample](#consolesample)
+  * [input:sample](#inputsample)
 - [Three](#three)
   * [threez](#threez)
-- [four](#four)
-  * [fourz](#fourz)
-- [Five](#five)
-  * [fivez](#fivez)
-- [Five2](#five2)
-  * [fivez3](#fivez3)
-- [Five4](#five4)
-  * [fivez5](#fivez5)
-- [Five](#five-1)
-  * [fivez](#fivez-1)
-- [Six](#six)
-  * [See](#see)
 <!-- end toc -->
 
 # Run
@@ -38,12 +28,20 @@ const chalk = require("chalk");
 console.log("NODEENV", process.env.NODE_ENV);
 (async () => {
     console.log(` -- ${chalk.bold.red("RED")} -- `);
-    await new Promise(resolve =>
+    await new Promise((resolve) =>
         setTimeout(() => {
             console.log("DONE");
         }, 2000)
     );
 })();
+```
+
+## say:hello
+
+JavaScript with template literals
+
+```javascript
+console.log(`HELLO!! : ${Date.now()}`);
 ```
 
 ## decrypt
@@ -94,14 +92,24 @@ node lib/test-files/testConsole.js
 INPUT=THREE node lib/test-files/testInput.js
 ```
 
-# Second
+# Samples
 
-second
+Here we execute some node scripts
 
-## runzz
+## console:sample
+
+Showing some console messages with delays
 
 ```bash
-node lib/test-files/testInput.js
+node lib/test-files/consoleSample.js
+```
+
+## input:sample
+
+Showcase asking user for input from script
+
+```bash
+node lib/test-files/inputSample.js
 ```
 
 # Three
@@ -109,53 +117,5 @@ node lib/test-files/testInput.js
 ## threez
 
 ```bash
-echo "FUCK"
-```
-
-# four
-
-## fourz
-
-```bash
-
-```
-
-# Five
-
-## fivez
-
-```bash
-
-```
-
-# Five2
-
-## fivez3
-
-```bash
-
-```
-
-# Five4
-
-## fivez5
-
-```bash
-
-```
-
-# Five
-
-## fivez
-
-```bash
-
-```
-
-# Six
-
-## See
-
-```bash
-
+echo "Damn girl!"
 ```
