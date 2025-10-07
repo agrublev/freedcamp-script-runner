@@ -76,10 +76,10 @@ describe('CLI Commands', () => {
         });
 
         it('should run testInput.js with environment variable', async () => {
-            const result = await runFsr('run', ['runzz']);
+            const result = await runFsr('run', ['run:three']);
 
             expect(result.exitCode).toBe(0);
-            expect(result.stdout).toMatch(/INPUT:/);
+            expect(result.stdout).toMatch(/INPUT: THREE/);
         });
     });
 
