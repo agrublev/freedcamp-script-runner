@@ -85,13 +85,13 @@ sleep 1
 ## run:two
 
 ```bash
-node testConsole.js
+node lib/test-files/testConsole.js
 ```
 
 ## run:three
 
 ```bash
-INPUT=THREE node testInput.js
+INPUT=THREE node lib/test-files/testInput.js
 ```
 
 # Second
@@ -101,7 +101,7 @@ second
 ## runzz
 
 ```bash
-node testInput.js
+node lib/test-files/testInput.js
 ```
 
 # Three
