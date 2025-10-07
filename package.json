@@ -1,6 +1,6 @@
 {
     "name": "fscr",
-    "version": "6.2.4",
+    "version": "6.2.5",
     "description": "Runs the fscripts.md file",
     "type": "module",
     "main": "./dist/index.js",
@@ -22,7 +22,6 @@
         "start:build": "babel-node index.js --ignore 'node_modules'",
         "start:run": "node dist/index.js",
         "start:watch": "nodemon --watch lib --watch index.js --ext js --exec babel-node index.js --ignore 'node_modules' -I",
-        "component": "babel lib/components --out-dir dist/components --extensions \".js,.jsx\"",
         "test": "vitest run",
         "test:watch": "vitest",
         "test:ui": "vitest --ui",
