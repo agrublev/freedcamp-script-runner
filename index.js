@@ -191,7 +191,8 @@ const runCmd = async (app, argsList = []) => {
             () => {},
             async function (argv) {
                 let type = argv.type;
-                await bump(type);
+                let skipGit = argv.skipGit;
+                await bump(type, skipGit === "true");
             }
         )
         .example(`${taskName("$0 bump")}`, `${textDescription("BUMPED AND PRETTY!")}`)
