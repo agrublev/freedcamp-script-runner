@@ -1,6 +1,6 @@
 {
     "name": "fscr",
-    "version": "6.2.6",
+    "version": "7.2.6",
     "description": "Runs the fscripts.md file",
     "type": "module",
     "main": "./dist/index.js",
@@ -25,6 +25,12 @@
         "test": "vitest run",
         "test:watch": "vitest",
         "test:ui": "vitest --ui",
+        "test:coverage": "vitest run --coverage",
+        "test:coverage:ui": "vitest --coverage --ui",
+        "test:unit": "vitest run tests/unit",
+        "test:integration": "vitest run tests/integration",
+        "test:e2e": "vitest run tests/e2e",
+        "test:performance": "vitest run tests/performance",
         "docs": "npx cli-docs-generator --cli=./bin",
         "test1": "echo 'yolo' && sleep 2 && echo 1",
         "test2": "echo '2yolo' && sleep 2 && echo 22"
@@ -122,6 +128,7 @@
         "terminal-tree": "^0.0.3",
         "underscore.string": "^3.3.5",
         "vitest": "^3.2.4",
+        "@vitest/coverage-v8": "^3.2.4",
         "yargs": "^18.0.0"
     },
     "peerDependencies": {

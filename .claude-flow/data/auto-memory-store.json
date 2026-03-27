@@ -1,0 +1,67 @@
+[
+  {
+    "id": "mem-MEMORY----freedcamp-app-registration-",
+    "key": "-freedcamp-app-registration-freedcamp-adding-new-a",
+    "content": "- [Freedcamp Project Architecture](freedcamp_project_context.md) — CodeIgniter + React architecture, key directories, Discussions as reference pattern\n- [Never delete recordings](feedback_recordings.md) — Never rm files in recordings/ or any user data files without explicit confirmation",
+    "summary": "- [Freedcamp App Registration](freedcamp_adding_new_app.md) — Full checklist for adding a new app (~20 files across PHP/JS/DB)",
+    "namespace": "core",
+    "type": "semantic",
+    "metadata": {
+      "sourceFile": "/Users/me3n/.claude/projects/-Users-me3n-DEVELOPMENT-fcdev/memory/MEMORY.md",
+      "bootstrapped": true
+    },
+    "createdAt": 1774648894840
+  },
+  {
+    "id": "mem-feedback_recordings----",
+    "key": "-",
+    "content": "name: Never delete recordings or user data files\ndescription: Never delete recording files or any user-generated data files without explicit confirmation\ntype: feedback\n---\n\nNever delete files in `packages/scripts/e2e/recordings/` or any user-generated data/output files.\n\n**Why:** User explicitly said \"never remove recordings!\" — recordings represent real user work and are not safe to delete just to fix a code bug. They may be the only copy of a recorded flow.\n\n**How to apply:** Never `rm`, `fs.",
+    "summary": "---",
+    "namespace": "feedback_recordings",
+    "type": "semantic",
+    "metadata": {
+      "sourceFile": "/Users/me3n/.claude/projects/-Users-me3n-DEVELOPMENT-fcdev/memory/feedback_recordings.md",
+      "bootstrapped": true
+    },
+    "createdAt": 1774648894841
+  },
+  {
+    "id": "mem-freedcamp_adding_new_app----",
+    "key": "-",
+    "content": "name: Freedcamp App Registration Process\ndescription: Complete checklist and file locations for adding a new app to Freedcamp (PHP + JS + DB) — ~20 files across backend, frontend, and config layers\ntype: reference\n---",
+    "summary": "---",
+    "namespace": "freedcamp_adding_new_app",
+    "type": "semantic",
+    "metadata": {
+      "sourceFile": "/Users/me3n/.claude/projects/-Users-me3n-DEVELOPMENT-fcdev/memory/freedcamp_adding_new_app.md",
+      "bootstrapped": true
+    },
+    "createdAt": 1774648894841
+  },
+  {
+    "id": "mem-freedcamp_adding_new_app-adding-a-new-app-to-freedcamp-",
+    "key": "adding-a-new-app-to-freedcamp-quick-reference",
+    "content": "Full documentation at: `docs/adding-new-app.md`\n\n### PHP Files (Backend)\n\n| File | What to add |\n|------|-------------|\n| `application/config/constants.php` | `define('APP_YOURAPP', <id>)` (~line 99) + APP_REACT_NAME_BY_ID entry (~line 330) |\n| `application/applications/core_apps/<yourapp>/models/<Yourapp>_model.php` | Domain model with CRUD (get, create, update, delete) |\n| `application/libraries/Items_lib.php` | App metadata (table, title_field, creator_field, etc.) |\n| `application/modules/ap",
+    "summary": "Adding a New App to Freedcamp — Quick Reference",
+    "namespace": "freedcamp_adding_new_app",
+    "type": "semantic",
+    "metadata": {
+      "sourceFile": "/Users/me3n/.claude/projects/-Users-me3n-DEVELOPMENT-fcdev/memory/freedcamp_adding_new_app.md",
+      "bootstrapped": true
+    },
+    "createdAt": 1774648894841
+  },
+  {
+    "id": "mem-freedcamp_project_context----",
+    "key": "-",
+    "content": "name: Freedcamp Project Architecture\ndescription: Freedcamp codebase architecture — CodeIgniter PHP backend with React/MobX frontend, app registration system, key directories and patterns\ntype: project\n---\n\nFreedcamp is a project management platform with a modular app system.\n\n**Why:** Understanding the architecture is essential for any feature work in this codebase.\n\n**How to apply:** Use this as context when the user asks to modify or add features to any Freedcamp app.\n\n### Tech Stack\n- **Back",
+    "summary": "---",
+    "namespace": "freedcamp_project_context",
+    "type": "semantic",
+    "metadata": {
+      "sourceFile": "/Users/me3n/.claude/projects/-Users-me3n-DEVELOPMENT-fcdev/memory/freedcamp_project_context.md",
+      "bootstrapped": true
+    },
+    "createdAt": 1774648894841
+  }
+]

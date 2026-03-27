@@ -1,0 +1,22 @@
+{
+  "id": "session-1774648894827",
+  "startedAt": "2026-03-27T22:01:34.827Z",
+  "cwd": "/Users/me3n/WebstormProjects/freedcamp-script-runner",
+  "context": {
+    "lastMatchedPatterns": [
+      "mem-freedcamp_adding_new_app-adding-a-new-app-to-freedcamp-",
+      "mem-freedcamp_project_context----",
+      "mem-MEMORY----freedcamp-app-registration-",
+      "mem-freedcamp_adding_new_app----",
+      "mem-feedback_recordings----"
+    ]
+  },
+  "metrics": {
+    "edits": 145,
+    "commands": 0,
+    "tasks": 0,
+    "errors": 0
+  },
+  "updatedAt": "2026-03-27T22:09:57.934Z",
+  "restoredAt": "2026-03-27T22:09:24.654Z"
+}

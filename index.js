@@ -12,6 +12,9 @@ import validateNotInDev from "./lib/git/validateNotDev.js";
 import encrypt from "./lib/encryption/encryption.js";
 import { clear } from "./lib/utils/index.js";
 import authConfig from "./lib/auth/auth-conf.js";
+import doctor from "./lib/commands/doctor.js";
+import completion from "./lib/completions/completion.js";
+import * as cacheCommands from "./lib/cache/cli.js";
 import { spawn } from "child_process";
 import yargs from "yargs";
 
@@ -310,6 +313,151 @@ const runCmd = async (app, argsList = []) => {
             `${textDescription(
                 "Generate updated Table of Contents on top of the fscripts.md file"
             )}`
+        )
+
+        /**
+         * fsr
+         * doctor --
+         */
+        .command(
+            "doctor",
+            "Run diagnostics and check system health",
+            (yargs) => {
+                yargs
+                    .option("fix", {
+                        alias: "f",
+                        type: "boolean",
+                        description: "Automatically fix issues when possible",
+                        default: false
+                    })
+                    .option("json", {
+                        type: "boolean",
+                        description: "Output results in JSON format",
+                        default: false
+                    })
+                    .option("verbose", {
+                        alias: "v",
+                        type: "boolean",
+                        description: "Show verbose output",
+                        default: false
+                    });
+            },
+            async function (argv) {
+                await doctor(argv);
+            }
+        )
+        .example(`${taskName("$0 doctor")}`, `${textDescription("Run system diagnostics")}`)
+        .example(
+            `${taskName("$0 doctor --fix")}`,
+            `${textDescription("Run diagnostics and auto-fix issues")}`
+        )
+        .example(
+            `${taskName("$0 doctor --json")}`,
+            `${textDescription("Output results as JSON")}`
+        )
+
+        /**
+         * fsr
+         * cache --
+         */
+        .command(
+            "cache <action>",
+            "Manage cache system",
+            (yargs) => {
+                yargs
+                    .positional("action", {
+                        describe: "Cache action to perform",
+                        choices: ["stats", "clear", "list", "benchmark", "export"]
+                    })
+                    .option("verbose", {
+                        alias: "v",
+                        type: "boolean",
+                        description: "Show verbose output",
+                        default: false
+                    })
+                    .option("limit", {
+                        alias: "l",
+                        type: "number",
+                        description: "Limit number of entries to display",
+                        default: 10
+                    })
+                    .option("output", {
+                        alias: "o",
+                        type: "string",
+                        description: "Output file path for export"
+                    });
+            },
+            async function (argv) {
+                const { action, verbose, limit, output } = argv;
+
+                switch (action) {
+                    case "stats":
+                        await cacheCommands.showCacheStats({ verbose });
+                        break;
+                    case "clear":
+                        await cacheCommands.clearCache();
+                        break;
+                    case "list":
+                        await cacheCommands.listCacheEntries({ limit });
+                        break;
+                    case "benchmark":
+                        await cacheCommands.benchmarkCache();
+                        break;
+                    case "export":
+                        await cacheCommands.exportCacheStats(output);
+                        break;
+                    default:
+                        console.log(chalk.yellow(`Unknown cache action: ${action}`));
+                }
+            }
+        )
+        .example(`${taskName("$0 cache stats")}`, `${textDescription("Show cache statistics")}`)
+        .example(`${taskName("$0 cache clear")}`, `${textDescription("Clear all cache entries")}`)
+        .example(`${taskName("$0 cache list")}`, `${textDescription("List cached entries")}`)
+        .example(`${taskName("$0 cache benchmark")}`, `${textDescription("Run cache performance benchmark")}`)
+
+        /**
+         * fsr
+         * completion --
+         */
+        .command(
+            "completion [action]",
+            "Manage shell completions",
+            (yargs) => {
+                yargs
+                    .positional("action", {
+                        describe: "Action to perform (install, uninstall, status, generate)",
+                        type: "string",
+                        choices: ["install", "uninstall", "status", "generate"]
+                    })
+                    .option("shell", {
+                        alias: "s",
+                        type: "string",
+                        description: "Target shell (bash, zsh, fish, powershell)",
+                        choices: ["bash", "zsh", "fish", "powershell"]
+                    })
+                    .option("force", {
+                        alias: "f",
+                        type: "boolean",
+                        description: "Force reinstall completions",
+                        default: false
+                    });
+            },
+            async function (argv) {
+                await completion(argv);
+            }
+        )
+        .example(
+            `${taskName("$0 completion install")}`,
+            `${textDescription("Install completions for your shell")}`
+        )
+        .example(
+            `${taskName("$0 completion status")}`,
+            `${textDescription("Check completion installation status")}`
+        )
+        .example(
+            `${taskName("$0 completion --shell zsh")}`,
+            `${textDescription("Install completions for zsh")}`
         )
         .help();
 
