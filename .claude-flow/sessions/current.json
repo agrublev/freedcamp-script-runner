@@ -5,18 +5,18 @@
   "context": {
     "lastMatchedPatterns": [
       "mem-freedcamp_adding_new_app-adding-a-new-app-to-freedcamp-",
-      "mem-freedcamp_project_context----",
       "mem-MEMORY----freedcamp-app-registration-",
       "mem-freedcamp_adding_new_app----",
-      "mem-feedback_recordings----"
+      "mem-feedback_recordings----",
+      "mem-freedcamp_project_context----"
     ]
   },
   "metrics": {
-    "edits": 145,
+    "edits": 146,
     "commands": 0,
     "tasks": 0,
     "errors": 0
   },
-  "updatedAt": "2026-03-27T22:09:57.934Z",
-  "restoredAt": "2026-03-27T22:09:24.654Z"
+  "updatedAt": "2026-03-28T03:36:14.034Z",
+  "restoredAt": "2026-03-28T03:35:52.989Z"
 }
