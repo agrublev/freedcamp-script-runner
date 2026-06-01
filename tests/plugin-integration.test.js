@@ -322,9 +322,10 @@ describe('Plugin System Integration', () => {
       const calls = logger.info.mock.calls.map(call => call[0]);
       const countCalls = calls.filter(c => c.includes('Count:'));
 
-      expect(countCalls).toContain(expect.stringContaining('Count: 1'));
-      expect(countCalls).toContain(expect.stringContaining('Count: 2'));
-      expect(countCalls).toContain(expect.stringContaining('Count: 3'));
+      // Plugin logger prepends [plugin-name] to messages
+      expect(countCalls.some(c => c.includes('Count: 1'))).toBe(true);
+      expect(countCalls.some(c => c.includes('Count: 2'))).toBe(true);
+      expect(countCalls.some(c => c.includes('Count: 3'))).toBe(true);
     });
   });
 
