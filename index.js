@@ -16,6 +16,7 @@ import doctor from "./lib/commands/doctor.js";
 import completion from "./lib/completions/completion.js";
 import * as cacheCommands from "./lib/cache/cli.js";
 import { loadPlugins, registerPluginCommands } from "./lib/plugins/loader.js";
+import { fireHook } from "./lib/plugins/hooks.js";
 import { spawn } from "child_process";
 import yargs from "yargs";
 
@@ -44,7 +45,7 @@ const runCmd = async (app, argsList = []) => {
 
 (async () => {
     clear();
-    const pluginCommands = await loadPlugins();
+    const { commands: pluginCommands, runnablePlugins } = await loadPlugins();
     const yargsInstance = yargs(process.argv.slice(2))
         .usage("Usage: $0 <command> [options]")
 
@@ -504,9 +505,19 @@ const runCmd = async (app, argsList = []) => {
     const argv = yargsInstance.argv;
 
     if (argv && argv._ && argv._.length === 0) {
-        const choice = await optionList();
+        const pluginChoices = runnablePlugins.map((p) => ({ name: `plugin:${p.name}`, message: p.description }));
+        const choice = await optionList(pluginChoices);
 
-        if (choice) {
+        const pluginMatch = runnablePlugins.find((p) => `plugin:${p.name}` === choice);
+        if (pluginMatch) {
+            const start = Date.now();
+            try {
+                await pluginMatch.run();
+                await fireHook("post-task", { taskName: pluginMatch.name, duration: Date.now() - start, success: true });
+            } catch (err) {
+                await fireHook("task-error", { taskName: pluginMatch.name, duration: Date.now() - start, error: err });
+            }
+        } else if (choice) {
             await runCmd("yarn", ["fsr", choice]);
         } else {
             console.log(chalk.green.bold("See you soon!"));
