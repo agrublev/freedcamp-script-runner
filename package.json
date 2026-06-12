@@ -1,13 +1,13 @@
 {
     "name": "fsr",
-    "version": "7.2.7",
+    "version": "7.3.0",
     "description": "Runs the fscripts.md file",
     "type": "module",
     "main": "./dist/index.js",
     "scripts": {
         "build": "rimraf dist && mkdir -p dist/lib && cp -r lib/. dist/lib && cp index.js dist/index.js",
         "fsr": "node dist/index.js",
-        "release": "vitest run && yarn fsr bump && yarn build",
+        "release": "yarn fsr bump && yarn build",
         "release:publish": "node lib/release/publish.js",
         "start": "run-s build start:run",
         "start:run": "node dist/index.js",
