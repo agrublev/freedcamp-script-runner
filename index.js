@@ -20,6 +20,12 @@ import yargs from "yargs";
 
 import "./lib/utils/console.js";
 
+/**
+ * RUN
+ * @param app
+ * @param argsList
+ * @returns {Promise<unknown>}
+ */
 const runCmd = async (app, argsList = []) => {
     let shell;
 
@@ -118,7 +124,12 @@ const runCmd = async (app, argsList = []) => {
             },
             async function (argv) {
                 let { task } = argv;
-                const { allTasks } = await parseScriptFile();
+                const parsed = await parseScriptFile();
+                if (!parsed) {
+                    console.error(`${chalk.bold.underline.red("No fscripts.md file found")}`);
+                    return;
+                }
+                const { allTasks } = parsed;
                 const taskData = allTasks.find((t) => t.name === task);
                 if (!taskData) {
                     console.error(`${chalk.bold.underline.red("Task not found")}`);
@@ -264,6 +275,30 @@ const runCmd = async (app, argsList = []) => {
             () => {},
             async function (argv) {
                 await encrypt.init();
+            }
+        )
+        /**
+         * fsr
+         * encrypt --
+         */
+        .command(
+            "encrypt",
+            "Encrypt a secret file/s",
+            () => {},
+            async function (argv) {
+                await encrypt.encrypt();
+            }
+        )
+        /**
+         * fsr
+         * decrypt --
+         */
+        .command(
+            "decrypt",
+            "Decrypt a secret file/s",
+            () => {},
+            async function (argv) {
+                await encrypt.decrypt();
             }
         )
         .example(
@@ -459,6 +494,7 @@ const runCmd = async (app, argsList = []) => {
             `${taskName("$0 completion --shell zsh")}`,
             `${textDescription("Install completions for zsh")}`
         )
+        .strict()
         .help();
 
     const argv = yargsInstance.argv;

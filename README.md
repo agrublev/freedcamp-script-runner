@@ -1,53 +1,71 @@
-## The simplest way to run your npm type tasks
+# fscr — the Freedcamp Script Runner (`fsr`)
 
-You write a beautiful & documented Markdown file, we run it for you. And you have a lot of flexibility!
+> The simplest way to run your npm‑type tasks. Write a beautiful, documented Markdown file —
+> `fsr` runs it for you, with a lot of flexibility.
 
-Example **fscripts.md** file :
-
-````markdown
-# Group 1
-           
-## run
+Instead of cramming logic into `package.json` `"scripts"`, you keep an **`fscripts.md`** file
+where every task is a Markdown section: a title, an optional description, and a fenced code
+block. `fsr` parses it and runs the task you pick — interactively or by name.
 
 ```bash
-echo 'start'; sleep 4; echo 'done'
+npm install -g fscr      # gives you the `fsr` and `fscr` commands
+fsr                       # interactive menu
+fsr run start:web         # run a specific task
+fsr list                  # fuzzy-find any task
 ```
 
-
-## run:s
-
-```bash
-yarn fsr run-s run:one run:two
-```
-
-## run:one
-
-```js
-console.log("ONEEE");
-```
-
-## run:two
-
-```js
-console.log("TWOOOO");
-```
-````
-
-Each section is an `h1` and task is defined using `h2` header and its child contents, the value of `h2` header will be used as task name, its following paragraphs (optional) will be used as task description, and following code block (optional) will be used as task script.
+## Example `fscripts.md`
 
 ````markdown
 # Start Scripts
 
 Start running in development mode
 
-## start:w:u
+## start:web
 
-Run tasks `start:web` and `start:utils` in parallel.
+Boots the web server with hot reload.
 
 ```bash
-fsr run-s start:web start:utils
+NODE_ENV=development vite
 ```
 
+## say:hello
+
+```javascript
+console.log(`HELLO! ${Date.now()}`);
+```
 ````
 
-## Password for encrypted file is 'secret' 
+Each `#` heading is a **category**; each `##` heading is a **task** (its title is the task
+name, the paragraph after it is the description, and the following code block is the script).
+` ```bash ` blocks run as shell commands; ` ```javascript ` blocks run in‑process.
+
+## Common commands
+
+| Command | What it does |
+|---|---|
+| `fsr` | Interactive top‑level menu |
+| `fsr start` | Pick a category, then a task (recent tasks pinned on top) |
+| `fsr list` | Fuzzy‑autocomplete across all tasks |
+| `fsr run <task>` | Run one task by name |
+| `fsr run-s <a> <b>` | Run tasks **sequentially** |
+| `fsr run-p <a> <b>` | Run tasks **in parallel** |
+| `fsr generate` | Scaffold `sample.fscripts.md` from `package.json` |
+| `fsr toc` | Generate/refresh the table of contents |
+| `fsr doctor` | Environment diagnostics (`--fix` to auto‑fix) |
+| `fsr encryption` | Encrypt/decrypt secret files (AES‑192‑CBC) |
+| `fsr upgrade` / `fsr bump` | Upgrade deps / bump version |
+
+## 📖 Full documentation
+
+**See [`docs/FSR.md`](./docs/FSR.md) for the complete guide** to the `fscripts.md` format,
+every command and option, configuration, encryption, caching, and shell completions.
+
+Other references live in [`docs/`](./docs); historical v7 implementation notes are archived in
+[`docs/archive/`](./docs/archive).
+
+---
+
+> The sample `config.json` in this repo decrypts with the password **`secret`**.
+
+MIT © Angel Grablev

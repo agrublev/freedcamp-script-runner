@@ -171,10 +171,10 @@ vitest run
 
 ## test:watch
 
-Watch mode for tests
+Watch mode for tests (test fixture uses a command that exits)
 
 \`\`\`bash
-vitest
+echo "watching for changes"
 \`\`\`
 
 # Development Scripts
