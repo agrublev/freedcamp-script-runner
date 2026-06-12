@@ -1,4 +1,4 @@
-# fscr — the Freedcamp Script Runner (`fsr`)
+# fsr — the Freedcamp Script Runner (`fsr`)
 
 > The simplest way to run your npm‑type tasks. Write a beautiful, documented Markdown file —
 > `fsr` runs it for you, with a lot of flexibility.
@@ -8,7 +8,7 @@ where every task is a Markdown section: a title, an optional description, and a 
 block. `fsr` parses it and runs the task you pick — interactively or by name.
 
 ```bash
-npm install -g fscr      # gives you the `fsr` and `fscr` commands
+npm install -g fsr      # gives you the `fsr` and `fsr` commands
 fsr                       # interactive menu
 fsr run start:web         # run a specific task
 fsr list                  # fuzzy-find any task

@@ -163,6 +163,6 @@ $scriptBlock = {
     }
 }
 
-# Register completion for fscr and fsr
-Register-ArgumentCompleter -CommandName fscr -ScriptBlock $scriptBlock
+# Register completion for fsr and fsr
+Register-ArgumentCompleter -CommandName fsr -ScriptBlock $scriptBlock
 Register-ArgumentCompleter -CommandName fsr -ScriptBlock $scriptBlock

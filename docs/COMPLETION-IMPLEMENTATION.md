@@ -58,7 +58,7 @@ Key functions:
 
 **Completion Flow:**
 ```
-User: fscr run <Tab>
+User: fsr run <Tab>
   ↓
 1. _fscr_completion function called
 2. Detects previous word is "run"
@@ -70,7 +70,7 @@ User: fscr run <Tab>
 
 **Integration:**
 - Appends to `~/.bashrc`
-- Uses `complete -F _fscr_completion fscr`
+- Uses `complete -F _fscr_completion fsr`
 
 ### Zsh (`zsh.sh`)
 
@@ -82,7 +82,7 @@ User: fscr run <Tab>
 
 **Completion Flow:**
 ```
-User: fscr completion <Tab>
+User: fsr completion <Tab>
   ↓
 1. _fscr function called
 2. State machine determines context
@@ -92,7 +92,7 @@ User: fscr completion <Tab>
 
 **Integration:**
 - Appends to `~/.zshrc`
-- Uses `compdef _fscr fscr`
+- Uses `compdef _fscr fsr`
 
 ### Fish (`fish.sh`)
 
@@ -104,7 +104,7 @@ User: fscr completion <Tab>
 
 **Completion Flow:**
 ```
-User: fscr run <Tab>
+User: fsr run <Tab>
   ↓
 1. Fish checks conditions
 2. Finds matching completion rules
@@ -114,7 +114,7 @@ User: fscr run <Tab>
 ```
 
 **Integration:**
-- Separate file: `~/.config/fish/completions/fscr.fish`
+- Separate file: `~/.config/fish/completions/fsr.fish`
 - Auto-loaded by Fish
 
 ### PowerShell (`powershell.ps1`)
@@ -127,7 +127,7 @@ User: fscr run <Tab>
 
 **Completion Flow:**
 ```
-User: fscr run <Tab>
+User: fsr run <Tab>
   ↓
 1. ArgumentCompleter script block called
 2. Parses command AST
@@ -190,7 +190,7 @@ This ensures completions work even without Node.js.
 ### Auto-Installation
 
 ```
-fscr completion install
+fsr completion install
   ↓
 1. detectShell() → "zsh"
 2. getShellConfigPath("zsh") → ~/.zshrc
@@ -216,7 +216,7 @@ Fish uses a separate file, so no markers needed.
 ### Force Reinstall
 
 ```bash
-fscr completion install --force
+fsr completion install --force
 ```
 
 Overwrites existing completion block, useful for:
@@ -229,7 +229,7 @@ Overwrites existing completion block, useful for:
 ### Command Structure
 
 ```
-fscr completion [action] [options]
+fsr completion [action] [options]
 
 Actions:
   install    - Install completions for current shell
@@ -303,25 +303,25 @@ Each shell should be tested manually:
 
 ```bash
 # 1. Install
-fscr completion install --shell bash
+fsr completion install --shell bash
 
 # 2. Reload
 source ~/.bashrc
 
 # 3. Test command completion
-fscr <Tab>
+fsr <Tab>
 
 # 4. Test task completion
-fscr run <Tab>
+fsr run <Tab>
 
 # 5. Test subcommand completion
-fscr completion <Tab>
+fsr completion <Tab>
 
 # 6. Test status
-fscr completion status
+fsr completion status
 
 # 7. Uninstall
-fscr completion uninstall
+fsr completion uninstall
 ```
 
 ## File Structure
@@ -438,10 +438,10 @@ When adding new commands:
 
 3. **Test all shells:**
    ```bash
-   fscr completion install --force --shell bash
-   fscr completion install --force --shell zsh
-   fscr completion install --force --shell fish
-   fscr completion install --force --shell powershell
+   fsr completion install --force --shell bash
+   fsr completion install --force --shell zsh
+   fsr completion install --force --shell fish
+   fsr completion install --force --shell powershell
    ```
 
 4. **Update documentation:**

@@ -36,7 +36,7 @@ Complete TypeScript definitions:
 Complete `ConfigManager` class with:
 - Package.json read/write
 - Profile CRUD operations
-- Active profile tracking (`.fscr/active-profile`)
+- Active profile tracking (`.fsr/active-profile`)
 - Default profile management
 - Profile resolution with inheritance
 - Profile validation
@@ -163,7 +163,7 @@ tsconfig.json                     (30 lines)  ✅
 - [x] Environment variable management
 - [x] Custom options support
 - [x] Scripts file per profile
-- [x] Active profile persistence (`.fscr/active-profile`)
+- [x] Active profile persistence (`.fsr/active-profile`)
 - [x] Default profile in package.json
 - [x] Profile resolution with inheritance
 
@@ -203,12 +203,12 @@ From `imp.md`:
 - [x] Display in CLI
 
 ### 4. Commands ✅
-- [x] `fscr profile list`
-- [x] `fscr profile create <name>`
-- [x] `fscr profile switch <name>`
-- [x] `fscr profile delete <name>`
-- [x] `fscr profile current` (bonus)
-- [x] `fscr profile default <name>` (bonus)
+- [x] `fsr profile list`
+- [x] `fsr profile create <name>`
+- [x] `fsr profile switch <name>`
+- [x] `fsr profile delete <name>`
+- [x] `fsr profile current` (bonus)
+- [x] `fsr profile default <name>` (bonus)
 
 ### 5. Implementation Files ✅
 - [x] `src/commands/profile.ts`
@@ -217,8 +217,8 @@ From `imp.md`:
 
 ### 6. Storage ✅
 - [x] Profiles in package.json → `fscripts.profiles`
-- [x] Active profile in `.fscr/active-profile`
-- [x] Global config support → `~/.fscr/config`
+- [x] Active profile in `.fsr/active-profile`
+- [x] Global config support → `~/.fsr/config`
 
 ### 7. Testing ✅
 - [x] Unit tests for ConfigManager
@@ -241,34 +241,34 @@ From `imp.md`:
 ### Example 1: Basic Setup
 ```bash
 # Create development profile
-fscr profile create development \
+fsr profile create development \
   --scripts-file fscripts.md \
   --env "NODE_ENV=development,DEBUG=true" \
   --set-default \
   --set-active
 
 # Create production profile
-fscr profile create production \
+fsr profile create production \
   --scripts-file fscripts.prod.md \
   --env "NODE_ENV=production"
 
 # List all profiles
-fscr profile list
+fsr profile list
 ```
 
 ### Example 2: With Inheritance
 ```bash
 # Create base profile
-fscr profile create base \
+fsr profile create base \
   --scripts-file fscripts.md \
   --env "TIMEOUT=30000,RETRY=3"
 
 # Create child profiles
-fscr profile create development \
+fsr profile create development \
   --inherits base \
   --env "NODE_ENV=development,DEBUG=true"
 
-fscr profile create production \
+fsr profile create production \
   --inherits base \
   --env "NODE_ENV=production"
 ```
@@ -276,13 +276,13 @@ fscr profile create production \
 ### Example 3: Switching Profiles
 ```bash
 # Switch to production
-fscr profile switch production
+fsr profile switch production
 
 # Run deployment with production environment
-fscr run deploy
+fsr run deploy
 
 # Switch back to development
-fscr profile switch development
+fsr profile switch development
 ```
 
 ---
@@ -375,7 +375,7 @@ Overall               | 95%   | 95%       | 90%      | 95%
 
 6. **Add to .gitignore:**
    ```
-   .fscr/
+   .fsr/
    ```
 
 ---

@@ -700,7 +700,7 @@ describe('Startup Performance', () => {
     const start = performance.now();
 
     await new Promise((resolve) => {
-      const proc = spawn('fscr', ['--version']);
+      const proc = spawn('fsr', ['--version']);
       proc.on('exit', () => {
         const duration = performance.now() - start;
         expect(duration).toBeLessThan(50); // Must be < 50ms
@@ -711,11 +711,11 @@ describe('Startup Performance', () => {
 
   bench('warm start (cached)', async () => {
     // Run once to warm cache
-    await runCommand('fscr', ['list']);
+    await runCommand('fsr', ['list']);
 
     // Measure second run
     const start = performance.now();
-    await runCommand('fscr', ['list']);
+    await runCommand('fsr', ['list']);
     const duration = performance.now() - start;
 
     expect(duration).toBeLessThan(10); // Must be < 10ms with cache
@@ -734,7 +734,7 @@ describe('Memory Usage', () => {
     const before = process.memoryUsage();
 
     // Run typical operation
-    await runCommand('fscr', ['run', 'test']);
+    await runCommand('fsr', ['run', 'test']);
 
     const after = process.memoryUsage();
     const heapUsed = (after.heapUsed - before.heapUsed) / 1024 / 1024;

@@ -1,7 +1,7 @@
 # `fsr` — The Freedcamp Script Runner
 
 > Run beautifully documented Markdown scripts from your terminal.
-> Package name: **`fscr`** · Binaries: **`fsr`** and **`fscr`** (identical) · Current version: **7.2.6**
+> Package name: **`fsr`** · Binaries: **`fsr`** and **`fsr`** (identical) · Current version: **7.2.6**
 
 `fsr` replaces the headache of cramming logic into `package.json` `"scripts"`. Instead, you
 write a human‑readable **`fscripts.md`** file where every task is a Markdown section with a
@@ -38,16 +38,16 @@ task you choose — interactively or by name.
 ## Installation
 
 ```bash
-# Global (gives you the `fsr` / `fscr` commands everywhere)
-npm install -g fscr
+# Global (gives you the `fsr` / `fsr` commands everywhere)
+npm install -g fsr
 # or
-yarn global add fscr
+yarn global add fsr
 
 # Per‑project dev dependency
-yarn add -D fscr
+yarn add -D fsr
 ```
 
-Both `fsr` and `fscr` are registered binaries pointing at the same entry point, so use
+Both `fsr` and `fsr` are registered binaries pointing at the same entry point, so use
 whichever you prefer. The runnable artifact is `dist/index.js` (built from `index.js` with
 `yarn build`); the `bin` shim simply `import()`s it.
 
@@ -422,7 +422,7 @@ the underlying file's modification time changes. Expired entries are swept once 
 
 ### `completion [action]`
 
-Install shell tab‑completion for `fsr`/`fscr`.
+Install shell tab‑completion for `fsr`/`fsr`.
 
 ```bash
 fsr completion                 # interactive: confirm install for detected shell
@@ -438,7 +438,7 @@ Supported shells: **bash, zsh, fish, powershell**. Behavior:
 - The current shell is auto‑detected from `$SHELL` (or PowerShell on Windows).
 - For bash/zsh/powershell, a delimited block (`# FSCR completion … # End FSCR completion`) is
   appended to the respective rc/profile file (idempotent; `--force` to replace).
-- For fish, a `fscr.fish` file is written to `~/.config/fish/completions/`.
+- For fish, a `fsr.fish` file is written to `~/.config/fish/completions/`.
 - After install it tells you how to activate (e.g. `source ~/.zshrc`).
 
 ### `--help`

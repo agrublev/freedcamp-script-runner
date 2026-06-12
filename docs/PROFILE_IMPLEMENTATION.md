@@ -37,7 +37,7 @@ The `ConfigManager` class is the heart of the profile system. It handles:
 
 - Reading/writing `package.json`
 - Managing profiles (create, read, update, delete)
-- Active profile tracking (`.fscr/active-profile`)
+- Active profile tracking (`.fsr/active-profile`)
 - Default profile management
 - Profile resolution with inheritance
 - Profile validation
@@ -149,7 +149,7 @@ addProfileCommand(yargsInstance);
 }
 ```
 
-### Active Profile File (`.fscr/active-profile`)
+### Active Profile File (`.fsr/active-profile`)
 
 ```json
 {
@@ -164,7 +164,7 @@ addProfileCommand(yargsInstance);
 
 When determining the current profile:
 
-1. **Active profile** (from `.fscr/active-profile`)
+1. **Active profile** (from `.fsr/active-profile`)
 2. **Default profile** (from `package.json` → `fscripts.defaultProfile`)
 3. **Fallback** (use `fscripts.md` if no profiles exist)
 
@@ -454,7 +454,7 @@ Support for loading profiles from remote URLs:
 Pre-built profile templates:
 
 ```bash
-fscr profile create production --template production-node
+fsr profile create production --template production-node
 ```
 
 ### 3. Environment File Support
@@ -504,7 +504,7 @@ v6.x had no profile support. Migration is automatic:
 
 ```bash
 # Create default profile from existing setup
-fscr profile create development \
+fsr profile create development \
   --scripts-file fscripts.md \
   --set-default
 

@@ -75,8 +75,8 @@ type HookEvent =
 ```
 
 ### 4. Plugin Discovery ✅
-- Auto-discover from `.fscr/plugins/` directory
-- Support for npm packages (`fscr-plugin-*`)
+- Auto-discover from `.fsr/plugins/` directory
+- Support for npm packages (`fsr-plugin-*`)
 - Version compatibility checking
 
 ### 5. Plugin Lifecycle ✅
@@ -152,7 +152,7 @@ type HookEvent =
 ```
 Initialize
   ↓
-Discover plugins (.fscr/plugins/ + node_modules/)
+Discover plugins (.fsr/plugins/ + node_modules/)
   ↓
 Load enabled plugins
   ├─→ Import module
@@ -253,7 +253,7 @@ export default {
 
 ### Use Plugin
 ```bash
-fscr greet
+fsr greet
 ```
 
 ---

@@ -56,7 +56,7 @@ The plugin system allows extending FSCR with custom commands, hooks, and functio
 ### Directory Layout
 
 ```
-.fscr/
+.fsr/
 └── plugins/
     ├── my-plugin/
     │   ├── index.js           # Plugin entry point
@@ -77,7 +77,7 @@ The plugin system allows extending FSCR with custom commands, hooks, and functio
 Every plugin must export a default object implementing the `Plugin` interface:
 
 ```typescript
-// .fscr/plugins/my-plugin/index.js
+// .fsr/plugins/my-plugin/index.js
 export default {
   name: 'my-plugin',
   version: '1.0.0',
@@ -125,18 +125,18 @@ export default {
 
 ```json
 {
-  "name": "fscr-plugin-deploy",
+  "name": "fsr-plugin-deploy",
   "version": "1.0.0",
   "description": "Deployment plugin for FSCR",
   "main": "index.js",
   "type": "module",
-  "keywords": ["fscr", "plugin", "deploy"],
+  "keywords": ["fsr", "plugin", "deploy"],
   "author": "John Doe",
   "license": "MIT",
   "peerDependencies": {
-    "fscr": "^7.0.0"
+    "fsr": "^7.0.0"
   },
-  "fscr": {
+  "fsr": {
     "plugin": true,
     "minVersion": "7.0.0",
     "permissions": ["fs", "network"]
@@ -148,7 +148,7 @@ export default {
 
 ### Discovery
 
-The plugin manager automatically discovers plugins in `.fscr/plugins/`:
+The plugin manager automatically discovers plugins in `.fsr/plugins/`:
 
 ```typescript
 // src/lib/plugins.ts
@@ -158,10 +158,10 @@ export class PluginManager {
   private commands = new Map<string, Command>();
 
   /**
-   * Discover plugins in .fscr/plugins/ directory
+   * Discover plugins in .fsr/plugins/ directory
    */
   async discoverPlugins(): Promise<string[]> {
-    const pluginDir = path.join(process.cwd(), '.fscr', 'plugins');
+    const pluginDir = path.join(process.cwd(), '.fsr', 'plugins');
 
     if (!fs.existsSync(pluginDir)) {
       return [];
@@ -499,12 +499,12 @@ export interface HookData {
 ### Example 1: Deployment Plugin
 
 ```typescript
-// .fscr/plugins/deploy/index.ts
-import type { Plugin, PluginContext, CommandOptions } from 'fscr';
+// .fsr/plugins/deploy/index.ts
+import type { Plugin, PluginContext, CommandOptions } from 'fsr';
 import { deploy } from './deploy-logic.js';
 
 export default {
-  name: 'fscr-plugin-deploy',
+  name: 'fsr-plugin-deploy',
   version: '1.0.0',
   description: 'Deploy your application to various platforms',
 
@@ -559,12 +559,12 @@ export default {
 ### Example 2: Notification Plugin
 
 ```typescript
-// .fscr/plugins/notify/index.ts
-import type { Plugin, PluginContext } from 'fscr';
+// .fsr/plugins/notify/index.ts
+import type { Plugin, PluginContext } from 'fsr';
 import notifier from 'node-notifier';
 
 export default {
-  name: 'fscr-plugin-notify',
+  name: 'fsr-plugin-notify',
   version: '1.0.0',
   description: 'Send desktop notifications on task completion',
 
@@ -587,14 +587,14 @@ export default {
 ### Example 3: Git Integration Plugin
 
 ```typescript
-// .fscr/plugins/git/index.ts
-import type { Plugin, PluginContext } from 'fscr';
+// .fsr/plugins/git/index.ts
+import type { Plugin, PluginContext } from 'fsr';
 import simpleGit from 'simple-git';
 
 const git = simpleGit();
 
 export default {
-  name: 'fscr-plugin-git',
+  name: 'fsr-plugin-git',
   version: '1.0.0',
 
   async init(context: PluginContext) {
@@ -632,16 +632,16 @@ export default {
 ### List Plugins
 
 ```bash
-$ fscr plugin list
+$ fsr plugin list
 
 Loaded Plugins:
-  • fscr-plugin-deploy (v1.0.0)
+  • fsr-plugin-deploy (v1.0.0)
     Deploy your application to various platforms
 
-  • fscr-plugin-notify (v1.0.0)
+  • fsr-plugin-notify (v1.0.0)
     Send desktop notifications on task completion
 
-  • fscr-plugin-git (v1.0.0)
+  • fsr-plugin-git (v1.0.0)
     Git integration for FSCR
 
 Total: 3 plugins
@@ -651,27 +651,27 @@ Total: 3 plugins
 
 ```bash
 # Install from npm
-$ fscr plugin install fscr-plugin-deploy
+$ fsr plugin install fsr-plugin-deploy
 
 # Install from local directory
-$ fscr plugin install ./my-plugin
+$ fsr plugin install ./my-plugin
 
 # Install from git
-$ fscr plugin install github:user/fscr-plugin-name
+$ fsr plugin install github:user/fsr-plugin-name
 ```
 
 ### Uninstall Plugin
 
 ```bash
-$ fscr plugin uninstall fscr-plugin-deploy
+$ fsr plugin uninstall fsr-plugin-deploy
 ```
 
 ### Plugin Info
 
 ```bash
-$ fscr plugin info fscr-plugin-deploy
+$ fsr plugin info fsr-plugin-deploy
 
-Name: fscr-plugin-deploy
+Name: fsr-plugin-deploy
 Version: 1.0.0
 Description: Deploy your application to various platforms
 Author: John Doe
@@ -691,7 +691,7 @@ Plugins can request specific permissions:
 
 ```json
 {
-  "fscr": {
+  "fsr": {
     "permissions": [
       "fs",       // File system access
       "network",  // Network access
@@ -767,7 +767,7 @@ async executeHook(hookType: HookType, payload: unknown) {
 ```typescript
 // tests/plugins/my-plugin.test.ts
 import { describe, it, expect } from 'vitest';
-import plugin from './.fscr/plugins/my-plugin/index.js';
+import plugin from './.fsr/plugins/my-plugin/index.js';
 
 describe('My Plugin', () => {
   it('should have required fields', () => {
@@ -844,13 +844,13 @@ Create comprehensive documentation for plugin developers:
 
 ```bash
 # Search for plugins
-$ fscr plugin search deploy
+$ fsr plugin search deploy
 
 # Browse all plugins
-$ fscr plugin browse
+$ fsr plugin browse
 
 # Get plugin info
-$ fscr plugin info fscr-plugin-deploy
+$ fsr plugin info fsr-plugin-deploy
 ```
 
 ## Summary

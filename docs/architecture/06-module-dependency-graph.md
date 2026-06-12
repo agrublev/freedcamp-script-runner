@@ -399,9 +399,9 @@ Each command is a separate chunk:
 dist/
 ├── cli.js                  (Entry point - 10KB)
 ├── commands/
-│   ├── run.js             (Loaded when: fscr run ...)
-│   ├── list.js            (Loaded when: fscr list)
-│   ├── doctor.js          (Loaded when: fscr doctor)
+│   ├── run.js             (Loaded when: fsr run ...)
+│   ├── list.js            (Loaded when: fsr list)
+│   ├── doctor.js          (Loaded when: fsr doctor)
 │   └── ...
 ```
 

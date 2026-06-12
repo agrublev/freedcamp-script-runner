@@ -1,5 +1,5 @@
 {
-  "name": "fscr",
+  "name": "fsr",
   "version": "7.0.0",
   "description": "Runs the fscripts.md file - TypeScript Edition",
   "type": "module",
@@ -19,7 +19,7 @@
 
     "_comment_cli": "CLI Commands",
     "fsr": "node dist/cli.js",
-    "fscr": "node dist/cli.js",
+    "fsr": "node dist/cli.js",
     "dev": "tsx src/cli.ts",
 
     "_comment_testing": "Test Scripts",
@@ -73,7 +73,7 @@
     "bin"
   ],
   "bin": {
-    "fscr": "./bin",
+    "fsr": "./bin",
     "fsr": "./bin"
   },
   "dependencies": {

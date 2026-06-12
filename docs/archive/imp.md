@@ -4,9 +4,9 @@
 >
 > ⚡ Startup time: **<50ms** | 💾 Memory: **<50MB** | 📘 **100% TypeScript**
 
-[![npm version](https://img.shields.io/npm/v/fscr.svg)](https://www.npmjs.com/package/fscr)
+[![npm version](https://img.shields.io/npm/v/fsr.svg)](https://www.npmjs.com/package/fsr)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js Version](https://img.shields.io/node/v/fscr.svg)](https://nodejs.org)
+[![Node.js Version](https://img.shields.io/node/v/fsr.svg)](https://nodejs.org)
 
 ---
 
@@ -32,14 +32,14 @@ FSCR v7.0.0 is a **complete rewrite** with massive performance improvements and 
 
 ```bash
 # Global install
-npm install -g fscr@latest
+npm install -g fsr@latest
 
 # Project install
-npm install --save-dev fscr
+npm install --save-dev fsr
 
 # Verify installation
-fscr --version
-fscr doctor
+fsr --version
+fsr doctor
 ```
 
 ---
@@ -49,7 +49,7 @@ fscr doctor
 ### 1. Create `fscripts.md`
 
 ```bash
-fscr generate  # Auto-generate from package.json
+fsr generate  # Auto-generate from package.json
 ```
 
 Or create manually:
@@ -87,19 +87,19 @@ await runTests();
 
 ```bash
 # Interactive mode (choose from menu)
-fscr
+fsr
 
 # Run specific task
-fscr run start:web
+fsr run start:web
 
 # List all tasks
-fscr list
+fsr list
 
 # Run multiple tasks sequentially
-fscr run-s build test deploy
+fsr run-s build test deploy
 
 # Run multiple tasks in parallel
-fscr run-p start:web start:api
+fsr run-p start:web start:api
 ```
 
 ---
@@ -109,7 +109,7 @@ fscr run-p start:web start:api
 ### 1. **Lightning Fast** ⚡
 
 ```bash
-$ time fscr run build
+$ time fsr run build
 real    0m0.045s  # <50ms startup!
 ```
 
@@ -123,10 +123,10 @@ real    0m0.045s  # <50ms startup!
 
 ```bash
 # Auto-install for your shell
-fscr completion --install
+fsr completion --install
 
 # Now get autocompletion!
-fscr run <TAB>
+fsr run <TAB>
   start:web    start:api    build    test    deploy
 ```
 
@@ -140,7 +140,7 @@ fscr run <TAB>
 
 ```typescript
 // Full type safety throughout
-import type { Command, CommandContext } from 'fscr';
+import type { Command, CommandContext } from 'fsr';
 
 export default {
   name: 'custom',
@@ -155,7 +155,7 @@ export default {
 Extend FSCR with custom commands and hooks:
 
 ```typescript
-// .fscr/plugins/my-plugin/index.js
+// .fsr/plugins/my-plugin/index.js
 export default {
   name: 'my-plugin',
   version: '1.0.0',
@@ -179,7 +179,7 @@ export default {
 ```
 
 ```bash
-fscr deploy  # Your custom command!
+fsr deploy  # Your custom command!
 ```
 
 ### 5. **Configuration Profiles** ⚙️
@@ -205,23 +205,23 @@ Manage multiple environments easily:
 ```
 
 ```bash
-$ fscr profile list
+$ fsr profile list
   • development (active)
   • production
 
-$ fscr profile switch production
-$ fscr run deploy  # Uses production profile
+$ fsr profile switch production
+$ fsr run deploy  # Uses production profile
 ```
 
 ### 6. **Smart Caching** 💾
 
 ```bash
 # First run (cold cache)
-$ time fscr run build
+$ time fsr run build
 450ms
 
 # Second run (warm cache)
-$ time fscr run build
+$ time fsr run build
 45ms  # 10x faster!
 ```
 
@@ -231,7 +231,7 @@ Automatic cache invalidation when `fscripts.md` changes.
 
 #### Beautiful Error Messages:
 ```bash
-$ fscr run invalid-task
+$ fsr run invalid-task
 
 ❌ Task "invalid-task" not found
 
@@ -241,7 +241,7 @@ Available tasks:
   • build
   ... and 23 more
 
-Tip: Run "fscr list" to see all tasks
+Tip: Run "fsr list" to see all tasks
 ```
 
 #### Progress Indicators:
@@ -255,7 +255,7 @@ Progress: [████████████████████░░░
 
 #### Performance Monitoring:
 ```bash
-$ FSCR_PERF=1 fscr run test
+$ FSCR_PERF=1 fsr run test
 
 Running tests...
 
@@ -270,7 +270,7 @@ Running tests...
 Run diagnostics to ensure everything works:
 
 ```bash
-$ fscr doctor
+$ fsr doctor
 
 🔍 Running FSCR diagnostics...
 
@@ -287,7 +287,7 @@ $ fscr doctor
    Found (4,523 bytes)
 
 ✅ package.json
-   Valid (fscr@7.0.0)
+   Valid (fsr@7.0.0)
 
 ⚠️  TypeScript
    Not installed (optional)
@@ -307,7 +307,7 @@ Summary:
 
 Fix issues automatically:
 ```bash
-fscr doctor --fix
+fsr doctor --fix
 ```
 
 ---
@@ -318,39 +318,39 @@ fscr doctor --fix
 
 | Command | Description | Example |
 |---------|-------------|---------|
-| `fscr` | Interactive menu | `fscr` |
-| `run` | Run a specific task | `fscr run start:web` |
-| `list` | List all tasks | `fscr list` |
-| `scripts` | Choose from package.json | `fscr scripts` |
-| `run-s` | Run tasks sequentially | `fscr run-s build test` |
-| `run-p` | Run tasks in parallel | `fscr run-p start:web start:api` |
+| `fsr` | Interactive menu | `fsr` |
+| `run` | Run a specific task | `fsr run start:web` |
+| `list` | List all tasks | `fsr list` |
+| `scripts` | Choose from package.json | `fsr scripts` |
+| `run-s` | Run tasks sequentially | `fsr run-s build test` |
+| `run-p` | Run tasks in parallel | `fsr run-p start:web start:api` |
 
 ### Utility Commands
 
 | Command | Description | Example |
 |---------|-------------|---------|
-| `generate` | Generate fscripts.md | `fscr generate` |
-| `toc` | Generate table of contents | `fscr toc` |
-| `clear` | Clear recent task history | `fscr clear` |
-| `doctor` | Run diagnostics | `fscr doctor --fix` |
-| `completion` | Shell completions | `fscr completion --install` |
+| `generate` | Generate fscripts.md | `fsr generate` |
+| `toc` | Generate table of contents | `fsr toc` |
+| `clear` | Clear recent task history | `fsr clear` |
+| `doctor` | Run diagnostics | `fsr doctor --fix` |
+| `completion` | Shell completions | `fsr completion --install` |
 
 ### Configuration Commands
 
 | Command | Description | Example |
 |---------|-------------|---------|
-| `profile list` | List profiles | `fscr profile list` |
-| `profile create` | Create profile | `fscr profile create staging` |
-| `profile switch` | Switch profile | `fscr profile switch prod` |
-| `profile delete` | Delete profile | `fscr profile delete old` |
+| `profile list` | List profiles | `fsr profile list` |
+| `profile create` | Create profile | `fsr profile create staging` |
+| `profile switch` | Switch profile | `fsr profile switch prod` |
+| `profile delete` | Delete profile | `fsr profile delete old` |
 
 ### Plugin Commands
 
 | Command | Description | Example |
 |---------|-------------|---------|
-| `plugin list` | List plugins | `fscr plugin list` |
-| `plugin install` | Install plugin | `fscr plugin install my-plugin` |
-| `plugin uninstall` | Uninstall plugin | `fscr plugin uninstall my-plugin` |
+| `plugin list` | List plugins | `fsr plugin list` |
+| `plugin install` | Install plugin | `fsr plugin install my-plugin` |
+| `plugin uninstall` | Uninstall plugin | `fsr plugin uninstall my-plugin` |
 
 ---
 
@@ -360,10 +360,10 @@ fscr doctor --fix
 
 ```bash
 # Override environment variables
-fscr run deploy --env "API_KEY=xxx,ENV=prod"
+fsr run deploy --env "API_KEY=xxx,ENV=prod"
 
 # Multiple variables
-fscr run test --env "CI=true,COVERAGE=80"
+fsr run test --env "CI=true,COVERAGE=80"
 ```
 
 ### Dry Run Mode
@@ -371,7 +371,7 @@ fscr run test --env "CI=true,COVERAGE=80"
 See what would be executed without running:
 
 ```bash
-$ fscr run build --dry-run
+$ fsr run build --dry-run
 
 🔍 Dry run mode - showing what would be executed:
 
@@ -390,7 +390,7 @@ npm run build -- --production
 Run without output (for CI/CD):
 
 ```bash
-fscr run test --silent && echo "Tests passed!"
+fsr run test --silent && echo "Tests passed!"
 ```
 
 ### Performance Benchmarks
@@ -443,7 +443,7 @@ npm run test:ui
 ## 🏗️ Architecture
 
 ```
-fscr/
+fsr/
 ├── src/
 │   ├── cli.ts                    # Main entry (lazy loading)
 │   ├── types/
@@ -473,7 +473,7 @@ fscr/
 ├── tests/                        # Comprehensive tests
 ├── benchmarks/                   # Performance benchmarks
 ├── bin/                          # Entry points
-│   ├── fscr
+│   ├── fsr
 │   └── fsr
 ├── tsconfig.json                 # TypeScript config
 ├── vitest.config.ts              # Test config

@@ -39,7 +39,7 @@ Successfully implemented a comprehensive doctor diagnostic system for FSCR v7.0.
 #### `/lib/diagnostics/cache.js`
 - Checks cache directory existence and permissions
 - Calculates cache size with human-readable formatting
-- Auto-fix creates cache directory at `~/.fscr/cache`
+- Auto-fix creates cache directory at `~/.fsr/cache`
 - **Lines**: 99
 - **Tests**: 1 test case
 
@@ -134,10 +134,10 @@ Implemented for:
 ### ✅ CLI Integration
 
 ```bash
-fscr doctor                  # Run diagnostics
-fscr doctor --fix           # Auto-fix issues
-fscr doctor --json          # JSON output
-fscr doctor --verbose       # Verbose output
+fsr doctor                  # Run diagnostics
+fsr doctor --fix           # Auto-fix issues
+fsr doctor --json          # JSON output
+fsr doctor --verbose       # Verbose output
 ```
 
 ### ✅ Performance Metrics
@@ -186,7 +186,7 @@ Duration: 2.63s
 ### Successful Run
 
 ```bash
-$ fscr doctor
+$ fsr doctor
 
 🔍 Running FSCR diagnostics...
 
@@ -203,7 +203,7 @@ $ fscr doctor
    Found (1.85 KB)
 
 ✅ package.json
-   Valid (fscr@6.2.6)
+   Valid (fsr@6.2.6)
 
 ⚠️  TypeScript
    Not installed (optional)
@@ -228,14 +228,14 @@ Summary:
 ### Auto-Fix Run
 
 ```bash
-$ fscr doctor --fix
+$ fsr doctor --fix
 
 🔍 Running FSCR diagnostics...
 
 ❌ Cache system
    Cache directory does not exist
    Attempting to fix...
-   ✓ Fixed: Created cache directory at /Users/me3n/.fscr/cache
+   ✓ Fixed: Created cache directory at /Users/me3n/.fsr/cache
 
 ──────────────────────────────────────────────────
 Summary:
@@ -315,7 +315,7 @@ Example GitHub Actions:
 
 ```yaml
 - name: Health Check
-  run: fscr doctor --json > health-report.json
+  run: fsr doctor --json > health-report.json
 ```
 
 ## Future Enhancements

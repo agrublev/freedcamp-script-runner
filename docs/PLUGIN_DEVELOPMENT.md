@@ -29,7 +29,7 @@ FSCR's plugin system allows you to extend the CLI with custom commands and hooks
 ### Quick Start
 
 ```javascript
-// .fscr/plugins/my-plugin/index.js
+// .fsr/plugins/my-plugin/index.js
 export default {
   name: 'my-plugin',
   version: '1.0.0',
@@ -85,7 +85,7 @@ interface Plugin {
 ### File Structure
 
 ```
-.fscr/plugins/my-plugin/
+.fsr/plugins/my-plugin/
 ├── index.js           # Main plugin file
 ├── package.json       # Optional: for npm plugins
 ├── README.md          # Plugin documentation
@@ -333,7 +333,7 @@ context.registerCommand({
   description: 'Deploy application',
   aliases: ['ship', 'publish'],
   handler: async (options, ctx) => {
-    // Can be called with: fscr deploy, fscr ship, or fscr publish
+    // Can be called with: fsr deploy, fsr ship, or fsr publish
   }
 });
 ```
@@ -345,9 +345,9 @@ context.registerCommand({
   name: 'deploy',
   description: 'Deploy application',
   examples: [
-    'fscr deploy --env staging',
-    'fscr deploy --env prod --branch main',
-    'fscr deploy --dry-run'
+    'fsr deploy --env staging',
+    'fsr deploy --env prod --branch main',
+    'fsr deploy --dry-run'
   ],
   handler: async (options, ctx) => {
     // ...
@@ -681,7 +681,7 @@ describe('MyPlugin', () => {
 ### Integration Testing
 
 ```javascript
-import { PluginManager } from 'fscr/lib/plugins';
+import { PluginManager } from 'fsr/lib/plugins';
 
 describe('Plugin Integration', () => {
   it('should load and execute plugin', async () => {
@@ -704,13 +704,13 @@ To publish as an npm package, add `package.json`:
 
 ```json
 {
-  "name": "fscr-plugin-my-plugin",
+  "name": "fsr-plugin-my-plugin",
   "version": "1.0.0",
   "description": "My FSCR plugin",
   "main": "index.js",
-  "keywords": ["fscr", "plugin"],
+  "keywords": ["fsr", "plugin"],
   "peerDependencies": {
-    "fscr": "^7.0.0"
+    "fsr": "^7.0.0"
   }
 }
 ```
@@ -724,17 +724,17 @@ npm publish
 Users can install with:
 
 ```bash
-npm install fscr-plugin-my-plugin
+npm install fsr-plugin-my-plugin
 ```
 
-FSCR auto-discovers plugins with `fscr-plugin-*` prefix in `node_modules`.
+FSCR auto-discovers plugins with `fsr-plugin-*` prefix in `node_modules`.
 
 ### Local Plugin
 
-Place in `.fscr/plugins/my-plugin/`:
+Place in `.fsr/plugins/my-plugin/`:
 
 ```
-.fscr/
+.fsr/
 └── plugins/
     └── my-plugin/
         ├── index.js

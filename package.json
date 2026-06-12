@@ -1,6 +1,6 @@
 {
-    "name": "fscr",
-    "version": "7.2.6",
+    "name": "fsr",
+    "version": "7.2.7",
     "description": "Runs the fscripts.md file",
     "type": "module",
     "main": "./dist/index.js",
@@ -43,7 +43,6 @@
         "bin"
     ],
     "bin": {
-        "fscr": "./bin",
         "fsr": "./bin"
     },
     "dependencies": {

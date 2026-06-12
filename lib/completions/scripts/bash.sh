@@ -38,14 +38,14 @@ _fscr_completion() {
     local cur="${COMP_WORDS[COMP_CWORD]}"
     local prev="${COMP_WORDS[COMP_CWORD-1]}"
 
-    # Get the main command (first argument after fscr)
+    # Get the main command (first argument after fsr)
     local cmd=""
     if [ ${COMP_CWORD} -gt 0 ]; then
         cmd="${COMP_WORDS[1]}"
     fi
 
     case "${prev}" in
-        fscr|fsr)
+        fsr|fsr)
             # Complete main commands
             COMPREPLY=($(compgen -W "${commands}" -- "${cur}"))
             return 0
@@ -103,6 +103,6 @@ _fscr_completion() {
     return 0
 }
 
-# Register completion for both fscr and fsr
-complete -F _fscr_completion fscr
+# Register completion for both fsr and fsr
+complete -F _fscr_completion fsr
 complete -F _fscr_completion fsr

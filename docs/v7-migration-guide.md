@@ -315,8 +315,8 @@ Install a plugin
 
 **Examples:**
 ```bash
-fsr plugin install fscr-plugin-notifications
-fsr plugin install https://github.com/user/fscr-plugin.git --type git
+fsr plugin install fsr-plugin-notifications
+fsr plugin install https://github.com/user/fsr-plugin.git --type git
 fsr plugin install ./my-plugin --type local
 fsr plugin install some-plugin --no-enable
 ```
@@ -474,10 +474,10 @@ npx tsc --version
 
 ```bash
 # Verify installation
-npm list fscr
+npm list fsr
 
 # Reinstall if needed
-npm install -g fscr
+npm install -g fsr
 ```
 
 ### Plugin Issues
@@ -487,7 +487,7 @@ npm install -g fscr
 fsr plugin list
 
 # Check plugin directory
-ls -la .fscr/plugins/
+ls -la .fsr/plugins/
 
 # Reinstall plugin
 fsr plugin uninstall <name>

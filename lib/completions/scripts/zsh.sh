@@ -70,7 +70,7 @@ _fscr() {
 
     case $state in
         command)
-            _describe -t commands 'fscr commands' commands
+            _describe -t commands 'fsr commands' commands
             ;;
         args)
             case $words[1] in
@@ -119,6 +119,6 @@ _fscr() {
     return 0
 }
 
-# Register completion for both fscr and fsr
-compdef _fscr fscr
+# Register completion for both fsr and fsr
+compdef _fscr fsr
 compdef _fscr fsr

@@ -10,14 +10,14 @@ FSCR v7.0.0 introduces **multi-environment profile support**, allowing you to ma
 
 ```bash
 # Create a development profile
-fscr profile create development \
+fsr profile create development \
   --scripts-file fscripts.md \
   --env "NODE_ENV=development,DEBUG=true" \
   --set-default \
   --set-active
 
 # Create a production profile
-fscr profile create production \
+fsr profile create production \
   --scripts-file fscripts.prod.md \
   --env "NODE_ENV=production"
 ```
@@ -26,13 +26,13 @@ fscr profile create production \
 
 ```bash
 # Switch to production
-fscr profile switch production
+fsr profile switch production
 
 # Run tasks with production profile
-fscr run deploy
+fsr run deploy
 
 # Switch back to development
-fscr profile switch development
+fsr profile switch development
 ```
 
 ## Profile Configuration
@@ -75,12 +75,12 @@ Profiles are stored in your `package.json` under the `fscripts` section:
 
 ## Commands
 
-### `fscr profile list`
+### `fsr profile list`
 
 List all available profiles with their status.
 
 ```bash
-fscr profile list
+fsr profile list
 ```
 
 **Output:**
@@ -100,12 +100,12 @@ fscr profile list
     Env: NODE_ENV=production
 ```
 
-### `fscr profile create <name>`
+### `fsr profile create <name>`
 
 Create a new profile.
 
 ```bash
-fscr profile create <name> [options]
+fsr profile create <name> [options]
 ```
 
 **Options:**
@@ -119,37 +119,37 @@ fscr profile create <name> [options]
 
 ```bash
 # Basic profile
-fscr profile create staging --scripts-file fscripts.staging.md
+fsr profile create staging --scripts-file fscripts.staging.md
 
 # With environment variables
-fscr profile create production \
+fsr profile create production \
   --scripts-file fscripts.prod.md \
   --env "NODE_ENV=production,API_URL=https://api.example.com"
 
 # With inheritance
-fscr profile create ci \
+fsr profile create ci \
   --inherits production \
   --env "CI=true"
 
 # Set as default and active
-fscr profile create development \
+fsr profile create development \
   --scripts-file fscripts.md \
   --env "NODE_ENV=development" \
   --set-default \
   --set-active
 ```
 
-### `fscr profile switch <name>`
+### `fsr profile switch <name>`
 
 Switch to a different profile.
 
 ```bash
-fscr profile switch <name>
+fsr profile switch <name>
 ```
 
 **Example:**
 ```bash
-fscr profile switch production
+fsr profile switch production
 # ✅ Switched to profile "production"
 #    Scripts: fscripts.prod.md
 #    Environment:
@@ -157,12 +157,12 @@ fscr profile switch production
 #      API_URL=https://api.example.com
 ```
 
-### `fscr profile delete <name>`
+### `fsr profile delete <name>`
 
 Delete a profile.
 
 ```bash
-fscr profile delete <name> [--force]
+fsr profile delete <name> [--force]
 ```
 
 **Options:**
@@ -170,19 +170,19 @@ fscr profile delete <name> [--force]
 
 **Example:**
 ```bash
-fscr profile delete old-staging --force
+fsr profile delete old-staging --force
 ```
 
 **Restrictions:**
 - Cannot delete the active profile (switch to another first)
 - Cannot delete the default profile (set another as default first)
 
-### `fscr profile current`
+### `fsr profile current`
 
 Show the current active profile.
 
 ```bash
-fscr profile current
+fsr profile current
 ```
 
 **Output:**
@@ -196,17 +196,17 @@ fscr profile current
      DEBUG=true
 ```
 
-### `fscr profile default <name>`
+### `fsr profile default <name>`
 
 Set a profile as the default.
 
 ```bash
-fscr profile default <name>
+fsr profile default <name>
 ```
 
 **Example:**
 ```bash
-fscr profile default production
+fsr profile default production
 # ✅ Set "production" as default profile.
 ```
 
@@ -309,7 +309,7 @@ Profiles support custom options for advanced configuration.
 
 ## Active Profile Storage
 
-The active profile is stored in `.fscr/active-profile`:
+The active profile is stored in `.fsr/active-profile`:
 
 ```json
 {
@@ -318,14 +318,14 @@ The active profile is stored in `.fscr/active-profile`:
 }
 ```
 
-This file is automatically managed by FSCR. Add `.fscr/` to your `.gitignore` to keep it local.
+This file is automatically managed by FSCR. Add `.fsr/` to your `.gitignore` to keep it local.
 
 ## Profile Priority
 
 FSCR determines which profile to use in this order:
 
-1. **Active profile** (set via `fscr profile switch`)
-2. **Default profile** (set in `package.json` or via `fscr profile default`)
+1. **Active profile** (set via `fsr profile switch`)
+2. **Default profile** (set in `package.json` or via `fsr profile default`)
 3. **Fallback** (use `fscripts.md` if no profiles configured)
 
 ## Best Practices
@@ -334,13 +334,13 @@ FSCR determines which profile to use in this order:
 
 ```bash
 # Good
-fscr profile create development
-fscr profile create staging
-fscr profile create production
+fsr profile create development
+fsr profile create staging
+fsr profile create production
 
 # Avoid
-fscr profile create p1
-fscr profile create config2
+fsr profile create p1
+fsr profile create config2
 ```
 
 ### 2. Keep Environment Variables in Profiles
@@ -349,13 +349,13 @@ Instead of:
 ```bash
 export NODE_ENV=production
 export API_URL=https://api.example.com
-fscr run deploy
+fsr run deploy
 ```
 
 Use:
 ```bash
-fscr profile switch production
-fscr run deploy
+fsr profile switch production
+fsr run deploy
 ```
 
 ### 3. Use Inheritance for Common Settings
@@ -382,11 +382,11 @@ fscr run deploy
 }
 ```
 
-### 4. Add `.fscr/` to `.gitignore`
+### 4. Add `.fsr/` to `.gitignore`
 
 ```gitignore
 # FSCR local state
-.fscr/
+.fsr/
 ```
 
 ### 5. Document Your Profiles
@@ -416,19 +416,19 @@ Add comments in package.json:
 
 ```bash
 # Setup
-fscr profile create staging --env "ENV=staging,API_URL=https://staging.example.com"
-fscr profile create production --env "ENV=production,API_URL=https://api.example.com"
+fsr profile create staging --env "ENV=staging,API_URL=https://staging.example.com"
+fsr profile create production --env "ENV=production,API_URL=https://api.example.com"
 
 # Deploy to staging
-fscr profile switch staging
-fscr run deploy
+fsr profile switch staging
+fsr run deploy
 
 # Test staging
-fscr run test:integration
+fsr run test:integration
 
 # Deploy to production
-fscr profile switch production
-fscr run deploy
+fsr profile switch production
+fsr run deploy
 ```
 
 ### CI/CD Integration
@@ -440,25 +440,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: npm install -g fscr
-      - run: fscr profile switch production
-      - run: fscr run build
-      - run: fscr run deploy
+      - run: npm install -g fsr
+      - run: fsr profile switch production
+      - run: fsr run build
+      - run: fsr run deploy
 ```
 
 ### Feature Branches
 
 ```bash
 # Create feature-specific profile
-fscr profile create feature-auth \
+fsr profile create feature-auth \
   --scripts-file fscripts.md \
   --env "FEATURE_AUTH=true,NODE_ENV=development"
 
 # Switch to it
-fscr profile switch feature-auth
+fsr profile switch feature-auth
 
 # Run tests
-fscr run test
+fsr run test
 ```
 
 ## Troubleshooting
@@ -467,13 +467,13 @@ fscr run test
 
 ```bash
 ❌ Profile "staging" does not exist.
-List available profiles with: fscr profile list
+List available profiles with: fsr profile list
 ```
 
 **Solution:** Check profile name spelling or create the profile:
 ```bash
-fscr profile list
-fscr profile create staging
+fsr profile list
+fsr profile create staging
 ```
 
 ### Cannot Delete Active Profile
@@ -484,8 +484,8 @@ fscr profile create staging
 
 **Solution:** Switch to another profile first:
 ```bash
-fscr profile switch production
-fscr profile delete development
+fsr profile switch production
+fsr profile delete development
 ```
 
 ### Invalid Environment Variables
@@ -510,7 +510,7 @@ fscr profile delete development
 For programmatic access:
 
 ```typescript
-import { ConfigManager } from 'fscr';
+import { ConfigManager } from 'fsr';
 
 const config = new ConfigManager();
 
@@ -541,12 +541,12 @@ If you had a single `fscripts.md` file, no changes needed. To adopt profiles:
 
 1. Create a default profile:
 ```bash
-fscr profile create development --scripts-file fscripts.md --set-default
+fsr profile create development --scripts-file fscripts.md --set-default
 ```
 
 2. Create additional profiles as needed:
 ```bash
-fscr profile create production --scripts-file fscripts.prod.md
+fsr profile create production --scripts-file fscripts.prod.md
 ```
 
 3. Your existing workflows continue to work.

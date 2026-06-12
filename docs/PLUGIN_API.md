@@ -543,7 +543,7 @@ import type {
   HookEvent,
   HookHandler,
   // ... etc
-} from 'fscr/types/plugin';
+} from 'fsr/types/plugin';
 ```
 
 ---

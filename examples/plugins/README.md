@@ -15,8 +15,8 @@ This directory contains example plugins demonstrating various features of the FS
 
 **Usage:**
 ```bash
-fscr hello
-fscr hello --name Alice
+fsr hello
+fsr hello --name Alice
 ```
 
 **Code highlights:**
@@ -50,9 +50,9 @@ context.registerHook('pre-task', async (data) => {
 
 **Usage:**
 ```bash
-fscr timer              # Show last 10 tasks
-fscr timer --limit 20   # Show last 20 tasks
-fscr timer --task build # Stats for specific task
+fsr timer              # Show last 10 tasks
+fsr timer --limit 20   # Show last 20 tasks
+fsr timer --task build # Stats for specific task
 ```
 
 **Code highlights:**
@@ -87,9 +87,9 @@ context.registerHook('post-task', async (data) => {
 
 **Usage:**
 ```bash
-fscr notify --enable   # Enable notifications
-fscr notify --disable  # Disable notifications
-fscr notify --status   # Check status
+fsr notify --enable   # Enable notifications
+fsr notify --disable  # Disable notifications
+fsr notify --status   # Check status
 ```
 
 **Code highlights:**
@@ -120,11 +120,11 @@ context.registerHook('post-task', async (data) => {
 
 **Usage:**
 ```bash
-fscr deploy --env staging
-fscr deploy --env prod --branch main
-fscr deploy --env dev --dry-run
-fscr ship --env prod              # Using alias
-fscr deploy-history               # View history
+fsr deploy --env staging
+fsr deploy --env prod --branch main
+fsr deploy --env dev --dry-run
+fsr ship --env prod              # Using alias
+fsr deploy-history               # View history
 ```
 
 **Code highlights:**
@@ -157,10 +157,10 @@ context.registerCommand({
 
 ### Local Installation
 
-1. Copy a plugin directory to `.fscr/plugins/`:
+1. Copy a plugin directory to `.fsr/plugins/`:
 ```bash
-mkdir -p .fscr/plugins
-cp -r examples/plugins/hello-world .fscr/plugins/
+mkdir -p .fsr/plugins
+cp -r examples/plugins/hello-world .fsr/plugins/
 ```
 
 2. Enable the plugin in your config:
@@ -176,7 +176,7 @@ cp -r examples/plugins/hello-world .fscr/plugins/
 
 3. Run FSCR:
 ```bash
-fscr hello
+fsr hello
 ```
 
 ### Testing Examples

@@ -70,13 +70,13 @@ export default {
           ctx.logger.info(`Notifications are ${status}`);
           ctx.logger.info(`Threshold: ${longRunningThreshold}ms`);
         } else {
-          ctx.logger.info('Usage: fscr notify [--enable|--disable|--status]');
+          ctx.logger.info('Usage: fsr notify [--enable|--disable|--status]');
         }
       },
       examples: [
-        'fscr notify --enable',
-        'fscr notify --disable',
-        'fscr notify --status'
+        'fsr notify --enable',
+        'fsr notify --disable',
+        'fsr notify --status'
       ]
     });
 

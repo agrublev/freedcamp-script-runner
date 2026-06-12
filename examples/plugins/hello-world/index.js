@@ -29,9 +29,9 @@ export default {
         ctx.logger.info(`FSCR version: ${context.version}`);
       },
       examples: [
-        'fscr hello',
-        'fscr hello --name Alice',
-        'fscr hello -n Bob'
+        'fsr hello',
+        'fsr hello --name Alice',
+        'fsr hello -n Bob'
       ]
     });
 

@@ -32,7 +32,7 @@ FSCR v7.0.0 includes comprehensive shell completion support for enhanced product
 The easiest way to install completions is to run:
 
 ```bash
-fscr completion install
+fsr completion install
 ```
 
 This will:
@@ -46,16 +46,16 @@ You can also specify the shell explicitly:
 
 ```bash
 # Install for Bash
-fscr completion install --shell bash
+fsr completion install --shell bash
 
 # Install for Zsh
-fscr completion install --shell zsh
+fsr completion install --shell zsh
 
 # Install for Fish
-fscr completion install --shell fish
+fsr completion install --shell fish
 
 # Install for PowerShell
-fscr completion install --shell powershell
+fsr completion install --shell powershell
 ```
 
 ### Activate Completions
@@ -89,7 +89,7 @@ Once installed, use `Tab` to complete commands and tasks:
 ### Complete Commands
 
 ```bash
-$ fscr <Tab>
+$ fsr <Tab>
 start     run      list     scripts   run-s
 run-p     bump     upgrade  branch    completion
 ```
@@ -97,7 +97,7 @@ run-p     bump     upgrade  branch    completion
 ### Complete Tasks
 
 ```bash
-$ fscr run <Tab>
+$ fsr run <Tab>
 node:script    say:hello     decrypt       run:s
 run:p          run:one       run:two       run:three
 ```
@@ -105,7 +105,7 @@ run:p          run:one       run:two       run:three
 ### Complete Multiple Tasks
 
 ```bash
-$ fscr run-s run:one <Tab>
+$ fsr run-s run:one <Tab>
 node:script    say:hello     decrypt       run:s
 run:p          run:one       run:two       run:three
 ```
@@ -113,7 +113,7 @@ run:p          run:one       run:two       run:three
 ### Complete Subcommands
 
 ```bash
-$ fscr completion <Tab>
+$ fsr completion <Tab>
 install    uninstall    status    generate
 ```
 
@@ -124,7 +124,7 @@ install    uninstall    status    generate
 See which shells have completions installed:
 
 ```bash
-$ fscr completion status
+$ fsr completion status
 
 📋 Completion Status
 
@@ -140,10 +140,10 @@ Output the completion script without installing:
 
 ```bash
 # Generate Bash completion script
-fscr completion generate --shell bash
+fsr completion generate --shell bash
 
 # Generate Zsh completion script
-fscr completion generate --shell zsh
+fsr completion generate --shell zsh
 ```
 
 This is useful if you want to:
@@ -156,7 +156,7 @@ This is useful if you want to:
 If you need to update or repair completions:
 
 ```bash
-fscr completion install --force
+fsr completion install --force
 ```
 
 This will overwrite existing completion configuration.
@@ -167,10 +167,10 @@ Remove completions from your shell:
 
 ```bash
 # Uninstall from current shell
-fscr completion uninstall
+fsr completion uninstall
 
 # Uninstall from specific shell
-fscr completion uninstall --shell zsh
+fsr completion uninstall --shell zsh
 ```
 
 ## How It Works
@@ -215,7 +215,7 @@ If completions aren't working after installation:
 
 1. **Check installation status:**
    ```bash
-   fscr completion status
+   fsr completion status
    ```
 
 2. **Verify shell config:**
@@ -234,7 +234,7 @@ If completions aren't working after installation:
 
 4. **Reinstall with force:**
    ```bash
-   fscr completion install --force
+   fsr completion install --force
    ```
 
 ### Tasks Not Completing
@@ -247,7 +247,7 @@ If task names aren't appearing in completions:
 
 ### Fish Completions Not Found
 
-For Fish, completions are installed to `~/.config/fish/completions/fscr.fish`. If they're not working:
+For Fish, completions are installed to `~/.config/fish/completions/fsr.fish`. If they're not working:
 
 1. **Check directory exists:**
    ```fish
@@ -256,7 +256,7 @@ For Fish, completions are installed to `~/.config/fish/completions/fscr.fish`. I
 
 2. **Verify file exists:**
    ```fish
-   cat ~/.config/fish/completions/fscr.fish
+   cat ~/.config/fish/completions/fsr.fish
    ```
 
 3. **Reload completions:**
@@ -311,7 +311,7 @@ Typical completion response time: **< 50ms**
 
 ### Fish
 - **Script:** `lib/completions/scripts/fish.sh`
-- **Config:** `~/.config/fish/completions/fscr.fish`
+- **Config:** `~/.config/fish/completions/fsr.fish`
 
 ### PowerShell
 - **Script:** `lib/completions/scripts/powershell.ps1`
@@ -321,10 +321,10 @@ Typical completion response time: **< 50ms**
 
 ### Commands
 
-#### `fscr completion`
+#### `fsr completion`
 Interactive completion installation.
 
-#### `fscr completion install`
+#### `fsr completion install`
 Install completions for current shell.
 
 **Options:**
@@ -333,12 +333,12 @@ Install completions for current shell.
 
 **Examples:**
 ```bash
-fscr completion install
-fscr completion install --shell zsh
-fscr completion install --force
+fsr completion install
+fsr completion install --shell zsh
+fsr completion install --force
 ```
 
-#### `fscr completion uninstall`
+#### `fsr completion uninstall`
 Uninstall completions.
 
 **Options:**
@@ -346,19 +346,19 @@ Uninstall completions.
 
 **Examples:**
 ```bash
-fscr completion uninstall
-fscr completion uninstall --shell bash
+fsr completion uninstall
+fsr completion uninstall --shell bash
 ```
 
-#### `fscr completion status`
+#### `fsr completion status`
 Show completion installation status for all shells.
 
 **Example:**
 ```bash
-fscr completion status
+fsr completion status
 ```
 
-#### `fscr completion generate`
+#### `fsr completion generate`
 Generate completion script without installing.
 
 **Options:**
@@ -366,8 +366,8 @@ Generate completion script without installing.
 
 **Examples:**
 ```bash
-fscr completion generate --shell bash > custom.sh
-fscr completion generate --shell zsh
+fsr completion generate --shell bash > custom.sh
+fsr completion generate --shell zsh
 ```
 
 ## Development
@@ -394,9 +394,9 @@ To add completions for a new command:
 
 3. **Test completions:**
    ```bash
-   fscr completion install --force
+   fsr completion install --force
    exec $SHELL
-   fscr newcmd <Tab>
+   fsr newcmd <Tab>
    ```
 
 ### Testing

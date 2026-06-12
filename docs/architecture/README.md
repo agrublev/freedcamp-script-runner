@@ -273,7 +273,7 @@ Final Bundle (<1.5MB)
 ## 📦 File Structure
 
 ```
-fscr/
+fsr/
 ├── src/
 │   ├── cli.ts                    # Entry point
 │   ├── types/

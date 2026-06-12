@@ -24,7 +24,7 @@ src/
 
 **Features:**
 - ✅ Profile CRUD operations (Create, Read, Update, Delete)
-- ✅ Active profile tracking (`.fscr/active-profile`)
+- ✅ Active profile tracking (`.fsr/active-profile`)
 - ✅ Default profile management
 - ✅ Profile inheritance support
 - ✅ Environment variable management
@@ -36,12 +36,12 @@ src/
 
 | Command | Description | Status |
 |---------|-------------|--------|
-| `fscr profile list` | List all profiles | ✅ Complete |
-| `fscr profile create <name>` | Create new profile | ✅ Complete |
-| `fscr profile switch <name>` | Switch active profile | ✅ Complete |
-| `fscr profile delete <name>` | Delete profile | ✅ Complete |
-| `fscr profile current` | Show current profile | ✅ Complete |
-| `fscr profile default <name>` | Set default profile | ✅ Complete |
+| `fsr profile list` | List all profiles | ✅ Complete |
+| `fsr profile create <name>` | Create new profile | ✅ Complete |
+| `fsr profile switch <name>` | Switch active profile | ✅ Complete |
+| `fsr profile delete <name>` | Delete profile | ✅ Complete |
+| `fsr profile current` | Show current profile | ✅ Complete |
+| `fsr profile default <name>` | Set default profile | ✅ Complete |
 
 ### 3. Testing
 
@@ -97,14 +97,14 @@ npx tsc
 
 ```bash
 # Development profile
-fscr profile create development \
+fsr profile create development \
   --scripts-file fscripts.md \
   --env "NODE_ENV=development,DEBUG=true" \
   --set-default \
   --set-active
 
 # Production profile
-fscr profile create production \
+fsr profile create production \
   --scripts-file fscripts.prod.md \
   --env "NODE_ENV=production"
 ```
@@ -113,13 +113,13 @@ fscr profile create production \
 
 ```bash
 # List profiles
-fscr profile list
+fsr profile list
 
 # Switch profiles
-fscr profile switch production
+fsr profile switch production
 
 # Run tasks with active profile
-fscr run deploy
+fsr run deploy
 ```
 
 ## 📋 Integration Checklist
@@ -193,7 +193,7 @@ async function parseScripts() {
 
 ```gitignore
 # FSCR local state
-.fscr/
+.fsr/
 ```
 
 ## 📊 Configuration Format
@@ -223,7 +223,7 @@ async function parseScripts() {
 }
 ```
 
-### Active Profile (.fscr/active-profile)
+### Active Profile (.fsr/active-profile)
 
 ```json
 {
@@ -316,7 +316,7 @@ await config.setActiveProfile('staging');
 - [ ] Profile hooks (onActivate/onDeactivate)
 - [ ] Profile export/import
 - [ ] Profile versioning
-- [ ] Global profiles (~/.fscr/profiles)
+- [ ] Global profiles (~/.fsr/profiles)
 
 ## 📚 Documentation
 
@@ -382,28 +382,28 @@ async setProfile(name: string, profile: Profile): Promise<void>
 
 ```bash
 # Setup profiles
-fscr profile create development --env "NODE_ENV=development,DEBUG=true" --set-default
-fscr profile create staging --env "NODE_ENV=staging,API_URL=https://staging.example.com"
-fscr profile create production --env "NODE_ENV=production,API_URL=https://api.example.com"
+fsr profile create development --env "NODE_ENV=development,DEBUG=true" --set-default
+fsr profile create staging --env "NODE_ENV=staging,API_URL=https://staging.example.com"
+fsr profile create production --env "NODE_ENV=production,API_URL=https://api.example.com"
 
 # Deploy to staging
-fscr profile switch staging
-fscr run deploy
+fsr profile switch staging
+fsr run deploy
 
 # Deploy to production
-fscr profile switch production
-fscr run deploy
+fsr profile switch production
+fsr run deploy
 ```
 
 ### With Inheritance
 
 ```bash
 # Create base profile
-fscr profile create base --env "TIMEOUT=30000,RETRY=3"
+fsr profile create base --env "TIMEOUT=30000,RETRY=3"
 
 # Create environment-specific profiles that inherit from base
-fscr profile create development --inherits base --env "NODE_ENV=development"
-fscr profile create production --inherits base --env "NODE_ENV=production"
+fsr profile create development --inherits base --env "NODE_ENV=development"
+fsr profile create production --inherits base --env "NODE_ENV=production"
 ```
 
 ## 🚨 Important Notes
@@ -421,7 +421,7 @@ No migration needed! Your existing setup continues to work. Profiles are opt-in:
 
 ```bash
 # Create a profile from existing setup
-fscr profile create development --scripts-file fscripts.md --set-default
+fsr profile create development --scripts-file fscripts.md --set-default
 ```
 
 ### Security
@@ -430,7 +430,7 @@ fscr profile create development --scripts-file fscripts.md --set-default
 - ✅ Profile name restrictions
 - ✅ Safe file operations
 - ✅ Error handling
-- ⚠️ Add `.fscr/` to `.gitignore`
+- ⚠️ Add `.fsr/` to `.gitignore`
 
 ## 📞 Support
 

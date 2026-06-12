@@ -3,10 +3,10 @@
 ## Commands
 
 ```bash
-fscr doctor             # Run all diagnostics
-fscr doctor --fix       # Auto-fix issues
-fscr doctor --json      # JSON output
-fscr doctor --verbose   # Verbose mode
+fsr doctor             # Run all diagnostics
+fsr doctor --fix       # Auto-fix issues
+fsr doctor --json      # JSON output
+fsr doctor --verbose   # Verbose mode
 ```
 
 ## Checks Performed
@@ -39,17 +39,17 @@ fscr doctor --verbose   # Verbose mode
 
 ### Issue: "TypeScript not installed"
 ```bash
-fscr doctor --fix  # Installs TypeScript
+fsr doctor --fix  # Installs TypeScript
 ```
 
 ### Issue: "Cache directory does not exist"
 ```bash
-fscr doctor --fix  # Creates cache directory
+fsr doctor --fix  # Creates cache directory
 ```
 
 ### Issue: "High startup time"
 ```bash
-rm -rf ~/.fscr/cache  # Clear cache
+rm -rf ~/.fsr/cache  # Clear cache
 ```
 
 ### Issue: "Node.js version too low"
@@ -63,14 +63,14 @@ nvm install 20  # If using nvm
 ### GitHub Actions
 ```yaml
 - name: FSCR Health Check
-  run: fscr doctor --json > health-report.json
+  run: fsr doctor --json > health-report.json
 ```
 
 ### GitLab CI
 ```yaml
 health-check:
   script:
-    - fscr doctor
+    - fsr doctor
 ```
 
 ## Programmatic Usage
@@ -88,22 +88,22 @@ if (!result.passed) {
 
 ## File Locations
 
-- **Cache**: `~/.fscr/cache`
+- **Cache**: `~/.fsr/cache`
 - **Config**: `./fscripts.md`, `./package.json`
 - **Diagnostics**: `./lib/diagnostics/*.js`
 
 ## Help
 
 ```bash
-fscr doctor --help      # Show help
-fscr --help             # Main help
+fsr doctor --help      # Show help
+fsr --help             # Main help
 ```
 
 ## Quick Troubleshooting
 
-1. Run `fscr doctor` to identify issues
-2. Try `fscr doctor --fix` for auto-fixes
-3. Check `~/.fscr/cache` permissions
+1. Run `fsr doctor` to identify issues
+2. Try `fsr doctor --fix` for auto-fixes
+3. Check `~/.fsr/cache` permissions
 4. Verify Node.js version >= 18.0.0
 5. Ensure package.json is valid JSON
 6. Check for peer dependency conflicts
@@ -119,8 +119,8 @@ fscr --help             # Main help
 ## Related Commands
 
 ```bash
-fscr --version          # Check version
-fscr list               # List tasks
-fscr generate           # Generate fscripts.md
-fscr clear              # Clear recent history
+fsr --version          # Check version
+fsr list               # List tasks
+fsr generate           # Generate fscripts.md
+fsr clear              # Clear recent history
 ```

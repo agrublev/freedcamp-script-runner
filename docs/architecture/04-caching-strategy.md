@@ -569,7 +569,7 @@ export class PersistentCacheManager extends CacheManager {
 
   constructor(options: { cacheDir?: string } = {}) {
     super();
-    const cacheDir = options.cacheDir || join(process.cwd(), '.fscr', 'cache');
+    const cacheDir = options.cacheDir || join(process.cwd(), '.fsr', 'cache');
     this.cacheFile = join(cacheDir, 'cache.json');
   }
 
@@ -607,7 +607,7 @@ export class PersistentCacheManager extends CacheManager {
 ### CLI Command to View Stats
 
 ```bash
-$ fscr cache stats
+$ fsr cache stats
 
 Cache Statistics:
 ─────────────────────────────
@@ -713,7 +713,7 @@ export const DEFAULT_CACHE_CONFIG: CacheConfig = {
   enabled: true,
   ttl: 5 * 60 * 1000,        // 5 minutes
   maxSize: 50 * 1024 * 1024, // 50MB
-  dir: '.fscr/cache'
+  dir: '.fsr/cache'
 };
 ```
 
@@ -736,13 +736,13 @@ export const DEFAULT_CACHE_CONFIG: CacheConfig = {
 
 ```bash
 # Disable cache
-FSCR_CACHE_ENABLED=false fscr run build
+FSCR_CACHE_ENABLED=false fsr run build
 
 # Set custom TTL (seconds)
-FSCR_CACHE_TTL=600 fscr run build
+FSCR_CACHE_TTL=600 fsr run build
 
 # Clear cache before run
-FSCR_CACHE_CLEAR=true fscr run build
+FSCR_CACHE_CLEAR=true fsr run build
 ```
 
 ## Testing Strategy

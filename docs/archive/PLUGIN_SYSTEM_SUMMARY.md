@@ -68,8 +68,8 @@ const stats = hookManager.getStats();
 **File:** `/src/lib/plugins.ts`
 
 Complete plugin lifecycle management:
-- ✅ Auto-discovery from `.fscr/plugins/` directory
-- ✅ npm package support (`fscr-plugin-*` prefix)
+- ✅ Auto-discovery from `.fsr/plugins/` directory
+- ✅ npm package support (`fsr-plugin-*` prefix)
 - ✅ Version compatibility checking (semver)
 - ✅ Initialization timeout protection
 - ✅ Command registration and conflict detection
@@ -123,9 +123,9 @@ export default {
 - Statistics calculation
 
 ```bash
-fscr timer              # Show last 10 tasks
-fscr timer --limit 20   # Custom limit
-fscr timer --task build # Filter by task
+fsr timer              # Show last 10 tasks
+fsr timer --limit 20   # Custom limit
+fsr timer --task build # Filter by task
 ```
 
 #### c) Task Notifier (`task-notifier/`)
@@ -135,9 +135,9 @@ fscr timer --task build # Filter by task
 - Toggle commands
 
 ```bash
-fscr notify --enable
-fscr notify --disable
-fscr notify --status
+fsr notify --enable
+fsr notify --disable
+fsr notify --status
 ```
 
 #### d) Deployment (`deployment/`)
@@ -148,10 +148,10 @@ fscr notify --status
 - Deployment history
 
 ```bash
-fscr deploy --env prod --branch main
-fscr ship --env staging              # Alias
-fscr deploy --env dev --dry-run
-fscr deploy-history
+fsr deploy --env prod --branch main
+fsr ship --env staging              # Alias
+fsr deploy --env dev --dry-run
+fsr deploy-history
 ```
 
 ### 5. Comprehensive Tests
@@ -211,8 +211,8 @@ TypeScript API documentation:
 1. PluginManager.initialize()
    ↓
 2. discoverPlugins()
-   ├─→ Scan .fscr/plugins/ (local)
-   └─→ Scan node_modules/ (npm packages with fscr-plugin-* prefix)
+   ├─→ Scan .fsr/plugins/ (local)
+   └─→ Scan node_modules/ (npm packages with fsr-plugin-* prefix)
    ↓
 3. loadPlugin(name)
    ├─→ Import module
@@ -288,7 +288,7 @@ context.registerCommand({
   handler: async (options, ctx) => {
     // Command logic
   },
-  examples: ['fscr deploy --env prod']
+  examples: ['fsr deploy --env prod']
 });
 ```
 
@@ -361,7 +361,7 @@ context.setStorage(state);
 {
   "fscripts": {
     "plugins": {
-      "pluginsDir": ".fscr/plugins",
+      "pluginsDir": ".fsr/plugins",
       "autoDiscover": true,
       "enabledPlugins": ["hello-world", "task-timer"],
       "disabledPlugins": ["old-plugin"]
@@ -389,8 +389,8 @@ await manager.initialize();
 
 **Local Plugin:**
 ```bash
-mkdir -p .fscr/plugins/my-plugin
-cat > .fscr/plugins/my-plugin/index.js << 'EOF'
+mkdir -p .fsr/plugins/my-plugin
+cat > .fsr/plugins/my-plugin/index.js << 'EOF'
 export default {
   name: 'my-plugin',
   version: '1.0.0',
@@ -409,14 +409,14 @@ EOF
 **npm Plugin:**
 ```bash
 npm init -y
-npm pkg set name=fscr-plugin-my-plugin
+npm pkg set name=fsr-plugin-my-plugin
 npm pkg set main=index.js
 npm publish
 ```
 
 Users install with:
 ```bash
-npm install fscr-plugin-my-plugin
+npm install fsr-plugin-my-plugin
 ```
 
 FSCR auto-discovers and loads it.
@@ -482,7 +482,7 @@ All requirements from imp.md implemented:
 - ✅ Plugin interface with `name`, `version`, `init()`
 - ✅ PluginContext with `registerCommand()` and `registerHook()`
 - ✅ Hook events: `pre-task`, `post-task`, `pre-command`, `post-command`
-- ✅ Plugin discovery from `.fscr/plugins/` directory
+- ✅ Plugin discovery from `.fsr/plugins/` directory
 - ✅ Auto-discovery and auto-loading
 - ✅ Version compatibility checking
 - ✅ Plugin lifecycle (init, execution, cleanup)
@@ -534,7 +534,7 @@ Each plugin has isolated storage - can't interfere with others.
 Plugins can't hang the system - timeouts prevent infinite loops.
 
 ### 8. Auto-Discovery
-No manual registration - just drop in `.fscr/plugins/` or install via npm.
+No manual registration - just drop in `.fsr/plugins/` or install via npm.
 
 ---
 
@@ -569,7 +569,7 @@ Plugin system is production-ready and accepting community plugins!
 1. Copy an example as a template
 2. Implement your functionality
 3. Test thoroughly
-4. Publish to npm as `fscr-plugin-*`
+4. Publish to npm as `fsr-plugin-*`
 5. Submit PR to add to official list
 
 ---

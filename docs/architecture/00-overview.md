@@ -126,7 +126,7 @@ Plugin system allows for:
 - **File:** `src/lib/plugins.ts`
 - **Responsibility:** Load and manage plugins
 - **Features:**
-  - Auto-discovery in `.fscr/plugins/`
+  - Auto-discovery in `.fsr/plugins/`
   - Lifecycle hooks
   - Custom command registration
 
@@ -314,7 +314,7 @@ cli.ts
 ## File Structure
 
 ```
-fscr/
+fsr/
 ├── src/
 │   ├── cli.ts                           # Main entry (200 lines)
 │   │
@@ -365,7 +365,7 @@ fscr/
 │   └── bundle.bench.ts                  # Bundle size
 │
 ├── bin/                                 # Binary entry points
-│   ├── fscr                             # Main binary
+│   ├── fsr                             # Main binary
 │   └── fsr                              # Alias
 │
 ├── docs/

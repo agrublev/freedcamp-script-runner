@@ -99,9 +99,9 @@ export default {
         }
       },
       examples: [
-        'fscr timer',
-        'fscr timer --limit 20',
-        'fscr timer --task build'
+        'fsr timer',
+        'fsr timer --limit 20',
+        'fsr timer --task build'
       ]
     });
 

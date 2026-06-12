@@ -211,7 +211,7 @@ describe("Completion System", () => {
 
         beforeEach(async () => {
             // Create a temporary directory for testing
-            tempDir = path.join(os.tmpdir(), `fscr-test-${Date.now()}`);
+            tempDir = path.join(os.tmpdir(), `fsr-test-${Date.now()}`);
             await fs.ensureDir(tempDir);
         });
 

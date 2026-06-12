@@ -6,16 +6,16 @@ The `doctor` command provides comprehensive health checks and diagnostics for yo
 
 ```bash
 # Run all diagnostics
-fscr doctor
+fsr doctor
 
 # Run diagnostics and auto-fix issues
-fscr doctor --fix
+fsr doctor --fix
 
 # Output results as JSON
-fscr doctor --json
+fsr doctor --json
 
 # Verbose output with error details
-fscr doctor --verbose
+fsr doctor --verbose
 ```
 
 ## What It Checks
@@ -81,7 +81,7 @@ fscr doctor --verbose
 ### 4. Cache System ✅
 
 #### Cache Directory
-- **Checks**: `~/.fscr/cache` directory exists and is writable
+- **Checks**: `~/.fsr/cache` directory exists and is writable
 - **Critical**: No
 - **Auto-fix**: Yes (creates directory with correct permissions)
 - **Reports**: Cache size in human-readable format
@@ -109,7 +109,7 @@ fscr doctor --verbose
 ### Standard Output
 
 ```bash
-$ fscr doctor
+$ fsr doctor
 
 🔍 Running FSCR diagnostics...
 
@@ -126,7 +126,7 @@ $ fscr doctor
    Found (4.52 KB)
 
 ✅ package.json
-   Valid (fscr@7.0.0)
+   Valid (fsr@7.0.0)
 
 ⚠️  TypeScript
    Not installed (optional)
@@ -159,7 +159,7 @@ Summary:
 ### With Issues
 
 ```bash
-$ fscr doctor
+$ fsr doctor
 
 🔍 Running FSCR diagnostics...
 
@@ -170,7 +170,7 @@ $ fscr doctor
    Not found
 
 ✅ package.json
-   Valid (fscr@7.0.0)
+   Valid (fsr@7.0.0)
 
 ──────────────────────────────────────────────────
 Summary:
@@ -184,13 +184,13 @@ Summary:
 │                                      │
 └──────────────────────────────────────┘
 
-Tip: Run "fscr doctor --fix" to automatically fix some issues
+Tip: Run "fsr doctor --fix" to automatically fix some issues
 ```
 
 ### Auto-Fix
 
 ```bash
-$ fscr doctor --fix
+$ fsr doctor --fix
 
 🔍 Running FSCR diagnostics...
 
@@ -202,7 +202,7 @@ $ fscr doctor --fix
 ❌ Cache system
    Cache directory does not exist
    Attempting to fix...
-   ✓ Fixed: Created cache directory at /Users/username/.fscr/cache
+   ✓ Fixed: Created cache directory at /Users/username/.fsr/cache
 
 ──────────────────────────────────────────────────
 Summary:
@@ -214,7 +214,7 @@ Summary:
 ### JSON Output
 
 ```bash
-$ fscr doctor --json
+$ fsr doctor --json
 ```
 
 ```json
@@ -266,8 +266,8 @@ Use JSON output for CI/CD pipelines:
 # GitHub Actions
 - name: Run FSCR Doctor
   run: |
-    fscr doctor --json > doctor-report.json
-    if ! fscr doctor; then
+    fsr doctor --json > doctor-report.json
+    if ! fsr doctor; then
       echo "FSCR health check failed"
       exit 1
     fi
@@ -275,10 +275,10 @@ Use JSON output for CI/CD pipelines:
 
 ```yaml
 # .gitlab-ci.yml
-fscr-health:
+fsr-health:
   script:
-    - npm install -g fscr
-    - fscr doctor --json > doctor-report.json
+    - npm install -g fsr
+    - fsr doctor --json > doctor-report.json
   artifacts:
     reports:
       json: doctor-report.json
@@ -365,14 +365,14 @@ npm install --save-dev typescript --legacy-peer-deps
 ```
 
 ### "Permission denied" on cache directory
-The cache directory is at `~/.fscr/cache`. Check permissions:
+The cache directory is at `~/.fsr/cache`. Check permissions:
 ```bash
-ls -la ~/.fscr/cache
-chmod 755 ~/.fscr/cache
+ls -la ~/.fsr/cache
+chmod 755 ~/.fsr/cache
 ```
 
 ### High startup time
-- Clear cache: `rm -rf ~/.fscr/cache`
+- Clear cache: `rm -rf ~/.fsr/cache`
 - Reduce number of plugins
 - Disable unnecessary hooks
 - Use a faster shell (zsh over bash)
@@ -385,8 +385,8 @@ chmod 755 ~/.fscr/cache
 
 ## Best Practices
 
-1. **Run before deployment**: Always run `fscr doctor` before deploying
-2. **CI/CD integration**: Add `fscr doctor` to your CI pipeline
+1. **Run before deployment**: Always run `fsr doctor` before deploying
+2. **CI/CD integration**: Add `fsr doctor` to your CI pipeline
 3. **Regular checks**: Run weekly to catch issues early
 4. **Auto-fix carefully**: Review what `--fix` will do in a test environment first
 5. **Monitor performance**: Track startup time and memory usage over time
@@ -394,7 +394,7 @@ chmod 755 ~/.fscr/cache
 
 ## Related Commands
 
-- `fscr --version` - Check FSCR version
-- `fscr --help` - List all commands
-- `fscr generate` - Generate fscripts.md
-- `fscr list` - List all available tasks
+- `fsr --version` - Check FSCR version
+- `fsr --help` - List all commands
+- `fsr generate` - Generate fscripts.md
+- `fsr list` - List all available tasks

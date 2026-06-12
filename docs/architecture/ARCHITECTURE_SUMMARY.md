@@ -193,17 +193,17 @@ export default {
 
 ```bash
 # Auto-install completions
-$ fscr completion --install
+$ fsr completion --install
 
 # Tab completion works!
-$ fscr run <TAB>
+$ fsr run <TAB>
   start:web    start:api    build    test    deploy
 ```
 
 ### 5. Doctor Diagnostics
 
 ```bash
-$ fscr doctor
+$ fsr doctor
 
 🔍 Running FSCR diagnostics...
 
@@ -211,7 +211,7 @@ $ fscr doctor
 ✅ Package manager (npm 10.0.0)
 ✅ Git (version 2.40.0)
 ✅ fscripts.md file (4,523 bytes)
-✅ package.json (fscr@7.0.0)
+✅ package.json (fsr@7.0.0)
 ⚠️  TypeScript (not installed - optional)
 
 Summary: ✅ 6 passed, ⚠️ 1 warning

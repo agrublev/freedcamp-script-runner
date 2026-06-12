@@ -7,8 +7,8 @@ Get started with FSCR v7.0.0 plugins in 5 minutes!
 Create a new directory for your plugin:
 
 ```bash
-mkdir -p .fscr/plugins/my-first-plugin
-cd .fscr/plugins/my-first-plugin
+mkdir -p .fsr/plugins/my-first-plugin
+cd .fsr/plugins/my-first-plugin
 ```
 
 Create `index.js`:
@@ -38,8 +38,8 @@ export default {
         ctx.logger.success(`👋 Hello, ${name}!`);
       },
       examples: [
-        'fscr greet',
-        'fscr greet --name Alice'
+        'fsr greet',
+        'fsr greet --name Alice'
       ]
     });
 
@@ -50,7 +50,7 @@ export default {
 
 ## 2. Enable Your Plugin
 
-Edit your `package.json` or create `.fscr/config.json`:
+Edit your `package.json` or create `.fsr/config.json`:
 
 ```json
 {
@@ -65,10 +65,10 @@ Edit your `package.json` or create `.fscr/config.json`:
 ## 3. Use Your Plugin
 
 ```bash
-fscr greet
+fsr greet
 # Output: 👋 Hello, World!
 
-fscr greet --name Alice
+fsr greet --name Alice
 # Output: 👋 Hello, Alice!
 ```
 
@@ -109,7 +109,7 @@ export default {
 Now when you run any task:
 
 ```bash
-fscr run build
+fsr run build
 # Output:
 # 🚀 Starting task: build
 # ... build output ...
@@ -244,7 +244,7 @@ context.registerHook('pre-task', async (data, ctx) => {
 ### Enable Debug Logging
 
 ```bash
-DEBUG=fscr:* fscr run build
+DEBUG=fsr:* fsr run build
 ```
 
 ### Check Plugin Status

@@ -163,11 +163,11 @@ describe('ConfigManager', () => {
       expect(active).toBeNull();
     });
 
-    it('should create .fscr directory when setting active profile', async () => {
+    it('should create .fsr directory when setting active profile', async () => {
       await configManager.setProfile('development', devProfile);
       await configManager.setActiveProfile('development');
 
-      const fscrDir = join(testDir, '.fscr');
+      const fscrDir = join(testDir, '.fsr');
       expect(existsSync(fscrDir)).toBe(true);
     });
   });

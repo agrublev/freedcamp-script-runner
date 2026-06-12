@@ -104,10 +104,10 @@ export default {
         }
       },
       examples: [
-        'fscr deploy --env staging',
-        'fscr deploy --env prod --branch release/v2',
-        'fscr deploy --env dev --dry-run',
-        'fscr ship --env prod --skip-tests'
+        'fsr deploy --env staging',
+        'fsr deploy --env prod --branch release/v2',
+        'fsr deploy --env dev --dry-run',
+        'fsr ship --env prod --skip-tests'
       ]
     });
 
@@ -135,7 +135,7 @@ export default {
 
         ctx.logger.info('─'.repeat(60));
       },
-      examples: ['fscr deploy-history']
+      examples: ['fsr deploy-history']
     });
 
     context.logger.success('Deployment plugin initialized');

@@ -159,7 +159,7 @@ TypeScript Source (.ts)
     "build:fix-extensions": "node scripts/fix-extensions.js",
 
     // Bundle (optional, for single-file distribution)
-    "bundle": "esbuild src/cli.ts --bundle --platform=node --format=esm --outfile=dist/fscr.bundle.js",
+    "bundle": "esbuild src/cli.ts --bundle --platform=node --format=esm --outfile=dist/fsr.bundle.js",
 
     // Development
     "dev": "node --loader ts-node/esm src/cli.ts",
@@ -624,14 +624,14 @@ describe('Build Performance', () => {
 ```json
 // package.json
 {
-  "name": "fscr",
+  "name": "fsr",
   "version": "7.0.0",
   "type": "module",
   "main": "./dist/cli.js",
   "types": "./dist/cli.d.ts",
   "bin": {
-    "fscr": "./bin/fscr",
-    "fsr": "./bin/fscr"
+    "fsr": "./bin/fsr",
+    "fsr": "./bin/fsr"
   },
   "files": [
     "dist",
@@ -650,7 +650,7 @@ describe('Build Performance', () => {
 ```bash
 #!/usr/bin/env node
 
-// bin/fscr
+// bin/fsr
 import '../dist/cli.js';
 ```
 

@@ -195,19 +195,19 @@ function runTask(script: Script): Promise<void> {
 
 ```bash
 # Measure startup time
-$ hyperfine 'fscr-v6 --version' 'fscr-v7 --version'
+$ hyperfine 'fsr-v6 --version' 'fsr-v7 --version'
 
-Benchmark 1: fscr-v6 --version
+Benchmark 1: fsr-v6 --version
   Time (mean ± σ):     487.3 ms ±  12.4 ms
   Range (min … max):   476.2 ms … 512.8 ms
 
-Benchmark 2: fscr-v7 --version
+Benchmark 2: fsr-v7 --version
   Time (mean ± σ):      45.2 ms ±   3.1 ms
   Range (min … max):    41.8 ms …  52.3 ms
 
 Summary
-  'fscr-v7 --version' ran
-   10.78 ± 0.76 times faster than 'fscr-v6 --version'
+  'fsr-v7 --version' ran
+   10.78 ± 0.76 times faster than 'fsr-v6 --version'
 ```
 
 ✅ **Target achieved:** <50ms startup time
@@ -226,7 +226,7 @@ $ npx type-coverage --detail
 ### Bundle Size
 
 ```bash
-$ du -sh node_modules/fscr/dist
+$ du -sh node_modules/fsr/dist
 
 v6.2.6: 2.8M
 v7.0.0: 1.2M

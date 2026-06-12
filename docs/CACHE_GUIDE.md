@@ -122,7 +122,7 @@ fsr cache export --output cache-stats.json
 ### Programmatic Access
 
 ```javascript
-import { getCache } from 'fscr/lib/cache';
+import { getCache } from 'fsr/lib/cache';
 
 // Get cache instance
 const cache = getCache();
@@ -143,7 +143,7 @@ cache.invalidate('key');
 If needed, disable caching:
 
 ```javascript
-import parseScriptFile from 'fscr/lib/parsers/parseScriptsMd';
+import parseScriptFile from 'fsr/lib/parsers/parseScriptsMd';
 
 // Disable cache for this call
 const scripts = await parseScriptFile({ useCache: false });
@@ -159,7 +159,7 @@ export FSCR_CACHE_ENABLED=false
 Configure cache behavior:
 
 ```javascript
-import { getCache } from 'fscr/lib/cache';
+import { getCache } from 'fsr/lib/cache';
 
 const cache = getCache({
     defaultTTL: 600000,    // 10 minutes (default: 5 min)
@@ -197,7 +197,7 @@ const cache = getCache({
 fsr cache clear
 
 # Clear programmatically
-import { getCache } from 'fscr/lib/cache';
+import { getCache } from 'fsr/lib/cache';
 getCache().clear();
 ```
 
@@ -316,7 +316,7 @@ export FSCR_CACHE_ENABLED=true
 export FSCR_CACHE_TTL=600000  # 10 minutes
 
 # Monitor hit rate
-fsr cache stats > /var/log/fscr-cache.log
+fsr cache stats > /var/log/fsr-cache.log
 ```
 
 ### CI/CD
