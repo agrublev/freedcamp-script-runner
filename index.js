@@ -15,6 +15,7 @@ import authConfig from "./lib/auth/auth-conf.js";
 import doctor from "./lib/commands/doctor.js";
 import completion from "./lib/completions/completion.js";
 import * as cacheCommands from "./lib/cache/cli.js";
+import { loadPlugins, registerPluginCommands } from "./lib/plugins/loader.js";
 import { spawn } from "child_process";
 import yargs from "yargs";
 
@@ -43,6 +44,7 @@ const runCmd = async (app, argsList = []) => {
 
 (async () => {
     clear();
+    const pluginCommands = await loadPlugins();
     const yargsInstance = yargs(process.argv.slice(2))
         .usage("Usage: $0 <command> [options]")
 
@@ -494,8 +496,10 @@ const runCmd = async (app, argsList = []) => {
             `${taskName("$0 completion --shell zsh")}`,
             `${textDescription("Install completions for zsh")}`
         )
-        .strict()
         .help();
+
+    registerPluginCommands(yargsInstance, pluginCommands);
+    yargsInstance.strict();
 
     const argv = yargsInstance.argv;
 
