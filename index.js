@@ -56,7 +56,7 @@ const runCmd = async (app, argsList = []) => {
          */
         .command(
             "branch",
-            "Create new branch instead of Development",
+            "Create a new branch so you don't make commits in Master or Development braches!",
             (yargs) => {},
             async function () {
                 await validateNotInDev();
