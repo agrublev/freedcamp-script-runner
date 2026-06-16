@@ -5,5 +5,15 @@
     "bracketSpacing": true,
     "jsxBracketSameLine": false,
     "semi": true,
-    "trailingComma": "none"
+    "trailingComma": "none",
+    "overrides": [
+        {
+            "files": "**/*.yml",
+            "options": {
+                "parser": "yaml",
+                "tabWidth": 2,
+                "useTabs": false
+            }
+        }
+    ]
 }

@@ -1,121 +1,141 @@
-- [Run](#run)
-  * [node:script](#nodescript)
-  * [say:hello](#sayhello)
-  * [decrypt](#decrypt)
-  * [run:s](#runs)
-  * [run:p](#runp)
-  * [run:one](#runone)
-  * [run:one:d](#runoned)
-  * [run:two](#runtwo)
-  * [run:three](#runthree)
-- [Samples](#samples)
-  * [console:sample](#consolesample)
-  * [input:sample](#inputsample)
-- [Three](#three)
-  * [threez](#threez)
-<!-- end toc -->
+-   [First category of scripts](#first-category-of-scripts)
+    -   [build](#build)
+    -   [fsr](#fsr)
+    -   [release](#release)
+    -   [release:publish](#releasepublish)
+    -   [start](#start)
+    -   [start:run](#startrun)
+    -   [watch](#watch)
+    -   [test](#test)
+    -   [test:watch](#testwatch)
+    -   [test:ui](#testui)
+    -   [test:coverage](#testcoverage)
+    -   [test:unit](#testunit)
+    -   [test:integration](#testintegration)
+    -   [test:e2e](#teste2e)
+    -   [test:performance](#testperformance)
+    <!-- end toc -->
 
-# Run
+# First category of scripts
 
-Run description here **test** sasa
+Welcome to your new amazing fscripts.md file. It replaces the headaches of npm scripts! But so much more.
 
-## node:script
+## build
 
-Javascript ran with import
-
-```javascript
-const chalk = require("chalk");
-console.log("NODEENV", process.env.NODE_ENV);
-(async () => {
-    console.log(` -- ${chalk.bold.red("RED")} -- `);
-    await new Promise((resolve) =>
-        setTimeout(() => {
-            console.log("DONE");
-        }, 2000)
-    );
-})();
-```
-
-## say:hello
-
-JavaScript with template literals
-
-```javascript
-console.log(`HELLO!! : ${Date.now()}`);
-```
-
-## decrypt
-
-Run encryption/decrytion with password "fscripts" to get file .config.json to become config.json
+Cleans the `dist/` output directory using `rimraf`, recreates `dist/lib/`, copies the entire `lib/` source tree into it, and copies `index.js` to `dist/index.js`. Run this before publishing or before running the CLI from `dist/`. The output in `dist/` is what gets shipped via the `files` field in `package.json`.
 
 ```bash
-SPECIAL=test node lib/encryption/decryptConfig.js
+rimraf dist && mkdir -p dist/lib && cp -r lib/. dist/lib && cp index.js dist/index.js
 ```
 
-## run:s
+## fsr
 
-Explain sequence with **bold** stuifff and more **boldss** s
+Runs the built `fsr` CLI directly from `dist/index.js`. Use this after a `build` to smoke-test the compiled output. In normal development you would run `yarn start` (which builds first) rather than this directly.
 
 ```bash
-NODE_ENV=RUNSEQ yarn fsr run-s run:one run:one:d node:script run:three  run:one:d run:one run:one:d run:one
+node dist/index.js
 ```
 
-## run:p
+## release
 
-Run parallel
+Prepares a release in two steps: first bumps the version in `package.json` (via `fsr bump`, which also handles git tagging), then rebuilds the `dist/` output so the published package reflects the new version. Run this when you are ready to cut a new version before publishing to npm.
 
 ```bash
-yarn fsr run-p run:one run:one:d node:script run:one  run:one:d run:one run:one:d run:one
+yarn fsr bump && yarn build
 ```
 
-## run:one
+## release:publish
+
+Executes `lib/release/publish.js`, which handles the full npm publish workflow — typically setting the dist-tag, running `npm publish`, and any post-publish steps. Run this after `release` to push the new version to the registry.
 
 ```bash
-NODE_ENV=test echo "ONE"
+node lib/release/publish.js
 ```
 
-## run:one:d
+## start
+
+Builds the project and then immediately runs the CLI. Equivalent to running `build` followed by `start:run` in sequence using `npm-run-all`'s `run-s`. Use this as the single command to go from source to a running CLI during development when you want a clean build first.
 
 ```bash
-sleep 1
+run-s build start:run
 ```
 
-## run:two
+## start:run
+
+Runs the built CLI from `dist/index.js`. This is the second step of `start` and can also be called on its own when you know `dist/` is already up to date and you just want to relaunch the CLI without rebuilding.
 
 ```bash
-node lib/test-files/testConsole.js
+node dist/index.js
 ```
 
-## run:three
+## watch
+
+Starts a `nodemon` watcher over `lib/` and `index.js`. Whenever any `.js` file changes, it automatically syncs the changed files to `dist/` (same copy commands as `build`, but without `rimraf` so it is fast). The `-I` flag keeps nodemon from reading stdin. Use this during active development so you can run `yarn fsr` after each save without manually rebuilding.
 
 ```bash
-INPUT=THREE node lib/test-files/testInput.js
+nodemon --watch lib --watch index.js --ext js --exec "mkdir -p dist/lib && cp -r lib/. dist/lib && cp index.js dist/index.js" --ignore 'node_modules' -I
 ```
 
-# Samples
+## test
 
-Here we execute some node scripts
-
-## console:sample
-
-Showing some console messages with delays
+Runs the full test suite once with Vitest in non-watch (CI) mode. Exits with a non-zero code if any test fails, making it suitable for CI pipelines. Covers all test types (unit, integration, e2e, performance) in a single pass.
 
 ```bash
-node lib/test-files/consoleSample.js
+vitest run
 ```
 
-## input:sample
+## test:watch
 
-Showcase asking user for input from script
+Starts Vitest in interactive watch mode. Re-runs only the affected tests on every file save. Use this during development to get instant feedback as you write code.
 
 ```bash
-node lib/test-files/inputSample.js
+vitest
 ```
 
-# Three
+## test:ui
 
-## threez
+Opens the Vitest browser-based UI at `localhost:51204` (or similar). Provides a visual dashboard to browse test files, inspect individual test results, and re-run tests interactively. Useful for exploring test output without reading terminal logs.
 
 ```bash
-echo "Damn girl!"
+vitest --ui
+```
+
+## test:coverage
+
+Runs the full test suite once and generates a V8 code coverage report via `@vitest/coverage-v8`. Outputs a summary to the terminal and writes detailed HTML/JSON reports to `coverage/`. Use this to check overall coverage before a release or PR.
+
+```bash
+vitest run --coverage
+```
+
+## test:unit
+
+Runs only the files inside `tests/unit/` — fast, isolated unit tests for individual functions and modules with no external dependencies. Use this for a quick sanity check focused on pure logic.
+
+```bash
+vitest run tests/unit
+```
+
+## test:integration
+
+Runs only the files inside `tests/integration/` — tests that exercise multiple modules working together (e.g., the parser + runner pipeline, file I/O, or CLI command handlers). Slower than unit tests but still headless.
+
+```bash
+vitest run tests/integration
+```
+
+## test:e2e
+
+Runs only the files inside `tests/e2e/` — end-to-end tests that exercise the full CLI from the outside, simulating real user invocations. These are the slowest tests and validate the complete user-facing behavior.
+
+```bash
+vitest run tests/e2e
+```
+
+## test:performance
+
+Runs only the files inside `tests/performance/` — benchmark and regression tests that assert timing or throughput constraints. Use these to catch regressions in hot paths such as parsing, task resolution, or plugin loading.
+
+```bash
+vitest run tests/performance
 ```

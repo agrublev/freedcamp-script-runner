@@ -1,0 +1,53 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0f1117;
+  --bg-sidebar: #161b22;
+  --bg-content: #0d1117;
+  --border: #21262d;
+  --text: #e6edf3;
+  --text-muted: #8b949e;
+  --text-heading: #f0f6fc;
+  --accent: #58a6ff;
+  --accent-hover: #79c0ff;
+  --accent-bg: rgba(56, 139, 253, 0.1);
+  --green: #3fb950;
+  --yellow: #d29922;
+  --code-bg: #161b22;
+  --code-border: #30363d;
+  --sidebar-width: 260px;
+  --header-height: 56px;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+}
+
+html, body, #root {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-hover); text-decoration: underline; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+
+/* Highlight.js theme override */
+.hljs {
+  background: var(--code-bg) !important;
+  color: #e6edf3 !important;
+}
+.hljs-keyword, .hljs-selector-tag, .hljs-built_in { color: #ff7b72 !important; }
+.hljs-string, .hljs-attr { color: #a5d6ff !important; }
+.hljs-comment { color: #8b949e !important; }
+.hljs-number, .hljs-literal { color: #79c0ff !important; }
+.hljs-title, .hljs-name { color: #d2a8ff !important; }
+.hljs-variable, .hljs-template-variable { color: #ffa657 !important; }
+.hljs-tag .hljs-attr { color: #79c0ff !important; }
