@@ -3,15 +3,13 @@ import chalk from "chalk";
 import { generateFScripts, generateToc } from "./lib/generators/index.js";
 import parseScriptFile from "./lib/parsers/parseScriptsMd.js";
 import upgradePackages from "./lib/upgradePackages.js";
-import { runSequence, runParallel, runCLICommand } from "./lib/running/index.js";
-import { startPackageScripts, startScripts, clearRecent } from "./lib/startScripts.js";
-const taskName = chalk.rgb(39, 173, 96).bold.underline;
-const textDescription = chalk.rgb(159, 161, 181);
+import { runCLICommand, runParallel, runSequence } from "./lib/running/index.js";
+import { clearRecent, startPackageScripts, startScripts } from "./lib/startScripts.js";
 import optionList from "./lib/optionList.js";
+import { selectPlugin } from "./lib/taskList.js";
 import validateNotInDev from "./lib/git/validateNotDev.js";
 import encrypt from "./lib/encryption/encryption.js";
 import { clear } from "./lib/utils/index.js";
-import authConfig from "./lib/auth/auth-conf.js";
 import doctor from "./lib/commands/doctor.js";
 import completion from "./lib/completions/completion.js";
 import * as cacheCommands from "./lib/cache/cli.js";
@@ -21,6 +19,9 @@ import { spawn } from "child_process";
 import yargs from "yargs";
 
 import "./lib/utils/console.js";
+
+const taskName = chalk.rgb(39, 173, 96).bold.underline;
+const textDescription = chalk.rgb(159, 161, 181);
 
 /**
  * RUN
@@ -254,20 +255,6 @@ const runCmd = async (app, argsList = []) => {
             `${taskName("$0 run-p start:web start:desktop")}`,
             `${textDescription("Run task 'start:web' and at the same time 'start:desktop'")}`
         )
-
-        /**
-         * fsr
-         * remote config --
-         */
-        .command(
-            "remote",
-            "Get remote configuration",
-            () => {},
-            async function (argv) {
-                await authConfig().catch(console.error);
-            }
-        )
-        .example(`${taskName("$0 remote")}`, `${textDescription("Get remote config")}`)
         /**
          * fsr
          * encryption --
@@ -389,10 +376,7 @@ const runCmd = async (app, argsList = []) => {
             `${taskName("$0 doctor --fix")}`,
             `${textDescription("Run diagnostics and auto-fix issues")}`
         )
-        .example(
-            `${taskName("$0 doctor --json")}`,
-            `${textDescription("Output results as JSON")}`
-        )
+        .example(`${taskName("$0 doctor --json")}`, `${textDescription("Output results as JSON")}`)
 
         /**
          * fsr
@@ -452,7 +436,10 @@ const runCmd = async (app, argsList = []) => {
         .example(`${taskName("$0 cache stats")}`, `${textDescription("Show cache statistics")}`)
         .example(`${taskName("$0 cache clear")}`, `${textDescription("Clear all cache entries")}`)
         .example(`${taskName("$0 cache list")}`, `${textDescription("List cached entries")}`)
-        .example(`${taskName("$0 cache benchmark")}`, `${textDescription("Run cache performance benchmark")}`)
+        .example(
+            `${taskName("$0 cache benchmark")}`,
+            `${textDescription("Run cache performance benchmark")}`
+        )
 
         /**
          * fsr
@@ -505,22 +492,61 @@ const runCmd = async (app, argsList = []) => {
     const argv = yargsInstance.argv;
 
     if (argv && argv._ && argv._.length === 0) {
-        const pluginChoices = runnablePlugins.map((p) => ({ name: `plugin:${p.name}`, message: p.description }));
-        const choice = await optionList(pluginChoices);
+        // Combine commands and plugins into a single menu
+        const commandItems = [
+            { name: "start", message: "Choose category then task to run" },
+            { name: "scripts", message: "Choose a script from package.json" },
+            { name: "list", message: "Select any task with text autocompletion" },
+            { name: "run", message: "Run a specific task" },
+            { name: "upgrade", message: "Upgrade all your packages" },
+            { name: "bump", message: "Bump package.json and beautify it" },
+            { name: "run-s", message: "Run a set of tasks one after another" },
+            { name: "run-p", message: "Run tasks in parallel" },
+            { name: "encryption", message: "Encrypt/Decrypt secret files" },
+            { name: "doctor", message: "Run diagnostics and check system health" },
+            { name: "cache", message: "Manage cache system" },
+            { name: "completion", message: "Manage shell completions" },
+            { name: "generate", message: "Generate sample fscripts.md file" },
+            { name: "toc", message: "Generate Table of Contents" }
+        ];
 
-        const pluginMatch = runnablePlugins.find((p) => `plugin:${p.name}` === choice);
-        if (pluginMatch) {
-            const start = Date.now();
-            try {
-                await pluginMatch.run();
-                await fireHook("post-task", { taskName: pluginMatch.name, duration: Date.now() - start, success: true });
-            } catch (err) {
-                await fireHook("task-error", { taskName: pluginMatch.name, duration: Date.now() - start, error: err });
-            }
-        } else if (choice) {
-            await runCmd("yarn", ["fsr", choice]);
-        } else {
+        const pluginItems = runnablePlugins.map((p) => ({
+            name: `plugin:${p.name}`,
+            message: p.description
+        }));
+
+        const allChoices = [...commandItems, ...pluginItems];
+        const choice = await selectPlugin(allChoices);
+
+        if (!choice) {
             console.log(chalk.green.bold("See you soon!"));
+            return;
+        }
+
+        // Check if it's a plugin
+        if (choice.startsWith("plugin:")) {
+            const pluginName = choice.replace("plugin:", "");
+            const pluginMatch = runnablePlugins.find((p) => p.name === pluginName);
+            if (pluginMatch) {
+                const start = Date.now();
+                try {
+                    await pluginMatch.run();
+                    await fireHook("post-task", {
+                        taskName: pluginMatch.name,
+                        duration: Date.now() - start,
+                        success: true
+                    });
+                } catch (err) {
+                    await fireHook("task-error", {
+                        taskName: pluginMatch.name,
+                        duration: Date.now() - start,
+                        error: err
+                    });
+                }
+            }
+        } else {
+            // It's a regular command
+            await runCmd("yarn", ["fsr", choice]);
         }
     }
 })();
