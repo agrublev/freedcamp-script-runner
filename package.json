@@ -5,7 +5,7 @@
     "type": "module",
     "main": "./dist/index.js",
     "scripts": {
-        "build": "rimraf dist && mkdir -p dist/lib && cp -r lib/. dist/lib && cp index.js dist/index.js && node scripts/build-ui.mjs",
+        "build": "rm -rf dist && mkdir -p dist/lib && cp -r lib/. dist/lib && cp index.js dist/index.js && node scripts/build-ui.mjs",
         "fsr": "node dist/index.js",
         "release": "yarn fsr bump && yarn build",
         "release:publish": "node lib/release/publish.js",
