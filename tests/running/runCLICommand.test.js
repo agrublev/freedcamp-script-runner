@@ -2,11 +2,17 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import runCLICommand from "../../lib/running/runCLICommand.js";
 import { fireHook } from "../../lib/plugins/hooks.js";
 import * as spawnNS from "cross-spawn";
-import requireFromString from "require-from-string";
+import * as fsPromises from "fs/promises";
 
-// Mocks must be declared before any import is used
 vi.mock("cross-spawn", () => ({ default: vi.fn() }));
-vi.mock("require-from-string", () => ({ default: vi.fn() }));
+vi.mock("fs/promises", async () => {
+    const actual = await vi.importActual("fs/promises");
+    return {
+        ...actual,
+        writeFile: vi.fn(actual.writeFile),
+        rm: vi.fn(actual.rm)
+    };
+});
 vi.mock("../../lib/plugins/hooks.js", () => ({
     fireHook: vi.fn().mockResolvedValue(undefined)
 }));
@@ -28,17 +34,19 @@ describe("runCLICommand – javascript lang", () => {
         fireHook.mockResolvedValue(undefined);
     });
 
-    it("executes javascript scripts via requireFromString", async () => {
-        requireFromString.mockImplementation(() => {});
+    it("executes javascript scripts by writing a temp .mjs file", async () => {
         await runCLICommand({
             task: { name: "hello" },
-            script: { lang: "javascript", full: "console.log('hi')", env: {}, type: "node", rest: [] }
+            script: { lang: "javascript", full: "// noop", env: {}, type: "node", rest: [] }
         });
-        expect(requireFromString).toHaveBeenCalledWith("console.log('hi')", "./fscripts.md");
+        expect(fsPromises.writeFile).toHaveBeenCalledWith(
+            expect.stringMatching(/\.fsr-task-[a-f0-9]+\.mjs$/),
+            "// noop",
+            "utf8"
+        );
     });
 
     it("fires post-task hook after javascript execution", async () => {
-        requireFromString.mockImplementation(() => {});
         await runCLICommand({
             task: { name: "my-task" },
             script: { lang: "javascript", full: "// noop", env: {}, type: "node", rest: [] }
