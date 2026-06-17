@@ -4,17 +4,6 @@
     -   [release](#release)
     -   [release:publish](#releasepublish)
     -   [start](#start)
-    -   [start:run](#startrun)
-    -   [watch](#watch)
-    -   [test](#test)
-    -   [test:watch](#testwatch)
-    -   [test:ui](#testui)
-    -   [test:coverage](#testcoverage)
-    -   [test:unit](#testunit)
-    -   [test:integration](#testintegration)
-    -   [test:e2e](#teste2e)
-    -   [test:performance](#testperformance)
-    <!-- end toc -->
 
 # First category of scripts
 

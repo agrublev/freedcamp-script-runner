@@ -1,0 +1,5811 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 13,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "scripts/build-ui.mjs",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 19,
+      "nonEmptyLines": 17,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "tests/cache/cli.test.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 151,
+      "nonEmptyLines": 129,
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "tests/completions/completion.test.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 297,
+      "nonEmptyLines": 252,
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "tests/generators/generateFScripts.test.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 57,
+      "nonEmptyLines": 49,
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "tests/generators/generateToc.test.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 124,
+      "nonEmptyLines": 101,
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "tests/parsers/parseScriptsMd.test.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 215,
+      "nonEmptyLines": 172,
+      "functions": [
+        {
+          "name": "withTempFscripts",
+          "startLine": 95,
+          "endLine": 107,
+          "params": [
+            "content",
+            "fn"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "withTempFscripts",
+          "callee": "mkdtempSync",
+          "lineNumber": 96
+        },
+        {
+          "caller": "withTempFscripts",
+          "callee": "join",
+          "lineNumber": 96
+        },
+        {
+          "caller": "withTempFscripts",
+          "callee": "tmpdir",
+          "lineNumber": 96
+        },
+        {
+          "caller": "withTempFscripts",
+          "callee": "join",
+          "lineNumber": 97
+        },
+        {
+          "caller": "withTempFscripts",
+          "callee": "writeFileSync",
+          "lineNumber": 98
+        },
+        {
+          "caller": "withTempFscripts",
+          "callee": "fn",
+          "lineNumber": 102
+        },
+        {
+          "caller": "withTempFscripts",
+          "callee": "unlinkSync",
+          "lineNumber": 105
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "tests/utils/encryption.test.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 49,
+      "nonEmptyLines": 42,
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "vitest.config.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 37,
+      "nonEmptyLines": 36,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "website/public/llms.txt",
+      "language": "txt",
+      "fileCategory": "docs",
+      "totalLines": 67,
+      "nonEmptyLines": 50,
+      "metrics": {}
+    },
+    {
+      "path": "website/public/pricing.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 31,
+      "nonEmptyLines": 26,
+      "sections": [
+        {
+          "heading": "Pricing — fsr (Freedcamp Script Runner)",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Free — Forever",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "Included features",
+          "level": 3,
+          "line": 11
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    },
+    {
+      "path": "website/public/support.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 1512,
+      "nonEmptyLines": 1498,
+      "callGraph": [
+        {
+          "caller": "__defNormalProp",
+          "callee": "__defProp",
+          "lineNumber": 5
+        },
+        {
+          "caller": "__publicField",
+          "callee": "__defNormalProp",
+          "lineNumber": 6
+        },
+        {
+          "caller": "parseDcDocument",
+          "callee": "doc.querySelector",
+          "lineNumber": 25
+        },
+        {
+          "caller": "parseDcDocument",
+          "callee": "doc.querySelector",
+          "lineNumber": 27
+        },
+        {
+          "caller": "parseDcDocument",
+          "callee": "parseDataProps",
+          "lineNumber": 28
+        },
+        {
+          "caller": "parseDcDocument",
+          "callee": "scriptEl?.getAttribute",
+          "lineNumber": 29
+        },
+        {
+          "caller": "parseDcText",
+          "callee": "/<x-dc(?:\\s[^>]*)?>/.exec",
+          "lineNumber": 39
+        },
+        {
+          "caller": "parseDcText",
+          "callee": "src.lastIndexOf",
+          "lineNumber": 41
+        },
+        {
+          "caller": "parseDcText",
+          "callee": "src.slice",
+          "lineNumber": 43
+        },
+        {
+          "caller": "parseDcText",
+          "callee": "new DOMParser().parseFromString",
+          "lineNumber": 44
+        },
+        {
+          "caller": "parseDcText",
+          "callee": "doc.querySelector",
+          "lineNumber": 45
+        },
+        {
+          "caller": "parseDcText",
+          "callee": "parseDataProps",
+          "lineNumber": 46
+        },
+        {
+          "caller": "parseDcText",
+          "callee": "scriptEl?.getAttribute",
+          "lineNumber": 47
+        },
+        {
+          "caller": "parseDataProps",
+          "callee": "JSON.parse",
+          "lineNumber": 60
+        },
+        {
+          "caller": "parseDataProps",
+          "callee": "Array.isArray",
+          "lineNumber": 64
+        },
+        {
+          "caller": "parseDataProps",
+          "callee": "Object.keys",
+          "lineNumber": 70
+        },
+        {
+          "caller": "parseDataProps",
+          "callee": "Object.keys",
+          "lineNumber": 73
+        },
+        {
+          "caller": "dcNameFromPath",
+          "callee": "decodeURIComponent",
+          "lineNumber": 78
+        },
+        {
+          "caller": "dcNameFromPath",
+          "callee": "p.split(\"/\").pop",
+          "lineNumber": 81
+        },
+        {
+          "caller": "dcNameFromPath",
+          "callee": "p.split",
+          "lineNumber": 81
+        },
+        {
+          "caller": "dcNameFromPath",
+          "callee": "base.replace(/\\.dc\\.html$/, \"\").replace",
+          "lineNumber": 82
+        },
+        {
+          "caller": "dcNameFromPath",
+          "callee": "base.replace",
+          "lineNumber": 82
+        },
+        {
+          "caller": "rootNameForDocument",
+          "callee": "/\\.dc\\.html?$/i.test",
+          "lineNumber": 131
+        },
+        {
+          "caller": "rootNameForDocument",
+          "callee": "safeDecode",
+          "lineNumber": 131
+        },
+        {
+          "caller": "rootNameForDocument",
+          "callee": "dcNameFromPath",
+          "lineNumber": 137
+        },
+        {
+          "caller": "safeDecode",
+          "callee": "decodeURIComponent",
+          "lineNumber": 141
+        },
+        {
+          "caller": "boot",
+          "callee": "parseDcDocument",
+          "lineNumber": 147
+        },
+        {
+          "caller": "boot",
+          "callee": "getReact",
+          "lineNumber": 149
+        },
+        {
+          "caller": "boot",
+          "callee": "rootNameForDocument",
+          "lineNumber": 150
+        },
+        {
+          "caller": "boot",
+          "callee": "runtime.markFetched",
+          "lineNumber": 151
+        },
+        {
+          "caller": "boot",
+          "callee": "runtime.adoptParsed",
+          "lineNumber": 152
+        },
+        {
+          "caller": "boot",
+          "callee": "fetch(location.href).then((res) => res.ok ? res.text() : \"\").then((t) => {\n      const raw = t ? parseDcText(t) : null;\n      if (raw?.template) runtime.updateHtml(rootName, raw.template);\n    }).catch",
+          "lineNumber": 153
+        },
+        {
+          "caller": "boot",
+          "callee": "fetch(location.href).then((res) => res.ok ? res.text() : \"\").then",
+          "lineNumber": 153
+        },
+        {
+          "caller": "boot",
+          "callee": "fetch(location.href).then",
+          "lineNumber": 153
+        },
+        {
+          "caller": "boot",
+          "callee": "fetch",
+          "lineNumber": 153
+        },
+        {
+          "caller": "boot",
+          "callee": "res.text",
+          "lineNumber": 153
+        },
+        {
+          "caller": "boot",
+          "callee": "parseDcText",
+          "lineNumber": 154
+        },
+        {
+          "caller": "boot",
+          "callee": "runtime.updateHtml",
+          "lineNumber": 155
+        },
+        {
+          "caller": "boot",
+          "callee": "doc.querySelector",
+          "lineNumber": 158
+        },
+        {
+          "caller": "boot",
+          "callee": "doc.createElement",
+          "lineNumber": 159
+        },
+        {
+          "caller": "boot",
+          "callee": "dc.replaceWith",
+          "lineNumber": 161
+        },
+        {
+          "caller": "boot",
+          "callee": "doc.createElement",
+          "lineNumber": 163
+        },
+        {
+          "caller": "boot",
+          "callee": "doc.head.appendChild",
+          "lineNumber": 165
+        },
+        {
+          "caller": "boot",
+          "callee": "runtime.getDC",
+          "lineNumber": 167
+        },
+        {
+          "caller": "boot",
+          "callee": "runtime.registry.get",
+          "lineNumber": 168
+        },
+        {
+          "caller": "StandaloneRoot",
+          "callee": "React.useState",
+          "lineNumber": 170
+        },
+        {
+          "caller": "StandaloneRoot",
+          "callee": "React.useEffect",
+          "lineNumber": 171
+        },
+        {
+          "caller": "sub",
+          "callee": "setTick",
+          "lineNumber": 172
+        },
+        {
+          "caller": "StandaloneRoot",
+          "callee": "entry.subs.add",
+          "lineNumber": 173
+        },
+        {
+          "caller": "StandaloneRoot",
+          "callee": "entry.subs.delete",
+          "lineNumber": 175
+        },
+        {
+          "caller": "StandaloneRoot",
+          "callee": "h",
+          "lineNumber": 178
+        },
+        {
+          "caller": "boot",
+          "callee": "getReactDOM",
+          "lineNumber": 180
+        },
+        {
+          "caller": "boot",
+          "callee": "ReactDOM.createRoot(hostEl).render",
+          "lineNumber": 182
+        },
+        {
+          "caller": "boot",
+          "callee": "ReactDOM.createRoot",
+          "lineNumber": 182
+        },
+        {
+          "caller": "boot",
+          "callee": "h",
+          "lineNumber": 182
+        },
+        {
+          "caller": "boot",
+          "callee": "ReactDOM.render",
+          "lineNumber": 183
+        },
+        {
+          "caller": "boot",
+          "callee": "h",
+          "lineNumber": 183
+        },
+        {
+          "caller": "resolve",
+          "callee": "String(src).trim",
+          "lineNumber": 191
+        },
+        {
+          "caller": "resolve",
+          "callee": "String",
+          "lineNumber": 191
+        },
+        {
+          "caller": "resolve",
+          "callee": "parensWrapWhole",
+          "lineNumber": 193
+        },
+        {
+          "caller": "resolve",
+          "callee": "resolve",
+          "lineNumber": 194
+        },
+        {
+          "caller": "resolve",
+          "callee": "expr.slice",
+          "lineNumber": 194
+        },
+        {
+          "caller": "resolve",
+          "callee": "findTopLevelEquality",
+          "lineNumber": 196
+        },
+        {
+          "caller": "resolve",
+          "callee": "resolve",
+          "lineNumber": 198
+        },
+        {
+          "caller": "resolve",
+          "callee": "expr.slice",
+          "lineNumber": 198
+        },
+        {
+          "caller": "resolve",
+          "callee": "resolve",
+          "lineNumber": 199
+        },
+        {
+          "caller": "resolve",
+          "callee": "expr.slice",
+          "lineNumber": 199
+        },
+        {
+          "caller": "resolve",
+          "callee": "resolve",
+          "lineNumber": 211
+        },
+        {
+          "caller": "resolve",
+          "callee": "expr.slice",
+          "lineNumber": 211
+        },
+        {
+          "caller": "resolve",
+          "callee": "NUMBER_RE.test",
+          "lineNumber": 216
+        },
+        {
+          "caller": "resolve",
+          "callee": "Number",
+          "lineNumber": 216
+        },
+        {
+          "caller": "resolve",
+          "callee": "expr.slice",
+          "lineNumber": 218
+        },
+        {
+          "caller": "resolve",
+          "callee": "resolvePath",
+          "lineNumber": 220
+        },
+        {
+          "caller": "findTopLevelEquality",
+          "callee": "expr.slice(0, i).trim",
+          "lineNumber": 241
+        },
+        {
+          "caller": "findTopLevelEquality",
+          "callee": "expr.slice",
+          "lineNumber": 241
+        },
+        {
+          "caller": "resolvePath",
+          "callee": "expr.match",
+          "lineNumber": 249
+        },
+        {
+          "caller": "resolvePath",
+          "callee": "expr.slice(i + 1).match",
+          "lineNumber": 255
+        },
+        {
+          "caller": "resolvePath",
+          "callee": "expr.slice",
+          "lineNumber": 255
+        },
+        {
+          "caller": "resolvePath",
+          "callee": "expr.slice(i + 1).match",
+          "lineNumber": 255
+        },
+        {
+          "caller": "resolvePath",
+          "callee": "expr.slice",
+          "lineNumber": 255
+        },
+        {
+          "caller": "resolvePath",
+          "callee": "resolve",
+          "lineNumber": 271
+        },
+        {
+          "caller": "resolvePath",
+          "callee": "expr.slice",
+          "lineNumber": 271
+        },
+        {
+          "caller": "encodeCase",
+          "callee": "html.replace",
+          "lineNumber": 321
+        },
+        {
+          "caller": "encodeCase",
+          "callee": "html.replace",
+          "lineNumber": 325
+        },
+        {
+          "caller": "encodeCase",
+          "callee": "html.replace",
+          "lineNumber": 326
+        },
+        {
+          "caller": "encodeCase",
+          "callee": "html.replace",
+          "lineNumber": 327
+        },
+        {
+          "caller": "encodeCase",
+          "callee": "name.replace",
+          "lineNumber": 329
+        },
+        {
+          "caller": "encodeCase",
+          "callee": "c.toLowerCase",
+          "lineNumber": 329
+        },
+        {
+          "caller": "encodeCase",
+          "callee": "Object.entries",
+          "lineNumber": 331
+        },
+        {
+          "caller": "encodeCase",
+          "callee": "html.replace",
+          "lineNumber": 332
+        },
+        {
+          "caller": "kebabToCamel",
+          "callee": "s.replace",
+          "lineNumber": 340
+        },
+        {
+          "caller": "kebabToCamel",
+          "callee": "c.toUpperCase",
+          "lineNumber": 340
+        },
+        {
+          "caller": "cssToObj",
+          "callee": "css.split",
+          "lineNumber": 344
+        },
+        {
+          "caller": "cssToObj",
+          "callee": "decl.indexOf",
+          "lineNumber": 345
+        },
+        {
+          "caller": "cssToObj",
+          "callee": "decl.slice(0, i).trim",
+          "lineNumber": 347
+        },
+        {
+          "caller": "cssToObj",
+          "callee": "decl.slice",
+          "lineNumber": 347
+        },
+        {
+          "caller": "cssToObj",
+          "callee": "prop.startsWith",
+          "lineNumber": 348
+        },
+        {
+          "caller": "cssToObj",
+          "callee": "kebabToCamel",
+          "lineNumber": 348
+        },
+        {
+          "caller": "cssToObj",
+          "callee": "decl.slice(i + 1).trim",
+          "lineNumber": 348
+        },
+        {
+          "caller": "cssToObj",
+          "callee": "decl.slice",
+          "lineNumber": 348
+        },
+        {
+          "caller": "compileAttr",
+          "callee": "raw.match",
+          "lineNumber": 353
+        },
+        {
+          "caller": "compileAttr",
+          "callee": "resolve",
+          "lineNumber": 356
+        },
+        {
+          "caller": "compileAttr",
+          "callee": "raw.includes",
+          "lineNumber": 358
+        },
+        {
+          "caller": "compileAttr",
+          "callee": "raw.split",
+          "lineNumber": 359
+        },
+        {
+          "caller": "compileAttr",
+          "callee": "parts.map((s, i) => i & 1 ? resolve(vals, s) ?? \"\" : s).join",
+          "lineNumber": 360
+        },
+        {
+          "caller": "compileAttr",
+          "callee": "parts.map",
+          "lineNumber": 360
+        },
+        {
+          "caller": "compileAttr",
+          "callee": "resolve",
+          "lineNumber": 360
+        },
+        {
+          "caller": "collectProps",
+          "callee": "key.startsWith",
+          "lineNumber": 373
+        },
+        {
+          "caller": "collectProps",
+          "callee": "kebabToCamel",
+          "lineNumber": 374
+        },
+        {
+          "caller": "collectProps",
+          "callee": "key.slice",
+          "lineNumber": 374
+        },
+        {
+          "caller": "collectProps",
+          "callee": "key.startsWith",
+          "lineNumber": 379
+        },
+        {
+          "caller": "collectProps",
+          "callee": "pseudoClasses.push",
+          "lineNumber": 380
+        },
+        {
+          "caller": "collectProps",
+          "callee": "host.pseudoClass",
+          "lineNumber": 380
+        },
+        {
+          "caller": "collectProps",
+          "callee": "key.slice",
+          "lineNumber": 380
+        },
+        {
+          "caller": "collectProps",
+          "callee": "key.includes",
+          "lineNumber": 384
+        },
+        {
+          "caller": "collectProps",
+          "callee": "kebabToCamel",
+          "lineNumber": 384
+        },
+        {
+          "caller": "collectProps",
+          "callee": "key.startsWith",
+          "lineNumber": 388
+        },
+        {
+          "caller": "collectProps",
+          "callee": "key[2].toUpperCase",
+          "lineNumber": 389
+        },
+        {
+          "caller": "collectProps",
+          "callee": "key.slice",
+          "lineNumber": 389
+        },
+        {
+          "caller": "collectProps",
+          "callee": "propGetters.push",
+          "lineNumber": 391
+        },
+        {
+          "caller": "collectProps",
+          "callee": "compileAttr",
+          "lineNumber": 391
+        },
+        {
+          "caller": "hostPositionStyle",
+          "callee": "cssToObj",
+          "lineNumber": 408
+        },
+        {
+          "caller": "hostPositionStyle",
+          "callee": "Object.entries",
+          "lineNumber": 411
+        },
+        {
+          "caller": "hostPositionStyle",
+          "callee": "k.replace",
+          "lineNumber": 412
+        },
+        {
+          "caller": "hostPositionStyle",
+          "callee": "c.toLowerCase",
+          "lineNumber": 412
+        },
+        {
+          "caller": "hostPositionStyle",
+          "callee": "HOST_STYLE_PROPS.has",
+          "lineNumber": 413
+        },
+        {
+          "caller": "hostPositionStyle",
+          "callee": "Object.keys",
+          "lineNumber": 415
+        },
+        {
+          "caller": "compileTemplate",
+          "callee": "document.createElement",
+          "lineNumber": 418
+        },
+        {
+          "caller": "compileTemplate",
+          "callee": "encodeCase",
+          "lineNumber": 420
+        },
+        {
+          "caller": "compileTemplate",
+          "callee": "(function stamp(node) {\n      if (node.nodeType === Node.ELEMENT_NODE) {\n        node.setAttribute(\"data-dc-tpl\", String(tplN++));\n      }\n      for (const c of node.childNodes) stamp(c);\n    })",
+          "lineNumber": 422
+        },
+        {
+          "caller": "compileTemplate",
+          "callee": "node.setAttribute",
+          "lineNumber": 424
+        },
+        {
+          "caller": "compileTemplate",
+          "callee": "String",
+          "lineNumber": 424
+        },
+        {
+          "caller": "compileTemplate",
+          "callee": "stamp",
+          "lineNumber": 426
+        },
+        {
+          "caller": "compileTemplate",
+          "callee": "walkChildren",
+          "lineNumber": 428
+        },
+        {
+          "caller": "compileTemplate",
+          "callee": "builders.map",
+          "lineNumber": 429
+        },
+        {
+          "caller": "compileTemplate",
+          "callee": "b",
+          "lineNumber": 429
+        },
+        {
+          "caller": "walkChildren",
+          "callee": "[...node.childNodes].map((c) => walk(c, host)).filter",
+          "lineNumber": 434
+        },
+        {
+          "caller": "walkChildren",
+          "callee": "[...node.childNodes].map",
+          "lineNumber": 434
+        },
+        {
+          "caller": "walkChildren",
+          "callee": "walk",
+          "lineNumber": 434
+        },
+        {
+          "caller": "walk",
+          "callee": "walkText",
+          "lineNumber": 437
+        },
+        {
+          "caller": "walk",
+          "callee": "el.tagName.toLowerCase",
+          "lineNumber": 440
+        },
+        {
+          "caller": "walk",
+          "callee": "walkFor",
+          "lineNumber": 441
+        },
+        {
+          "caller": "walk",
+          "callee": "walkIf",
+          "lineNumber": 442
+        },
+        {
+          "caller": "walk",
+          "callee": "walkXImport",
+          "lineNumber": 443
+        },
+        {
+          "caller": "walk",
+          "callee": "host.helmet",
+          "lineNumber": 444
+        },
+        {
+          "caller": "walk",
+          "callee": "walkComponent",
+          "lineNumber": 445
+        },
+        {
+          "caller": "walk",
+          "callee": "walkElement",
+          "lineNumber": 446
+        },
+        {
+          "caller": "warnUnresolved",
+          "callee": "warnedHoles.has",
+          "lineNumber": 451
+        },
+        {
+          "caller": "warnUnresolved",
+          "callee": "warnedHoles.add",
+          "lineNumber": 452
+        },
+        {
+          "caller": "warnUnresolved",
+          "callee": "console.warn",
+          "lineNumber": 453
+        },
+        {
+          "caller": "walkText",
+          "callee": "txt.includes",
+          "lineNumber": 457
+        },
+        {
+          "caller": "walkText",
+          "callee": "txt.trim",
+          "lineNumber": 458
+        },
+        {
+          "caller": "walkText",
+          "callee": "txt.includes",
+          "lineNumber": 458
+        },
+        {
+          "caller": "walkText",
+          "callee": "txt.split",
+          "lineNumber": 461
+        },
+        {
+          "caller": "walkText",
+          "callee": "h",
+          "lineNumber": 462
+        },
+        {
+          "caller": "walkText",
+          "callee": "getReact",
+          "lineNumber": 463
+        },
+        {
+          "caller": "walkText",
+          "callee": "parts.map",
+          "lineNumber": 465
+        },
+        {
+          "caller": "walkText",
+          "callee": "resolve",
+          "lineNumber": 467
+        },
+        {
+          "caller": "walkText",
+          "callee": "document.body?.hasAttribute",
+          "lineNumber": 470
+        },
+        {
+          "caller": "walkText",
+          "callee": "h",
+          "lineNumber": 471
+        },
+        {
+          "caller": "walkText",
+          "callee": "p.trim",
+          "lineNumber": 474
+        },
+        {
+          "caller": "walkText",
+          "callee": "warnUnresolved",
+          "lineNumber": 477
+        },
+        {
+          "caller": "walkText",
+          "callee": "p.trim",
+          "lineNumber": 479
+        },
+        {
+          "caller": "walkText",
+          "callee": "h",
+          "lineNumber": 483
+        },
+        {
+          "caller": "walkText",
+          "callee": "p.trim",
+          "lineNumber": 486
+        },
+        {
+          "caller": "walkText",
+          "callee": "getReact().isValidElement",
+          "lineNumber": 489
+        },
+        {
+          "caller": "walkText",
+          "callee": "getReact",
+          "lineNumber": 489
+        },
+        {
+          "caller": "walkText",
+          "callee": "Array.isArray",
+          "lineNumber": 489
+        },
+        {
+          "caller": "walkText",
+          "callee": "h",
+          "lineNumber": 490
+        },
+        {
+          "caller": "walkText",
+          "callee": "getReact",
+          "lineNumber": 490
+        },
+        {
+          "caller": "walkText",
+          "callee": "h",
+          "lineNumber": 493
+        },
+        {
+          "caller": "walkText",
+          "callee": "String",
+          "lineNumber": 493
+        },
+        {
+          "caller": "walkFor",
+          "callee": "compileAttr",
+          "lineNumber": 498
+        },
+        {
+          "caller": "walkFor",
+          "callee": "el.getAttribute",
+          "lineNumber": 498
+        },
+        {
+          "caller": "walkFor",
+          "callee": "el.getAttribute",
+          "lineNumber": 499
+        },
+        {
+          "caller": "walkFor",
+          "callee": "parseInt",
+          "lineNumber": 500
+        },
+        {
+          "caller": "walkFor",
+          "callee": "el.getAttribute",
+          "lineNumber": 500
+        },
+        {
+          "caller": "walkFor",
+          "callee": "walkChildren",
+          "lineNumber": 501
+        },
+        {
+          "caller": "walkFor",
+          "callee": "el.getAttribute",
+          "lineNumber": 502
+        },
+        {
+          "caller": "walkFor",
+          "callee": "listGet",
+          "lineNumber": 504
+        },
+        {
+          "caller": "walkFor",
+          "callee": "Array.isArray",
+          "lineNumber": 505
+        },
+        {
+          "caller": "walkFor",
+          "callee": "warnUnresolved",
+          "lineNumber": 508
+        },
+        {
+          "caller": "walkFor",
+          "callee": "Array(hintN).fill",
+          "lineNumber": 515
+        },
+        {
+          "caller": "walkFor",
+          "callee": "Array",
+          "lineNumber": 515
+        },
+        {
+          "caller": "walkFor",
+          "callee": "h",
+          "lineNumber": 518
+        },
+        {
+          "caller": "walkFor",
+          "callee": "getReact",
+          "lineNumber": 519
+        },
+        {
+          "caller": "walkFor",
+          "callee": "list.map",
+          "lineNumber": 521
+        },
+        {
+          "caller": "walkFor",
+          "callee": "h",
+          "lineNumber": 523
+        },
+        {
+          "caller": "walkFor",
+          "callee": "getReact",
+          "lineNumber": 524
+        },
+        {
+          "caller": "walkFor",
+          "callee": "kids.map",
+          "lineNumber": 526
+        },
+        {
+          "caller": "walkFor",
+          "callee": "b",
+          "lineNumber": 526
+        },
+        {
+          "caller": "walkIf",
+          "callee": "compileAttr",
+          "lineNumber": 533
+        },
+        {
+          "caller": "walkIf",
+          "callee": "el.getAttribute",
+          "lineNumber": 533
+        },
+        {
+          "caller": "walkIf",
+          "callee": "el.getAttribute",
+          "lineNumber": 534
+        },
+        {
+          "caller": "walkIf",
+          "callee": "compileAttr",
+          "lineNumber": 535
+        },
+        {
+          "caller": "walkIf",
+          "callee": "walkChildren",
+          "lineNumber": 536
+        },
+        {
+          "caller": "walkIf",
+          "callee": "valGet",
+          "lineNumber": 538
+        },
+        {
+          "caller": "walkIf",
+          "callee": "hintGet",
+          "lineNumber": 539
+        },
+        {
+          "caller": "walkIf",
+          "callee": "h",
+          "lineNumber": 540
+        },
+        {
+          "caller": "walkIf",
+          "callee": "getReact",
+          "lineNumber": 541
+        },
+        {
+          "caller": "walkIf",
+          "callee": "kids.map",
+          "lineNumber": 543
+        },
+        {
+          "caller": "walkIf",
+          "callee": "b",
+          "lineNumber": 543
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "el.getAttribute",
+          "lineNumber": 548
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "el.getAttribute",
+          "lineNumber": 548
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "el.removeAttribute",
+          "lineNumber": 549
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "el.removeAttribute",
+          "lineNumber": 550
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "el.getAttribute",
+          "lineNumber": 551
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "el.getAttribute",
+          "lineNumber": 552
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "el.removeAttribute",
+          "lineNumber": 553
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "compileAttr",
+          "lineNumber": 554
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "collectProps",
+          "lineNumber": 555
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "walkChildren",
+          "lineNumber": 556
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "hostPositionStyle",
+          "lineNumber": 562
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "styleGet",
+          "lineNumber": 562
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "g",
+          "lineNumber": 564
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "kids.map",
+          "lineNumber": 565
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "b",
+          "lineNumber": 565
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "h",
+          "lineNumber": 566
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "host.component",
+          "lineNumber": 566
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "compileAttr",
+          "lineNumber": 570
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "el.getAttribute",
+          "lineNumber": 571
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "compileAttr",
+          "lineNumber": 573
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "el.getAttribute",
+          "lineNumber": 574
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "el.getAttribute",
+          "lineNumber": 574
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "el.getAttribute",
+          "lineNumber": 576
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "el.getAttribute",
+          "lineNumber": 576
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "el.getAttribute",
+          "lineNumber": 576
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "/\\.(jsx|tsx)(\\?|#|$)/i.test",
+          "lineNumber": 577
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "el.getAttribute",
+          "lineNumber": 578
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "el.getAttribute",
+          "lineNumber": 579
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "el.removeAttribute",
+          "lineNumber": 580
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "compileAttr",
+          "lineNumber": 581
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "collectProps",
+          "lineNumber": 583
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "(el.textContent || \"\").trim",
+          "lineNumber": 584
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "walkChildren",
+          "lineNumber": 585
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "url.includes",
+          "lineNumber": 586
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "host.loadExternal",
+          "lineNumber": 587
+        },
+        {
+          "caller": "evalName",
+          "callee": "g",
+          "lineNumber": 589
+        },
+        {
+          "caller": "evalName",
+          "callee": "String",
+          "lineNumber": 590
+        },
+        {
+          "caller": "evalName",
+          "callee": "s.includes",
+          "lineNumber": 591
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "evalName",
+          "lineNumber": 594
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "evalName",
+          "lineNumber": 595
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "host.resolveExternalGlobal",
+          "lineNumber": 596
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "host.resolveExternal",
+          "lineNumber": 596
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "hostPositionStyle",
+          "lineNumber": 597
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "styleGet",
+          "lineNumber": 597
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "host.resolveExternalError",
+          "lineNumber": 605
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "host.placeholder",
+          "lineNumber": 606
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "h",
+          "lineNumber": 612
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "g",
+          "lineNumber": 620
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "host.placeholder",
+          "lineNumber": 625
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "h",
+          "lineNumber": 631
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "kids.map",
+          "lineNumber": 633
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "b",
+          "lineNumber": 633
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "h",
+          "lineNumber": 634
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "h",
+          "lineNumber": 634
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "h",
+          "lineNumber": 634
+        },
+        {
+          "caller": "walkElement",
+          "callee": "el.getAttribute",
+          "lineNumber": 639
+        },
+        {
+          "caller": "walkElement",
+          "callee": "collectProps",
+          "lineNumber": 640
+        },
+        {
+          "caller": "walkElement",
+          "callee": "walkChildren",
+          "lineNumber": 641
+        },
+        {
+          "caller": "walkElement",
+          "callee": "g",
+          "lineNumber": 645
+        },
+        {
+          "caller": "walkElement",
+          "callee": "cssToObj",
+          "lineNumber": 646
+        },
+        {
+          "caller": "walkElement",
+          "callee": "[props.className, ...pseudoClasses].filter(Boolean).join",
+          "lineNumber": 653
+        },
+        {
+          "caller": "walkElement",
+          "callee": "[props.className, ...pseudoClasses].filter",
+          "lineNumber": 653
+        },
+        {
+          "caller": "walkElement",
+          "callee": "h",
+          "lineNumber": 655
+        },
+        {
+          "caller": "walkElement",
+          "callee": "kids.map",
+          "lineNumber": 655
+        },
+        {
+          "caller": "walkElement",
+          "callee": "b",
+          "lineNumber": 655
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 662
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 663
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 665
+        },
+        {
+          "caller": "setState",
+          "callee": "this.__host.__setLogicState",
+          "lineNumber": 669
+        },
+        {
+          "caller": "forceUpdate",
+          "callee": "this.__host.forceUpdate",
+          "lineNumber": 672
+        },
+        {
+          "caller": "evalDcLogic",
+          "callee": "fn",
+          "lineNumber": 693
+        },
+        {
+          "caller": "evalDcLogic",
+          "callee": "getReact",
+          "lineNumber": 693
+        },
+        {
+          "caller": "shallowEqual",
+          "callee": "Object.keys(a).filter",
+          "lineNumber": 699
+        },
+        {
+          "caller": "shallowEqual",
+          "callee": "Object.keys",
+          "lineNumber": 699
+        },
+        {
+          "caller": "shallowEqual",
+          "callee": "Object.keys(b).filter",
+          "lineNumber": 700
+        },
+        {
+          "caller": "shallowEqual",
+          "callee": "Object.keys",
+          "lineNumber": 700
+        },
+        {
+          "caller": "Placeholder",
+          "callee": "(hintSize || \"100%,60px\").split",
+          "lineNumber": 711
+        },
+        {
+          "caller": "Placeholder",
+          "callee": "h",
+          "lineNumber": 712
+        },
+        {
+          "caller": "Placeholder",
+          "callee": "w.trim",
+          "lineNumber": 716
+        },
+        {
+          "caller": "Placeholder",
+          "callee": "hgt.trim",
+          "lineNumber": 716
+        },
+        {
+          "caller": "Placeholder",
+          "callee": "h",
+          "lineNumber": 719
+        },
+        {
+          "caller": "hintToMin",
+          "callee": "hint.split",
+          "lineNumber": 728
+        },
+        {
+          "caller": "hintToMin",
+          "callee": "w.trim",
+          "lineNumber": 729
+        },
+        {
+          "caller": "hintToMin",
+          "callee": "hgt.trim",
+          "lineNumber": 729
+        },
+        {
+          "caller": "createComponentFactory",
+          "callee": "getReact",
+          "lineNumber": 732
+        },
+        {
+          "caller": "createComponentFactory",
+          "callee": "React.createContext",
+          "lineNumber": 733
+        },
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 736
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 737
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 738
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 739
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 743
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 744
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 750
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 751
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 752
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 757
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 758
+        },
+        {
+          "caller": "constructor",
+          "callee": "this.setState",
+          "lineNumber": 762
+        },
+        {
+          "caller": "constructor",
+          "callee": "this.forceUpdate",
+          "lineNumber": 763
+        },
+        {
+          "caller": "constructor",
+          "callee": "this.__makeLogic",
+          "lineNumber": 765
+        },
+        {
+          "caller": "constructor",
+          "callee": "registry.get",
+          "lineNumber": 765
+        },
+        {
+          "caller": "constructor",
+          "callee": "ensureFetched",
+          "lineNumber": 766
+        },
+        {
+          "caller": "getDerivedStateFromError",
+          "callee": "String",
+          "lineNumber": 772
+        },
+        {
+          "caller": "componentDidCatch",
+          "callee": "console.error",
+          "lineNumber": 775
+        },
+        {
+          "caller": "__makeLogic",
+          "callee": "this.__userProps",
+          "lineNumber": 786
+        },
+        {
+          "caller": "__makeLogic",
+          "callee": "console.error",
+          "lineNumber": 791
+        },
+        {
+          "caller": "__makeLogic",
+          "callee": "this.__userProps",
+          "lineNumber": 793
+        },
+        {
+          "caller": "__makeLogic",
+          "callee": "registry.get",
+          "lineNumber": 794
+        },
+        {
+          "caller": "__makeLogic",
+          "callee": "String",
+          "lineNumber": 795
+        },
+        {
+          "caller": "__makeLogic",
+          "callee": "this.__userProps",
+          "lineNumber": 797
+        },
+        {
+          "caller": "__setLogicState",
+          "callee": "update",
+          "lineNumber": 812
+        },
+        {
+          "caller": "__setLogicState",
+          "callee": "this.setState",
+          "lineNumber": 814
+        },
+        {
+          "caller": "__reconcileLogic",
+          "callee": "registry.get",
+          "lineNumber": 820
+        },
+        {
+          "caller": "__reconcileLogic",
+          "callee": "shallowEqual",
+          "lineNumber": 823
+        },
+        {
+          "caller": "__reconcileLogic",
+          "callee": "this.__userProps",
+          "lineNumber": 823
+        },
+        {
+          "caller": "__reconcileLogic",
+          "callee": "this.logic.componentWillUnmount",
+          "lineNumber": 828
+        },
+        {
+          "caller": "__reconcileLogic",
+          "callee": "console.error",
+          "lineNumber": 830
+        },
+        {
+          "caller": "__reconcileLogic",
+          "callee": "this.__makeLogic",
+          "lineNumber": 833
+        },
+        {
+          "caller": "componentDidMount",
+          "callee": "registry.get(this.__name).subs.add",
+          "lineNumber": 837
+        },
+        {
+          "caller": "componentDidMount",
+          "callee": "registry.get",
+          "lineNumber": 837
+        },
+        {
+          "caller": "componentDidMount",
+          "callee": "this.logic.componentDidMount",
+          "lineNumber": 839
+        },
+        {
+          "caller": "componentDidMount",
+          "callee": "console.error",
+          "lineNumber": 841
+        },
+        {
+          "caller": "componentDidUpdate",
+          "callee": "this.__userProps",
+          "lineNumber": 845
+        },
+        {
+          "caller": "componentDidUpdate",
+          "callee": "registry.get",
+          "lineNumber": 847
+        },
+        {
+          "caller": "componentDidUpdate",
+          "callee": "this.logic.componentDidMount",
+          "lineNumber": 850
+        },
+        {
+          "caller": "componentDidUpdate",
+          "callee": "console.error",
+          "lineNumber": 852
+        },
+        {
+          "caller": "componentDidUpdate",
+          "callee": "this.logic.componentDidUpdate",
+          "lineNumber": 856
+        },
+        {
+          "caller": "componentDidUpdate",
+          "callee": "console.error",
+          "lineNumber": 858
+        },
+        {
+          "caller": "componentWillUnmount",
+          "callee": "registry.get(this.__name).subs.delete",
+          "lineNumber": 863
+        },
+        {
+          "caller": "componentWillUnmount",
+          "callee": "registry.get",
+          "lineNumber": 863
+        },
+        {
+          "caller": "componentWillUnmount",
+          "callee": "this.logic.componentWillUnmount",
+          "lineNumber": 866
+        },
+        {
+          "caller": "componentWillUnmount",
+          "callee": "console.error",
+          "lineNumber": 868
+        },
+        {
+          "caller": "render",
+          "callee": "registry.get",
+          "lineNumber": 873
+        },
+        {
+          "caller": "render",
+          "callee": "hintToMin",
+          "lineNumber": 875
+        },
+        {
+          "caller": "render",
+          "callee": "Array.isArray",
+          "lineNumber": 883
+        },
+        {
+          "caller": "render",
+          "callee": "chain.includes",
+          "lineNumber": 884
+        },
+        {
+          "caller": "render",
+          "callee": "[\n            ...chain.slice(chain.indexOf(this.__name)),\n            this.__name\n          ].join",
+          "lineNumber": 885
+        },
+        {
+          "caller": "render",
+          "callee": "chain.slice",
+          "lineNumber": 886
+        },
+        {
+          "caller": "render",
+          "callee": "chain.indexOf",
+          "lineNumber": 886
+        },
+        {
+          "caller": "render",
+          "callee": "h",
+          "lineNumber": 889
+        },
+        {
+          "caller": "render",
+          "callee": "h",
+          "lineNumber": 892
+        },
+        {
+          "caller": "render",
+          "callee": "h",
+          "lineNumber": 900
+        },
+        {
+          "caller": "render",
+          "callee": "h",
+          "lineNumber": 903
+        },
+        {
+          "caller": "render",
+          "callee": "h",
+          "lineNumber": 908
+        },
+        {
+          "caller": "render",
+          "callee": "this.__reconcileLogic",
+          "lineNumber": 915
+        },
+        {
+          "caller": "render",
+          "callee": "h",
+          "lineNumber": 917
+        },
+        {
+          "caller": "render",
+          "callee": "h",
+          "lineNumber": 920
+        },
+        {
+          "caller": "render",
+          "callee": "this.__userProps",
+          "lineNumber": 923
+        },
+        {
+          "caller": "render",
+          "callee": "this.logic.renderVals",
+          "lineNumber": 928
+        },
+        {
+          "caller": "render",
+          "callee": "console.error",
+          "lineNumber": 930
+        },
+        {
+          "caller": "render",
+          "callee": "String",
+          "lineNumber": 931
+        },
+        {
+          "caller": "render",
+          "callee": "h",
+          "lineNumber": 935
+        },
+        {
+          "caller": "render",
+          "callee": "h",
+          "lineNumber": 938
+        },
+        {
+          "caller": "render",
+          "callee": "h",
+          "lineNumber": 939
+        },
+        {
+          "caller": "render",
+          "callee": "r.tpl",
+          "lineNumber": 942
+        },
+        {
+          "caller": "createComponentFactory",
+          "callee": "__publicField",
+          "lineNumber": 947
+        },
+        {
+          "caller": "getDC",
+          "callee": "named.get",
+          "lineNumber": 950
+        },
+        {
+          "caller": "Dispatcher",
+          "callee": "React.useState",
+          "lineNumber": 953
+        },
+        {
+          "caller": "Dispatcher",
+          "callee": "React.useEffect",
+          "lineNumber": 954
+        },
+        {
+          "caller": "sub",
+          "callee": "setTick",
+          "lineNumber": 955
+        },
+        {
+          "caller": "Dispatcher",
+          "callee": "registry.get(name).subs.add",
+          "lineNumber": 956
+        },
+        {
+          "caller": "Dispatcher",
+          "callee": "registry.get",
+          "lineNumber": 956
+        },
+        {
+          "caller": "Dispatcher",
+          "callee": "registry.get(name).subs.delete",
+          "lineNumber": 958
+        },
+        {
+          "caller": "Dispatcher",
+          "callee": "registry.get",
+          "lineNumber": 958
+        },
+        {
+          "caller": "Dispatcher",
+          "callee": "ensureFetched",
+          "lineNumber": 961
+        },
+        {
+          "caller": "Dispatcher",
+          "callee": "h",
+          "lineNumber": 962
+        },
+        {
+          "caller": "getDC",
+          "callee": "named.set",
+          "lineNumber": 965
+        },
+        {
+          "caller": "isCustomElementName",
+          "callee": "n.includes",
+          "lineNumber": 975
+        },
+        {
+          "caller": "isCustomElementName",
+          "callee": "n.includes",
+          "lineNumber": 975
+        },
+        {
+          "caller": "isRenderableType",
+          "callee": "isElementClass",
+          "lineNumber": 977
+        },
+        {
+          "caller": "resolveDottedPath",
+          "callee": "name.split",
+          "lineNumber": 982
+        },
+        {
+          "caller": "ensureBabel",
+          "callee": "Promise.resolve",
+          "lineNumber": 997
+        },
+        {
+          "caller": "ensureBabel",
+          "callee": "document.createElement",
+          "lineNumber": 1000
+        },
+        {
+          "caller": "ensureBabel",
+          "callee": "res",
+          "lineNumber": 1003
+        },
+        {
+          "caller": "ensureBabel",
+          "callee": "document.head.appendChild",
+          "lineNumber": 1005
+        },
+        {
+          "caller": "load",
+          "callee": "cache.has",
+          "lineNumber": 1010
+        },
+        {
+          "caller": "load",
+          "callee": "cache.set",
+          "lineNumber": 1011
+        },
+        {
+          "caller": "load",
+          "callee": "console.info",
+          "lineNumber": 1012
+        },
+        {
+          "caller": "load",
+          "callee": "ensureBabel",
+          "lineNumber": 1013
+        },
+        {
+          "caller": "load",
+          "callee": "Promise.resolve",
+          "lineNumber": 1013
+        },
+        {
+          "caller": "load",
+          "callee": "ready.then(() => fetch(url)).then((r) => {\n        if (!r.ok) throw new Error(\"HTTP \" + r.status);\n        return r.text();\n      }).then((src) => {\n        const code = kind === \"jsx\" ? window.Babel.transform(src, {\n          filename: url,\n          presets: [\"react\", \"typescript\"]\n        }).code : src;\n        const module = { exports: {} };\n        const before = new Set(Object.keys(window));\n        //! nosemgrep: eval-and-function-constructor\n        new Function(\"React\", \"module\", \"exports\", \"require\", code)(\n          getReact(),\n          module,\n          module.exports,\n          () => ({})\n        );\n        const globals = {};\n        for (const k of Object.keys(window)) {\n          if (!before.has(k) && typeof window[k] === \"function\") {\n            globals[k] = window[k];\n          }\n        }\n        cache.set(url, { mod: module.exports, globals });\n        console.info(\n          \"[dc-runtime] x-import: loaded\",\n          url,\n          \"\\u2014 exports:\",\n          Object.keys(module.exports),\n          \"window globals:\",\n          Object.keys(globals)\n        );\n        onResolved();\n      }).catch",
+          "lineNumber": 1014
+        },
+        {
+          "caller": "load",
+          "callee": "ready.then(() => fetch(url)).then((r) => {\n        if (!r.ok) throw new Error(\"HTTP \" + r.status);\n        return r.text();\n      }).then",
+          "lineNumber": 1014
+        },
+        {
+          "caller": "load",
+          "callee": "ready.then(() => fetch(url)).then",
+          "lineNumber": 1014
+        },
+        {
+          "caller": "load",
+          "callee": "ready.then",
+          "lineNumber": 1014
+        },
+        {
+          "caller": "load",
+          "callee": "fetch",
+          "lineNumber": 1014
+        },
+        {
+          "caller": "load",
+          "callee": "r.text",
+          "lineNumber": 1016
+        },
+        {
+          "caller": "load",
+          "callee": "window.Babel.transform",
+          "lineNumber": 1018
+        },
+        {
+          "caller": "load",
+          "callee": "Object.keys",
+          "lineNumber": 1023
+        },
+        {
+          "caller": "load",
+          "callee": "new Function(\"React\", \"module\", \"exports\", \"require\", code)",
+          "lineNumber": 1025
+        },
+        {
+          "caller": "load",
+          "callee": "getReact",
+          "lineNumber": 1026
+        },
+        {
+          "caller": "load",
+          "callee": "Object.keys",
+          "lineNumber": 1032
+        },
+        {
+          "caller": "load",
+          "callee": "before.has",
+          "lineNumber": 1033
+        },
+        {
+          "caller": "load",
+          "callee": "cache.set",
+          "lineNumber": 1037
+        },
+        {
+          "caller": "load",
+          "callee": "console.info",
+          "lineNumber": 1038
+        },
+        {
+          "caller": "load",
+          "callee": "Object.keys",
+          "lineNumber": 1042
+        },
+        {
+          "caller": "load",
+          "callee": "Object.keys",
+          "lineNumber": 1044
+        },
+        {
+          "caller": "load",
+          "callee": "onResolved",
+          "lineNumber": 1046
+        },
+        {
+          "caller": "load",
+          "callee": "cache.set",
+          "lineNumber": 1048
+        },
+        {
+          "caller": "load",
+          "callee": "String",
+          "lineNumber": 1051
+        },
+        {
+          "caller": "load",
+          "callee": "console.error",
+          "lineNumber": 1053
+        },
+        {
+          "caller": "load",
+          "callee": "onResolved",
+          "lineNumber": 1059
+        },
+        {
+          "caller": "resolve2",
+          "callee": "cache.get",
+          "lineNumber": 1063
+        },
+        {
+          "caller": "resolve2",
+          "callee": "reportedMissing.has",
+          "lineNumber": 1069
+        },
+        {
+          "caller": "resolve2",
+          "callee": "reportedMissing.set",
+          "lineNumber": 1070
+        },
+        {
+          "caller": "resolve2",
+          "callee": "Object.keys(mod).join",
+          "lineNumber": 1072
+        },
+        {
+          "caller": "resolve2",
+          "callee": "Object.keys",
+          "lineNumber": 1072
+        },
+        {
+          "caller": "resolve2",
+          "callee": "console.error",
+          "lineNumber": 1074
+        },
+        {
+          "caller": "resolve2",
+          "callee": "JSON.stringify",
+          "lineNumber": 1078
+        },
+        {
+          "caller": "resolve2",
+          "callee": "Object.keys",
+          "lineNumber": 1080
+        },
+        {
+          "caller": "resolve2",
+          "callee": "Object.keys",
+          "lineNumber": 1082
+        },
+        {
+          "caller": "waitForGlobal",
+          "callee": "polling.has",
+          "lineNumber": 1089
+        },
+        {
+          "caller": "waitForGlobal",
+          "callee": "polling.add",
+          "lineNumber": 1090
+        },
+        {
+          "caller": "waitForGlobal",
+          "callee": "Date.now",
+          "lineNumber": 1091
+        },
+        {
+          "caller": "waitForGlobal",
+          "callee": "isCustomElementName",
+          "lineNumber": 1092
+        },
+        {
+          "caller": "tick",
+          "callee": "customElements.get",
+          "lineNumber": 1094
+        },
+        {
+          "caller": "tick",
+          "callee": "isRenderableType",
+          "lineNumber": 1094
+        },
+        {
+          "caller": "tick",
+          "callee": "resolveDottedPath",
+          "lineNumber": 1094
+        },
+        {
+          "caller": "tick",
+          "callee": "polling.delete",
+          "lineNumber": 1096
+        },
+        {
+          "caller": "tick",
+          "callee": "onResolved",
+          "lineNumber": 1097
+        },
+        {
+          "caller": "tick",
+          "callee": "Date.now",
+          "lineNumber": 1100
+        },
+        {
+          "caller": "tick",
+          "callee": "console.warn",
+          "lineNumber": 1101
+        },
+        {
+          "caller": "tick",
+          "callee": "JSON.stringify",
+          "lineNumber": 1103
+        },
+        {
+          "caller": "tick",
+          "callee": "setTimeout",
+          "lineNumber": 1108
+        },
+        {
+          "caller": "waitForGlobal",
+          "callee": "setTimeout",
+          "lineNumber": 1110
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "isCustomElementName",
+          "lineNumber": 1113
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "customElements.get",
+          "lineNumber": 1116
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "waitForGlobal",
+          "lineNumber": 1117
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "resolveDottedPath",
+          "lineNumber": 1120
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "isRenderableType",
+          "lineNumber": 1121
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "waitForGlobal",
+          "lineNumber": 1122
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "cache.get",
+          "lineNumber": 1125
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "customElements.get",
+          "lineNumber": 1127
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "resolveDottedPath",
+          "lineNumber": 1128
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "isRenderableType",
+          "lineNumber": 1129
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "name.includes",
+          "lineNumber": 1130
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "reportedMissing.has",
+          "lineNumber": 1132
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "reportedMissing.set",
+          "lineNumber": 1133
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "customElements.get",
+          "lineNumber": 1134
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "console.warn",
+          "lineNumber": 1135
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "JSON.stringify",
+          "lineNumber": 1139
+        },
+        {
+          "caller": "getError",
+          "callee": "cache.get",
+          "lineNumber": 1147
+        },
+        {
+          "caller": "getError",
+          "callee": "reportedMissing.get",
+          "lineNumber": 1149
+        },
+        {
+          "caller": "compile",
+          "callee": "isStreaming",
+          "lineNumber": 1170
+        },
+        {
+          "caller": "compile",
+          "callee": "child.getAttribute",
+          "lineNumber": 1177
+        },
+        {
+          "caller": "compile",
+          "callee": "mounted.has",
+          "lineNumber": 1178
+        },
+        {
+          "caller": "compile",
+          "callee": "mounted.add",
+          "lineNumber": 1179
+        },
+        {
+          "caller": "compile",
+          "callee": "doc.createElement",
+          "lineNumber": 1180
+        },
+        {
+          "caller": "compile",
+          "callee": "el.setAttribute",
+          "lineNumber": 1182
+        },
+        {
+          "caller": "compile",
+          "callee": "doc.head.appendChild",
+          "lineNumber": 1184
+        },
+        {
+          "caller": "compile",
+          "callee": "child.getAttribute",
+          "lineNumber": 1187
+        },
+        {
+          "caller": "compile",
+          "callee": "child.getAttribute",
+          "lineNumber": 1187
+        },
+        {
+          "caller": "compile",
+          "callee": "mounted.has",
+          "lineNumber": 1188
+        },
+        {
+          "caller": "compile",
+          "callee": "mounted.add",
+          "lineNumber": 1189
+        },
+        {
+          "caller": "compile",
+          "callee": "doc.head.appendChild",
+          "lineNumber": 1190
+        },
+        {
+          "caller": "compile",
+          "callee": "child.cloneNode",
+          "lineNumber": 1190
+        },
+        {
+          "caller": "compile",
+          "callee": "live.get",
+          "lineNumber": 1193
+        },
+        {
+          "caller": "compile",
+          "callee": "el.remove",
+          "lineNumber": 1195
+        },
+        {
+          "caller": "compile",
+          "callee": "doc.createElement",
+          "lineNumber": 1196
+        },
+        {
+          "caller": "compile",
+          "callee": "tag.toLowerCase",
+          "lineNumber": 1196
+        },
+        {
+          "caller": "compile",
+          "callee": "live.set",
+          "lineNumber": 1197
+        },
+        {
+          "caller": "compile",
+          "callee": "doc.head.appendChild",
+          "lineNumber": 1198
+        },
+        {
+          "caller": "compile",
+          "callee": "el.getAttribute",
+          "lineNumber": 1201
+        },
+        {
+          "caller": "compile",
+          "callee": "el.setAttribute",
+          "lineNumber": 1201
+        },
+        {
+          "caller": "createPseudoSheet",
+          "callee": "cache.get",
+          "lineNumber": 1220
+        },
+        {
+          "caller": "createPseudoSheet",
+          "callee": "doc.createElement",
+          "lineNumber": 1223
+        },
+        {
+          "caller": "createPseudoSheet",
+          "callee": "doc.head.appendChild",
+          "lineNumber": 1224
+        },
+        {
+          "caller": "createPseudoSheet",
+          "callee": "(n++).toString",
+          "lineNumber": 1226
+        },
+        {
+          "caller": "createPseudoSheet",
+          "callee": "el.sheet.insertRule",
+          "lineNumber": 1228
+        },
+        {
+          "caller": "createPseudoSheet",
+          "callee": "cache.set",
+          "lineNumber": 1229
+        },
+        {
+          "caller": "createRegistry",
+          "callee": "Object.create",
+          "lineNumber": 1236
+        },
+        {
+          "caller": "bump",
+          "callee": "get",
+          "lineNumber": 1250
+        },
+        {
+          "caller": "bump",
+          "callee": "fn",
+          "lineNumber": 1252
+        },
+        {
+          "caller": "bumpAll",
+          "callee": "bump",
+          "lineNumber": 1259
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "createRegistry",
+          "lineNumber": 1267
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "createPseudoSheet",
+          "lineNumber": 1268
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "createHelmetManager",
+          "lineNumber": 1269
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "registry.get",
+          "lineNumber": 1271
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "createExternalModules",
+          "lineNumber": 1273
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "registry.bumpAll",
+          "lineNumber": 1273
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "createComponentFactory",
+          "lineNumber": 1274
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "factory.getDC",
+          "lineNumber": 1276
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "h",
+          "lineNumber": 1277
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "helmet.compile",
+          "lineNumber": 1278
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "external.load",
+          "lineNumber": 1279
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "external.resolve",
+          "lineNumber": 1280
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "external.resolveGlobal",
+          "lineNumber": 1281
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "external.getError",
+          "lineNumber": 1282
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "registry.get",
+          "lineNumber": 1286
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "encodeURIComponent",
+          "lineNumber": 1289
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "fetch(url).then((res) => {\n        if (!res.ok) {\n          console.error(\n            \"[dc-runtime] sibling fetch for <\" + name + \"/> failed:\",\n            url,\n            \"returned\",\n            res.status,\n            \"\\u2014 the reference renders as an empty placeholder.\"\n          );\n          return \"\";\n        }\n        return res.text();\n      }).then((t) => {\n        if (!t) return;\n        const parsed = parseDcText(t);\n        if (!parsed) {\n          console.error(\n            \"[dc-runtime] sibling fetch for <\" + name + \"/>:\",\n            url,\n            \"has no <x-dc> block \\u2014 not a Design Component.\"\n          );\n          return;\n        }\n        if (parsed.props) r.propsMeta = parsed.props;\n        if (parsed.preview) r.preview = parsed.preview;\n        if (parsed.template && !r.html) updateHtml(name, parsed.template);\n        if (parsed.js && !r.Logic) updateJs(name, parsed.js);\n      }).catch",
+          "lineNumber": 1290
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "fetch(url).then((res) => {\n        if (!res.ok) {\n          console.error(\n            \"[dc-runtime] sibling fetch for <\" + name + \"/> failed:\",\n            url,\n            \"returned\",\n            res.status,\n            \"\\u2014 the reference renders as an empty placeholder.\"\n          );\n          return \"\";\n        }\n        return res.text();\n      }).then",
+          "lineNumber": 1290
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "fetch(url).then",
+          "lineNumber": 1290
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "fetch",
+          "lineNumber": 1290
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "console.error",
+          "lineNumber": 1292
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "res.text",
+          "lineNumber": 1301
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "parseDcText",
+          "lineNumber": 1304
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "console.error",
+          "lineNumber": 1306
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "updateHtml",
+          "lineNumber": 1315
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "updateJs",
+          "lineNumber": 1316
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "console.error",
+          "lineNumber": 1318
+        },
+        {
+          "caller": "updateHtml",
+          "callee": "registry.get",
+          "lineNumber": 1326
+        },
+        {
+          "caller": "updateHtml",
+          "callee": "compileTemplate",
+          "lineNumber": 1329
+        },
+        {
+          "caller": "updateHtml",
+          "callee": "console.error",
+          "lineNumber": 1331
+        },
+        {
+          "caller": "updateHtml",
+          "callee": "registry.bump",
+          "lineNumber": 1333
+        },
+        {
+          "caller": "updateJs",
+          "callee": "registry.get",
+          "lineNumber": 1336
+        },
+        {
+          "caller": "updateJs",
+          "callee": "evalDcLogic",
+          "lineNumber": 1339
+        },
+        {
+          "caller": "updateJs",
+          "callee": "console.error",
+          "lineNumber": 1349
+        },
+        {
+          "caller": "updateJs",
+          "callee": "String",
+          "lineNumber": 1355
+        },
+        {
+          "caller": "updateJs",
+          "callee": "registry.bump",
+          "lineNumber": 1357
+        },
+        {
+          "caller": "setStreaming",
+          "callee": "registry.get",
+          "lineNumber": 1360
+        },
+        {
+          "caller": "setStreaming",
+          "callee": "doc.documentElement.classList.toggle",
+          "lineNumber": 1371
+        },
+        {
+          "caller": "setStreaming",
+          "callee": "registry.bump",
+          "lineNumber": 1372
+        },
+        {
+          "caller": "dcUpdate",
+          "callee": "registry.get",
+          "lineNumber": 1375
+        },
+        {
+          "caller": "dcUpdate",
+          "callee": "setStreaming",
+          "lineNumber": 1377
+        },
+        {
+          "caller": "dcUpdate",
+          "callee": "updateHtml",
+          "lineNumber": 1378
+        },
+        {
+          "caller": "dcUpdate",
+          "callee": "setStreaming",
+          "lineNumber": 1380
+        },
+        {
+          "caller": "dcUpdate",
+          "callee": "updateJs",
+          "lineNumber": 1381
+        },
+        {
+          "caller": "dcUpdate",
+          "callee": "parseDataProps",
+          "lineNumber": 1383
+        },
+        {
+          "caller": "dcUpdate",
+          "callee": "registry.get",
+          "lineNumber": 1384
+        },
+        {
+          "caller": "dcUpdate",
+          "callee": "registry.bump",
+          "lineNumber": 1387
+        },
+        {
+          "caller": "setProps",
+          "callee": "registry.get",
+          "lineNumber": 1391
+        },
+        {
+          "caller": "setProps",
+          "callee": "registry.bump",
+          "lineNumber": 1392
+        },
+        {
+          "caller": "adoptParsed",
+          "callee": "registry.get",
+          "lineNumber": 1396
+        },
+        {
+          "caller": "adoptParsed",
+          "callee": "updateHtml",
+          "lineNumber": 1399
+        },
+        {
+          "caller": "adoptParsed",
+          "callee": "updateJs",
+          "lineNumber": 1400
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "registry.get",
+          "lineNumber": 1411
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "registry.get",
+          "lineNumber": 1414
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "registry.get",
+          "lineNumber": 1417
+        },
+        {
+          "caller": "hideRawTemplate",
+          "callee": "document.createElement",
+          "lineNumber": 1428
+        },
+        {
+          "caller": "hideRawTemplate",
+          "callee": "document.head.appendChild",
+          "lineNumber": 1430
+        },
+        {
+          "caller": "loadScript",
+          "callee": "document.createElement",
+          "lineNumber": 1435
+        },
+        {
+          "caller": "loadScript",
+          "callee": "resolve2",
+          "lineNumber": 1440
+        },
+        {
+          "caller": "loadScript",
+          "callee": "reject",
+          "lineNumber": 1441
+        },
+        {
+          "caller": "loadScript",
+          "callee": "document.head.appendChild",
+          "lineNumber": 1442
+        },
+        {
+          "caller": "loadReactUmd",
+          "callee": "Promise.resolve",
+          "lineNumber": 1447
+        },
+        {
+          "caller": "loadReactUmd",
+          "callee": "Promise.all([\n      loadScript(REACT_URL, REACT_SRI),\n      loadScript(REACT_DOM_URL, REACT_DOM_SRI)\n    ]).then",
+          "lineNumber": 1448
+        },
+        {
+          "caller": "loadReactUmd",
+          "callee": "Promise.all",
+          "lineNumber": 1448
+        },
+        {
+          "caller": "loadReactUmd",
+          "callee": "loadScript",
+          "lineNumber": 1449
+        },
+        {
+          "caller": "loadReactUmd",
+          "callee": "loadScript",
+          "lineNumber": 1450
+        },
+        {
+          "caller": "init",
+          "callee": "createRuntime",
+          "lineNumber": 1454
+        },
+        {
+          "caller": "init",
+          "callee": "document.createElement",
+          "lineNumber": 1456
+        },
+        {
+          "caller": "init",
+          "callee": "document.head.prepend",
+          "lineNumber": 1458
+        },
+        {
+          "caller": "notifyHost",
+          "callee": "window.parent.postMessage",
+          "lineNumber": 1463
+        },
+        {
+          "caller": "init",
+          "callee": "runtime.dcUpdate",
+          "lineNumber": 1477
+        },
+        {
+          "caller": "init",
+          "callee": "notifyHost",
+          "lineNumber": 1478
+        },
+        {
+          "caller": "init",
+          "callee": "runtime.setProps",
+          "lineNumber": 1480
+        },
+        {
+          "caller": "init",
+          "callee": "runtime.annotatedTemplate",
+          "lineNumber": 1489
+        },
+        {
+          "caller": "init",
+          "callee": "runtime.templateSource",
+          "lineNumber": 1491
+        },
+        {
+          "caller": "init",
+          "callee": "boot",
+          "lineNumber": 1493
+        },
+        {
+          "caller": "init",
+          "callee": "notifyHost",
+          "lineNumber": 1494
+        },
+        {
+          "caller": "init",
+          "callee": "runtime.getDC",
+          "lineNumber": 1497
+        },
+        {
+          "caller": "init",
+          "callee": "Object.assign",
+          "lineNumber": 1503
+        },
+        {
+          "caller": "init",
+          "callee": "api.__dcBoot",
+          "lineNumber": 1504
+        },
+        {
+          "caller": "init",
+          "callee": "document.addEventListener",
+          "lineNumber": 1505
+        },
+        {
+          "caller": "init",
+          "callee": "api.__dcBoot",
+          "lineNumber": 1505
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "website/support.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 1512,
+      "nonEmptyLines": 1498,
+      "callGraph": [
+        {
+          "caller": "__defNormalProp",
+          "callee": "__defProp",
+          "lineNumber": 5
+        },
+        {
+          "caller": "__publicField",
+          "callee": "__defNormalProp",
+          "lineNumber": 6
+        },
+        {
+          "caller": "parseDcDocument",
+          "callee": "doc.querySelector",
+          "lineNumber": 25
+        },
+        {
+          "caller": "parseDcDocument",
+          "callee": "doc.querySelector",
+          "lineNumber": 27
+        },
+        {
+          "caller": "parseDcDocument",
+          "callee": "parseDataProps",
+          "lineNumber": 28
+        },
+        {
+          "caller": "parseDcDocument",
+          "callee": "scriptEl?.getAttribute",
+          "lineNumber": 29
+        },
+        {
+          "caller": "parseDcText",
+          "callee": "/<x-dc(?:\\s[^>]*)?>/.exec",
+          "lineNumber": 39
+        },
+        {
+          "caller": "parseDcText",
+          "callee": "src.lastIndexOf",
+          "lineNumber": 41
+        },
+        {
+          "caller": "parseDcText",
+          "callee": "src.slice",
+          "lineNumber": 43
+        },
+        {
+          "caller": "parseDcText",
+          "callee": "new DOMParser().parseFromString",
+          "lineNumber": 44
+        },
+        {
+          "caller": "parseDcText",
+          "callee": "doc.querySelector",
+          "lineNumber": 45
+        },
+        {
+          "caller": "parseDcText",
+          "callee": "parseDataProps",
+          "lineNumber": 46
+        },
+        {
+          "caller": "parseDcText",
+          "callee": "scriptEl?.getAttribute",
+          "lineNumber": 47
+        },
+        {
+          "caller": "parseDataProps",
+          "callee": "JSON.parse",
+          "lineNumber": 60
+        },
+        {
+          "caller": "parseDataProps",
+          "callee": "Array.isArray",
+          "lineNumber": 64
+        },
+        {
+          "caller": "parseDataProps",
+          "callee": "Object.keys",
+          "lineNumber": 70
+        },
+        {
+          "caller": "parseDataProps",
+          "callee": "Object.keys",
+          "lineNumber": 73
+        },
+        {
+          "caller": "dcNameFromPath",
+          "callee": "decodeURIComponent",
+          "lineNumber": 78
+        },
+        {
+          "caller": "dcNameFromPath",
+          "callee": "p.split(\"/\").pop",
+          "lineNumber": 81
+        },
+        {
+          "caller": "dcNameFromPath",
+          "callee": "p.split",
+          "lineNumber": 81
+        },
+        {
+          "caller": "dcNameFromPath",
+          "callee": "base.replace(/\\.dc\\.html$/, \"\").replace",
+          "lineNumber": 82
+        },
+        {
+          "caller": "dcNameFromPath",
+          "callee": "base.replace",
+          "lineNumber": 82
+        },
+        {
+          "caller": "rootNameForDocument",
+          "callee": "/\\.dc\\.html?$/i.test",
+          "lineNumber": 131
+        },
+        {
+          "caller": "rootNameForDocument",
+          "callee": "safeDecode",
+          "lineNumber": 131
+        },
+        {
+          "caller": "rootNameForDocument",
+          "callee": "dcNameFromPath",
+          "lineNumber": 137
+        },
+        {
+          "caller": "safeDecode",
+          "callee": "decodeURIComponent",
+          "lineNumber": 141
+        },
+        {
+          "caller": "boot",
+          "callee": "parseDcDocument",
+          "lineNumber": 147
+        },
+        {
+          "caller": "boot",
+          "callee": "getReact",
+          "lineNumber": 149
+        },
+        {
+          "caller": "boot",
+          "callee": "rootNameForDocument",
+          "lineNumber": 150
+        },
+        {
+          "caller": "boot",
+          "callee": "runtime.markFetched",
+          "lineNumber": 151
+        },
+        {
+          "caller": "boot",
+          "callee": "runtime.adoptParsed",
+          "lineNumber": 152
+        },
+        {
+          "caller": "boot",
+          "callee": "fetch(location.href).then((res) => res.ok ? res.text() : \"\").then((t) => {\n      const raw = t ? parseDcText(t) : null;\n      if (raw?.template) runtime.updateHtml(rootName, raw.template);\n    }).catch",
+          "lineNumber": 153
+        },
+        {
+          "caller": "boot",
+          "callee": "fetch(location.href).then((res) => res.ok ? res.text() : \"\").then",
+          "lineNumber": 153
+        },
+        {
+          "caller": "boot",
+          "callee": "fetch(location.href).then",
+          "lineNumber": 153
+        },
+        {
+          "caller": "boot",
+          "callee": "fetch",
+          "lineNumber": 153
+        },
+        {
+          "caller": "boot",
+          "callee": "res.text",
+          "lineNumber": 153
+        },
+        {
+          "caller": "boot",
+          "callee": "parseDcText",
+          "lineNumber": 154
+        },
+        {
+          "caller": "boot",
+          "callee": "runtime.updateHtml",
+          "lineNumber": 155
+        },
+        {
+          "caller": "boot",
+          "callee": "doc.querySelector",
+          "lineNumber": 158
+        },
+        {
+          "caller": "boot",
+          "callee": "doc.createElement",
+          "lineNumber": 159
+        },
+        {
+          "caller": "boot",
+          "callee": "dc.replaceWith",
+          "lineNumber": 161
+        },
+        {
+          "caller": "boot",
+          "callee": "doc.createElement",
+          "lineNumber": 163
+        },
+        {
+          "caller": "boot",
+          "callee": "doc.head.appendChild",
+          "lineNumber": 165
+        },
+        {
+          "caller": "boot",
+          "callee": "runtime.getDC",
+          "lineNumber": 167
+        },
+        {
+          "caller": "boot",
+          "callee": "runtime.registry.get",
+          "lineNumber": 168
+        },
+        {
+          "caller": "StandaloneRoot",
+          "callee": "React.useState",
+          "lineNumber": 170
+        },
+        {
+          "caller": "StandaloneRoot",
+          "callee": "React.useEffect",
+          "lineNumber": 171
+        },
+        {
+          "caller": "sub",
+          "callee": "setTick",
+          "lineNumber": 172
+        },
+        {
+          "caller": "StandaloneRoot",
+          "callee": "entry.subs.add",
+          "lineNumber": 173
+        },
+        {
+          "caller": "StandaloneRoot",
+          "callee": "entry.subs.delete",
+          "lineNumber": 175
+        },
+        {
+          "caller": "StandaloneRoot",
+          "callee": "h",
+          "lineNumber": 178
+        },
+        {
+          "caller": "boot",
+          "callee": "getReactDOM",
+          "lineNumber": 180
+        },
+        {
+          "caller": "boot",
+          "callee": "ReactDOM.createRoot(hostEl).render",
+          "lineNumber": 182
+        },
+        {
+          "caller": "boot",
+          "callee": "ReactDOM.createRoot",
+          "lineNumber": 182
+        },
+        {
+          "caller": "boot",
+          "callee": "h",
+          "lineNumber": 182
+        },
+        {
+          "caller": "boot",
+          "callee": "ReactDOM.render",
+          "lineNumber": 183
+        },
+        {
+          "caller": "boot",
+          "callee": "h",
+          "lineNumber": 183
+        },
+        {
+          "caller": "resolve",
+          "callee": "String(src).trim",
+          "lineNumber": 191
+        },
+        {
+          "caller": "resolve",
+          "callee": "String",
+          "lineNumber": 191
+        },
+        {
+          "caller": "resolve",
+          "callee": "parensWrapWhole",
+          "lineNumber": 193
+        },
+        {
+          "caller": "resolve",
+          "callee": "resolve",
+          "lineNumber": 194
+        },
+        {
+          "caller": "resolve",
+          "callee": "expr.slice",
+          "lineNumber": 194
+        },
+        {
+          "caller": "resolve",
+          "callee": "findTopLevelEquality",
+          "lineNumber": 196
+        },
+        {
+          "caller": "resolve",
+          "callee": "resolve",
+          "lineNumber": 198
+        },
+        {
+          "caller": "resolve",
+          "callee": "expr.slice",
+          "lineNumber": 198
+        },
+        {
+          "caller": "resolve",
+          "callee": "resolve",
+          "lineNumber": 199
+        },
+        {
+          "caller": "resolve",
+          "callee": "expr.slice",
+          "lineNumber": 199
+        },
+        {
+          "caller": "resolve",
+          "callee": "resolve",
+          "lineNumber": 211
+        },
+        {
+          "caller": "resolve",
+          "callee": "expr.slice",
+          "lineNumber": 211
+        },
+        {
+          "caller": "resolve",
+          "callee": "NUMBER_RE.test",
+          "lineNumber": 216
+        },
+        {
+          "caller": "resolve",
+          "callee": "Number",
+          "lineNumber": 216
+        },
+        {
+          "caller": "resolve",
+          "callee": "expr.slice",
+          "lineNumber": 218
+        },
+        {
+          "caller": "resolve",
+          "callee": "resolvePath",
+          "lineNumber": 220
+        },
+        {
+          "caller": "findTopLevelEquality",
+          "callee": "expr.slice(0, i).trim",
+          "lineNumber": 241
+        },
+        {
+          "caller": "findTopLevelEquality",
+          "callee": "expr.slice",
+          "lineNumber": 241
+        },
+        {
+          "caller": "resolvePath",
+          "callee": "expr.match",
+          "lineNumber": 249
+        },
+        {
+          "caller": "resolvePath",
+          "callee": "expr.slice(i + 1).match",
+          "lineNumber": 255
+        },
+        {
+          "caller": "resolvePath",
+          "callee": "expr.slice",
+          "lineNumber": 255
+        },
+        {
+          "caller": "resolvePath",
+          "callee": "expr.slice(i + 1).match",
+          "lineNumber": 255
+        },
+        {
+          "caller": "resolvePath",
+          "callee": "expr.slice",
+          "lineNumber": 255
+        },
+        {
+          "caller": "resolvePath",
+          "callee": "resolve",
+          "lineNumber": 271
+        },
+        {
+          "caller": "resolvePath",
+          "callee": "expr.slice",
+          "lineNumber": 271
+        },
+        {
+          "caller": "encodeCase",
+          "callee": "html.replace",
+          "lineNumber": 321
+        },
+        {
+          "caller": "encodeCase",
+          "callee": "html.replace",
+          "lineNumber": 325
+        },
+        {
+          "caller": "encodeCase",
+          "callee": "html.replace",
+          "lineNumber": 326
+        },
+        {
+          "caller": "encodeCase",
+          "callee": "html.replace",
+          "lineNumber": 327
+        },
+        {
+          "caller": "encodeCase",
+          "callee": "name.replace",
+          "lineNumber": 329
+        },
+        {
+          "caller": "encodeCase",
+          "callee": "c.toLowerCase",
+          "lineNumber": 329
+        },
+        {
+          "caller": "encodeCase",
+          "callee": "Object.entries",
+          "lineNumber": 331
+        },
+        {
+          "caller": "encodeCase",
+          "callee": "html.replace",
+          "lineNumber": 332
+        },
+        {
+          "caller": "kebabToCamel",
+          "callee": "s.replace",
+          "lineNumber": 340
+        },
+        {
+          "caller": "kebabToCamel",
+          "callee": "c.toUpperCase",
+          "lineNumber": 340
+        },
+        {
+          "caller": "cssToObj",
+          "callee": "css.split",
+          "lineNumber": 344
+        },
+        {
+          "caller": "cssToObj",
+          "callee": "decl.indexOf",
+          "lineNumber": 345
+        },
+        {
+          "caller": "cssToObj",
+          "callee": "decl.slice(0, i).trim",
+          "lineNumber": 347
+        },
+        {
+          "caller": "cssToObj",
+          "callee": "decl.slice",
+          "lineNumber": 347
+        },
+        {
+          "caller": "cssToObj",
+          "callee": "prop.startsWith",
+          "lineNumber": 348
+        },
+        {
+          "caller": "cssToObj",
+          "callee": "kebabToCamel",
+          "lineNumber": 348
+        },
+        {
+          "caller": "cssToObj",
+          "callee": "decl.slice(i + 1).trim",
+          "lineNumber": 348
+        },
+        {
+          "caller": "cssToObj",
+          "callee": "decl.slice",
+          "lineNumber": 348
+        },
+        {
+          "caller": "compileAttr",
+          "callee": "raw.match",
+          "lineNumber": 353
+        },
+        {
+          "caller": "compileAttr",
+          "callee": "resolve",
+          "lineNumber": 356
+        },
+        {
+          "caller": "compileAttr",
+          "callee": "raw.includes",
+          "lineNumber": 358
+        },
+        {
+          "caller": "compileAttr",
+          "callee": "raw.split",
+          "lineNumber": 359
+        },
+        {
+          "caller": "compileAttr",
+          "callee": "parts.map((s, i) => i & 1 ? resolve(vals, s) ?? \"\" : s).join",
+          "lineNumber": 360
+        },
+        {
+          "caller": "compileAttr",
+          "callee": "parts.map",
+          "lineNumber": 360
+        },
+        {
+          "caller": "compileAttr",
+          "callee": "resolve",
+          "lineNumber": 360
+        },
+        {
+          "caller": "collectProps",
+          "callee": "key.startsWith",
+          "lineNumber": 373
+        },
+        {
+          "caller": "collectProps",
+          "callee": "kebabToCamel",
+          "lineNumber": 374
+        },
+        {
+          "caller": "collectProps",
+          "callee": "key.slice",
+          "lineNumber": 374
+        },
+        {
+          "caller": "collectProps",
+          "callee": "key.startsWith",
+          "lineNumber": 379
+        },
+        {
+          "caller": "collectProps",
+          "callee": "pseudoClasses.push",
+          "lineNumber": 380
+        },
+        {
+          "caller": "collectProps",
+          "callee": "host.pseudoClass",
+          "lineNumber": 380
+        },
+        {
+          "caller": "collectProps",
+          "callee": "key.slice",
+          "lineNumber": 380
+        },
+        {
+          "caller": "collectProps",
+          "callee": "key.includes",
+          "lineNumber": 384
+        },
+        {
+          "caller": "collectProps",
+          "callee": "kebabToCamel",
+          "lineNumber": 384
+        },
+        {
+          "caller": "collectProps",
+          "callee": "key.startsWith",
+          "lineNumber": 388
+        },
+        {
+          "caller": "collectProps",
+          "callee": "key[2].toUpperCase",
+          "lineNumber": 389
+        },
+        {
+          "caller": "collectProps",
+          "callee": "key.slice",
+          "lineNumber": 389
+        },
+        {
+          "caller": "collectProps",
+          "callee": "propGetters.push",
+          "lineNumber": 391
+        },
+        {
+          "caller": "collectProps",
+          "callee": "compileAttr",
+          "lineNumber": 391
+        },
+        {
+          "caller": "hostPositionStyle",
+          "callee": "cssToObj",
+          "lineNumber": 408
+        },
+        {
+          "caller": "hostPositionStyle",
+          "callee": "Object.entries",
+          "lineNumber": 411
+        },
+        {
+          "caller": "hostPositionStyle",
+          "callee": "k.replace",
+          "lineNumber": 412
+        },
+        {
+          "caller": "hostPositionStyle",
+          "callee": "c.toLowerCase",
+          "lineNumber": 412
+        },
+        {
+          "caller": "hostPositionStyle",
+          "callee": "HOST_STYLE_PROPS.has",
+          "lineNumber": 413
+        },
+        {
+          "caller": "hostPositionStyle",
+          "callee": "Object.keys",
+          "lineNumber": 415
+        },
+        {
+          "caller": "compileTemplate",
+          "callee": "document.createElement",
+          "lineNumber": 418
+        },
+        {
+          "caller": "compileTemplate",
+          "callee": "encodeCase",
+          "lineNumber": 420
+        },
+        {
+          "caller": "compileTemplate",
+          "callee": "(function stamp(node) {\n      if (node.nodeType === Node.ELEMENT_NODE) {\n        node.setAttribute(\"data-dc-tpl\", String(tplN++));\n      }\n      for (const c of node.childNodes) stamp(c);\n    })",
+          "lineNumber": 422
+        },
+        {
+          "caller": "compileTemplate",
+          "callee": "node.setAttribute",
+          "lineNumber": 424
+        },
+        {
+          "caller": "compileTemplate",
+          "callee": "String",
+          "lineNumber": 424
+        },
+        {
+          "caller": "compileTemplate",
+          "callee": "stamp",
+          "lineNumber": 426
+        },
+        {
+          "caller": "compileTemplate",
+          "callee": "walkChildren",
+          "lineNumber": 428
+        },
+        {
+          "caller": "compileTemplate",
+          "callee": "builders.map",
+          "lineNumber": 429
+        },
+        {
+          "caller": "compileTemplate",
+          "callee": "b",
+          "lineNumber": 429
+        },
+        {
+          "caller": "walkChildren",
+          "callee": "[...node.childNodes].map((c) => walk(c, host)).filter",
+          "lineNumber": 434
+        },
+        {
+          "caller": "walkChildren",
+          "callee": "[...node.childNodes].map",
+          "lineNumber": 434
+        },
+        {
+          "caller": "walkChildren",
+          "callee": "walk",
+          "lineNumber": 434
+        },
+        {
+          "caller": "walk",
+          "callee": "walkText",
+          "lineNumber": 437
+        },
+        {
+          "caller": "walk",
+          "callee": "el.tagName.toLowerCase",
+          "lineNumber": 440
+        },
+        {
+          "caller": "walk",
+          "callee": "walkFor",
+          "lineNumber": 441
+        },
+        {
+          "caller": "walk",
+          "callee": "walkIf",
+          "lineNumber": 442
+        },
+        {
+          "caller": "walk",
+          "callee": "walkXImport",
+          "lineNumber": 443
+        },
+        {
+          "caller": "walk",
+          "callee": "host.helmet",
+          "lineNumber": 444
+        },
+        {
+          "caller": "walk",
+          "callee": "walkComponent",
+          "lineNumber": 445
+        },
+        {
+          "caller": "walk",
+          "callee": "walkElement",
+          "lineNumber": 446
+        },
+        {
+          "caller": "warnUnresolved",
+          "callee": "warnedHoles.has",
+          "lineNumber": 451
+        },
+        {
+          "caller": "warnUnresolved",
+          "callee": "warnedHoles.add",
+          "lineNumber": 452
+        },
+        {
+          "caller": "warnUnresolved",
+          "callee": "console.warn",
+          "lineNumber": 453
+        },
+        {
+          "caller": "walkText",
+          "callee": "txt.includes",
+          "lineNumber": 457
+        },
+        {
+          "caller": "walkText",
+          "callee": "txt.trim",
+          "lineNumber": 458
+        },
+        {
+          "caller": "walkText",
+          "callee": "txt.includes",
+          "lineNumber": 458
+        },
+        {
+          "caller": "walkText",
+          "callee": "txt.split",
+          "lineNumber": 461
+        },
+        {
+          "caller": "walkText",
+          "callee": "h",
+          "lineNumber": 462
+        },
+        {
+          "caller": "walkText",
+          "callee": "getReact",
+          "lineNumber": 463
+        },
+        {
+          "caller": "walkText",
+          "callee": "parts.map",
+          "lineNumber": 465
+        },
+        {
+          "caller": "walkText",
+          "callee": "resolve",
+          "lineNumber": 467
+        },
+        {
+          "caller": "walkText",
+          "callee": "document.body?.hasAttribute",
+          "lineNumber": 470
+        },
+        {
+          "caller": "walkText",
+          "callee": "h",
+          "lineNumber": 471
+        },
+        {
+          "caller": "walkText",
+          "callee": "p.trim",
+          "lineNumber": 474
+        },
+        {
+          "caller": "walkText",
+          "callee": "warnUnresolved",
+          "lineNumber": 477
+        },
+        {
+          "caller": "walkText",
+          "callee": "p.trim",
+          "lineNumber": 479
+        },
+        {
+          "caller": "walkText",
+          "callee": "h",
+          "lineNumber": 483
+        },
+        {
+          "caller": "walkText",
+          "callee": "p.trim",
+          "lineNumber": 486
+        },
+        {
+          "caller": "walkText",
+          "callee": "getReact().isValidElement",
+          "lineNumber": 489
+        },
+        {
+          "caller": "walkText",
+          "callee": "getReact",
+          "lineNumber": 489
+        },
+        {
+          "caller": "walkText",
+          "callee": "Array.isArray",
+          "lineNumber": 489
+        },
+        {
+          "caller": "walkText",
+          "callee": "h",
+          "lineNumber": 490
+        },
+        {
+          "caller": "walkText",
+          "callee": "getReact",
+          "lineNumber": 490
+        },
+        {
+          "caller": "walkText",
+          "callee": "h",
+          "lineNumber": 493
+        },
+        {
+          "caller": "walkText",
+          "callee": "String",
+          "lineNumber": 493
+        },
+        {
+          "caller": "walkFor",
+          "callee": "compileAttr",
+          "lineNumber": 498
+        },
+        {
+          "caller": "walkFor",
+          "callee": "el.getAttribute",
+          "lineNumber": 498
+        },
+        {
+          "caller": "walkFor",
+          "callee": "el.getAttribute",
+          "lineNumber": 499
+        },
+        {
+          "caller": "walkFor",
+          "callee": "parseInt",
+          "lineNumber": 500
+        },
+        {
+          "caller": "walkFor",
+          "callee": "el.getAttribute",
+          "lineNumber": 500
+        },
+        {
+          "caller": "walkFor",
+          "callee": "walkChildren",
+          "lineNumber": 501
+        },
+        {
+          "caller": "walkFor",
+          "callee": "el.getAttribute",
+          "lineNumber": 502
+        },
+        {
+          "caller": "walkFor",
+          "callee": "listGet",
+          "lineNumber": 504
+        },
+        {
+          "caller": "walkFor",
+          "callee": "Array.isArray",
+          "lineNumber": 505
+        },
+        {
+          "caller": "walkFor",
+          "callee": "warnUnresolved",
+          "lineNumber": 508
+        },
+        {
+          "caller": "walkFor",
+          "callee": "Array(hintN).fill",
+          "lineNumber": 515
+        },
+        {
+          "caller": "walkFor",
+          "callee": "Array",
+          "lineNumber": 515
+        },
+        {
+          "caller": "walkFor",
+          "callee": "h",
+          "lineNumber": 518
+        },
+        {
+          "caller": "walkFor",
+          "callee": "getReact",
+          "lineNumber": 519
+        },
+        {
+          "caller": "walkFor",
+          "callee": "list.map",
+          "lineNumber": 521
+        },
+        {
+          "caller": "walkFor",
+          "callee": "h",
+          "lineNumber": 523
+        },
+        {
+          "caller": "walkFor",
+          "callee": "getReact",
+          "lineNumber": 524
+        },
+        {
+          "caller": "walkFor",
+          "callee": "kids.map",
+          "lineNumber": 526
+        },
+        {
+          "caller": "walkFor",
+          "callee": "b",
+          "lineNumber": 526
+        },
+        {
+          "caller": "walkIf",
+          "callee": "compileAttr",
+          "lineNumber": 533
+        },
+        {
+          "caller": "walkIf",
+          "callee": "el.getAttribute",
+          "lineNumber": 533
+        },
+        {
+          "caller": "walkIf",
+          "callee": "el.getAttribute",
+          "lineNumber": 534
+        },
+        {
+          "caller": "walkIf",
+          "callee": "compileAttr",
+          "lineNumber": 535
+        },
+        {
+          "caller": "walkIf",
+          "callee": "walkChildren",
+          "lineNumber": 536
+        },
+        {
+          "caller": "walkIf",
+          "callee": "valGet",
+          "lineNumber": 538
+        },
+        {
+          "caller": "walkIf",
+          "callee": "hintGet",
+          "lineNumber": 539
+        },
+        {
+          "caller": "walkIf",
+          "callee": "h",
+          "lineNumber": 540
+        },
+        {
+          "caller": "walkIf",
+          "callee": "getReact",
+          "lineNumber": 541
+        },
+        {
+          "caller": "walkIf",
+          "callee": "kids.map",
+          "lineNumber": 543
+        },
+        {
+          "caller": "walkIf",
+          "callee": "b",
+          "lineNumber": 543
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "el.getAttribute",
+          "lineNumber": 548
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "el.getAttribute",
+          "lineNumber": 548
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "el.removeAttribute",
+          "lineNumber": 549
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "el.removeAttribute",
+          "lineNumber": 550
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "el.getAttribute",
+          "lineNumber": 551
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "el.getAttribute",
+          "lineNumber": 552
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "el.removeAttribute",
+          "lineNumber": 553
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "compileAttr",
+          "lineNumber": 554
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "collectProps",
+          "lineNumber": 555
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "walkChildren",
+          "lineNumber": 556
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "hostPositionStyle",
+          "lineNumber": 562
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "styleGet",
+          "lineNumber": 562
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "g",
+          "lineNumber": 564
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "kids.map",
+          "lineNumber": 565
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "b",
+          "lineNumber": 565
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "h",
+          "lineNumber": 566
+        },
+        {
+          "caller": "walkComponent",
+          "callee": "host.component",
+          "lineNumber": 566
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "compileAttr",
+          "lineNumber": 570
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "el.getAttribute",
+          "lineNumber": 571
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "compileAttr",
+          "lineNumber": 573
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "el.getAttribute",
+          "lineNumber": 574
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "el.getAttribute",
+          "lineNumber": 574
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "el.getAttribute",
+          "lineNumber": 576
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "el.getAttribute",
+          "lineNumber": 576
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "el.getAttribute",
+          "lineNumber": 576
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "/\\.(jsx|tsx)(\\?|#|$)/i.test",
+          "lineNumber": 577
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "el.getAttribute",
+          "lineNumber": 578
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "el.getAttribute",
+          "lineNumber": 579
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "el.removeAttribute",
+          "lineNumber": 580
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "compileAttr",
+          "lineNumber": 581
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "collectProps",
+          "lineNumber": 583
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "(el.textContent || \"\").trim",
+          "lineNumber": 584
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "walkChildren",
+          "lineNumber": 585
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "url.includes",
+          "lineNumber": 586
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "host.loadExternal",
+          "lineNumber": 587
+        },
+        {
+          "caller": "evalName",
+          "callee": "g",
+          "lineNumber": 589
+        },
+        {
+          "caller": "evalName",
+          "callee": "String",
+          "lineNumber": 590
+        },
+        {
+          "caller": "evalName",
+          "callee": "s.includes",
+          "lineNumber": 591
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "evalName",
+          "lineNumber": 594
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "evalName",
+          "lineNumber": 595
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "host.resolveExternalGlobal",
+          "lineNumber": 596
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "host.resolveExternal",
+          "lineNumber": 596
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "hostPositionStyle",
+          "lineNumber": 597
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "styleGet",
+          "lineNumber": 597
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "host.resolveExternalError",
+          "lineNumber": 605
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "host.placeholder",
+          "lineNumber": 606
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "h",
+          "lineNumber": 612
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "g",
+          "lineNumber": 620
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "host.placeholder",
+          "lineNumber": 625
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "h",
+          "lineNumber": 631
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "kids.map",
+          "lineNumber": 633
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "b",
+          "lineNumber": 633
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "h",
+          "lineNumber": 634
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "h",
+          "lineNumber": 634
+        },
+        {
+          "caller": "walkXImport",
+          "callee": "h",
+          "lineNumber": 634
+        },
+        {
+          "caller": "walkElement",
+          "callee": "el.getAttribute",
+          "lineNumber": 639
+        },
+        {
+          "caller": "walkElement",
+          "callee": "collectProps",
+          "lineNumber": 640
+        },
+        {
+          "caller": "walkElement",
+          "callee": "walkChildren",
+          "lineNumber": 641
+        },
+        {
+          "caller": "walkElement",
+          "callee": "g",
+          "lineNumber": 645
+        },
+        {
+          "caller": "walkElement",
+          "callee": "cssToObj",
+          "lineNumber": 646
+        },
+        {
+          "caller": "walkElement",
+          "callee": "[props.className, ...pseudoClasses].filter(Boolean).join",
+          "lineNumber": 653
+        },
+        {
+          "caller": "walkElement",
+          "callee": "[props.className, ...pseudoClasses].filter",
+          "lineNumber": 653
+        },
+        {
+          "caller": "walkElement",
+          "callee": "h",
+          "lineNumber": 655
+        },
+        {
+          "caller": "walkElement",
+          "callee": "kids.map",
+          "lineNumber": 655
+        },
+        {
+          "caller": "walkElement",
+          "callee": "b",
+          "lineNumber": 655
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 662
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 663
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 665
+        },
+        {
+          "caller": "setState",
+          "callee": "this.__host.__setLogicState",
+          "lineNumber": 669
+        },
+        {
+          "caller": "forceUpdate",
+          "callee": "this.__host.forceUpdate",
+          "lineNumber": 672
+        },
+        {
+          "caller": "evalDcLogic",
+          "callee": "fn",
+          "lineNumber": 693
+        },
+        {
+          "caller": "evalDcLogic",
+          "callee": "getReact",
+          "lineNumber": 693
+        },
+        {
+          "caller": "shallowEqual",
+          "callee": "Object.keys(a).filter",
+          "lineNumber": 699
+        },
+        {
+          "caller": "shallowEqual",
+          "callee": "Object.keys",
+          "lineNumber": 699
+        },
+        {
+          "caller": "shallowEqual",
+          "callee": "Object.keys(b).filter",
+          "lineNumber": 700
+        },
+        {
+          "caller": "shallowEqual",
+          "callee": "Object.keys",
+          "lineNumber": 700
+        },
+        {
+          "caller": "Placeholder",
+          "callee": "(hintSize || \"100%,60px\").split",
+          "lineNumber": 711
+        },
+        {
+          "caller": "Placeholder",
+          "callee": "h",
+          "lineNumber": 712
+        },
+        {
+          "caller": "Placeholder",
+          "callee": "w.trim",
+          "lineNumber": 716
+        },
+        {
+          "caller": "Placeholder",
+          "callee": "hgt.trim",
+          "lineNumber": 716
+        },
+        {
+          "caller": "Placeholder",
+          "callee": "h",
+          "lineNumber": 719
+        },
+        {
+          "caller": "hintToMin",
+          "callee": "hint.split",
+          "lineNumber": 728
+        },
+        {
+          "caller": "hintToMin",
+          "callee": "w.trim",
+          "lineNumber": 729
+        },
+        {
+          "caller": "hintToMin",
+          "callee": "hgt.trim",
+          "lineNumber": 729
+        },
+        {
+          "caller": "createComponentFactory",
+          "callee": "getReact",
+          "lineNumber": 732
+        },
+        {
+          "caller": "createComponentFactory",
+          "callee": "React.createContext",
+          "lineNumber": 733
+        },
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 736
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 737
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 738
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 739
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 743
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 744
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 750
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 751
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 752
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 757
+        },
+        {
+          "caller": "constructor",
+          "callee": "__publicField",
+          "lineNumber": 758
+        },
+        {
+          "caller": "constructor",
+          "callee": "this.setState",
+          "lineNumber": 762
+        },
+        {
+          "caller": "constructor",
+          "callee": "this.forceUpdate",
+          "lineNumber": 763
+        },
+        {
+          "caller": "constructor",
+          "callee": "this.__makeLogic",
+          "lineNumber": 765
+        },
+        {
+          "caller": "constructor",
+          "callee": "registry.get",
+          "lineNumber": 765
+        },
+        {
+          "caller": "constructor",
+          "callee": "ensureFetched",
+          "lineNumber": 766
+        },
+        {
+          "caller": "getDerivedStateFromError",
+          "callee": "String",
+          "lineNumber": 772
+        },
+        {
+          "caller": "componentDidCatch",
+          "callee": "console.error",
+          "lineNumber": 775
+        },
+        {
+          "caller": "__makeLogic",
+          "callee": "this.__userProps",
+          "lineNumber": 786
+        },
+        {
+          "caller": "__makeLogic",
+          "callee": "console.error",
+          "lineNumber": 791
+        },
+        {
+          "caller": "__makeLogic",
+          "callee": "this.__userProps",
+          "lineNumber": 793
+        },
+        {
+          "caller": "__makeLogic",
+          "callee": "registry.get",
+          "lineNumber": 794
+        },
+        {
+          "caller": "__makeLogic",
+          "callee": "String",
+          "lineNumber": 795
+        },
+        {
+          "caller": "__makeLogic",
+          "callee": "this.__userProps",
+          "lineNumber": 797
+        },
+        {
+          "caller": "__setLogicState",
+          "callee": "update",
+          "lineNumber": 812
+        },
+        {
+          "caller": "__setLogicState",
+          "callee": "this.setState",
+          "lineNumber": 814
+        },
+        {
+          "caller": "__reconcileLogic",
+          "callee": "registry.get",
+          "lineNumber": 820
+        },
+        {
+          "caller": "__reconcileLogic",
+          "callee": "shallowEqual",
+          "lineNumber": 823
+        },
+        {
+          "caller": "__reconcileLogic",
+          "callee": "this.__userProps",
+          "lineNumber": 823
+        },
+        {
+          "caller": "__reconcileLogic",
+          "callee": "this.logic.componentWillUnmount",
+          "lineNumber": 828
+        },
+        {
+          "caller": "__reconcileLogic",
+          "callee": "console.error",
+          "lineNumber": 830
+        },
+        {
+          "caller": "__reconcileLogic",
+          "callee": "this.__makeLogic",
+          "lineNumber": 833
+        },
+        {
+          "caller": "componentDidMount",
+          "callee": "registry.get(this.__name).subs.add",
+          "lineNumber": 837
+        },
+        {
+          "caller": "componentDidMount",
+          "callee": "registry.get",
+          "lineNumber": 837
+        },
+        {
+          "caller": "componentDidMount",
+          "callee": "this.logic.componentDidMount",
+          "lineNumber": 839
+        },
+        {
+          "caller": "componentDidMount",
+          "callee": "console.error",
+          "lineNumber": 841
+        },
+        {
+          "caller": "componentDidUpdate",
+          "callee": "this.__userProps",
+          "lineNumber": 845
+        },
+        {
+          "caller": "componentDidUpdate",
+          "callee": "registry.get",
+          "lineNumber": 847
+        },
+        {
+          "caller": "componentDidUpdate",
+          "callee": "this.logic.componentDidMount",
+          "lineNumber": 850
+        },
+        {
+          "caller": "componentDidUpdate",
+          "callee": "console.error",
+          "lineNumber": 852
+        },
+        {
+          "caller": "componentDidUpdate",
+          "callee": "this.logic.componentDidUpdate",
+          "lineNumber": 856
+        },
+        {
+          "caller": "componentDidUpdate",
+          "callee": "console.error",
+          "lineNumber": 858
+        },
+        {
+          "caller": "componentWillUnmount",
+          "callee": "registry.get(this.__name).subs.delete",
+          "lineNumber": 863
+        },
+        {
+          "caller": "componentWillUnmount",
+          "callee": "registry.get",
+          "lineNumber": 863
+        },
+        {
+          "caller": "componentWillUnmount",
+          "callee": "this.logic.componentWillUnmount",
+          "lineNumber": 866
+        },
+        {
+          "caller": "componentWillUnmount",
+          "callee": "console.error",
+          "lineNumber": 868
+        },
+        {
+          "caller": "render",
+          "callee": "registry.get",
+          "lineNumber": 873
+        },
+        {
+          "caller": "render",
+          "callee": "hintToMin",
+          "lineNumber": 875
+        },
+        {
+          "caller": "render",
+          "callee": "Array.isArray",
+          "lineNumber": 883
+        },
+        {
+          "caller": "render",
+          "callee": "chain.includes",
+          "lineNumber": 884
+        },
+        {
+          "caller": "render",
+          "callee": "[\n            ...chain.slice(chain.indexOf(this.__name)),\n            this.__name\n          ].join",
+          "lineNumber": 885
+        },
+        {
+          "caller": "render",
+          "callee": "chain.slice",
+          "lineNumber": 886
+        },
+        {
+          "caller": "render",
+          "callee": "chain.indexOf",
+          "lineNumber": 886
+        },
+        {
+          "caller": "render",
+          "callee": "h",
+          "lineNumber": 889
+        },
+        {
+          "caller": "render",
+          "callee": "h",
+          "lineNumber": 892
+        },
+        {
+          "caller": "render",
+          "callee": "h",
+          "lineNumber": 900
+        },
+        {
+          "caller": "render",
+          "callee": "h",
+          "lineNumber": 903
+        },
+        {
+          "caller": "render",
+          "callee": "h",
+          "lineNumber": 908
+        },
+        {
+          "caller": "render",
+          "callee": "this.__reconcileLogic",
+          "lineNumber": 915
+        },
+        {
+          "caller": "render",
+          "callee": "h",
+          "lineNumber": 917
+        },
+        {
+          "caller": "render",
+          "callee": "h",
+          "lineNumber": 920
+        },
+        {
+          "caller": "render",
+          "callee": "this.__userProps",
+          "lineNumber": 923
+        },
+        {
+          "caller": "render",
+          "callee": "this.logic.renderVals",
+          "lineNumber": 928
+        },
+        {
+          "caller": "render",
+          "callee": "console.error",
+          "lineNumber": 930
+        },
+        {
+          "caller": "render",
+          "callee": "String",
+          "lineNumber": 931
+        },
+        {
+          "caller": "render",
+          "callee": "h",
+          "lineNumber": 935
+        },
+        {
+          "caller": "render",
+          "callee": "h",
+          "lineNumber": 938
+        },
+        {
+          "caller": "render",
+          "callee": "h",
+          "lineNumber": 939
+        },
+        {
+          "caller": "render",
+          "callee": "r.tpl",
+          "lineNumber": 942
+        },
+        {
+          "caller": "createComponentFactory",
+          "callee": "__publicField",
+          "lineNumber": 947
+        },
+        {
+          "caller": "getDC",
+          "callee": "named.get",
+          "lineNumber": 950
+        },
+        {
+          "caller": "Dispatcher",
+          "callee": "React.useState",
+          "lineNumber": 953
+        },
+        {
+          "caller": "Dispatcher",
+          "callee": "React.useEffect",
+          "lineNumber": 954
+        },
+        {
+          "caller": "sub",
+          "callee": "setTick",
+          "lineNumber": 955
+        },
+        {
+          "caller": "Dispatcher",
+          "callee": "registry.get(name).subs.add",
+          "lineNumber": 956
+        },
+        {
+          "caller": "Dispatcher",
+          "callee": "registry.get",
+          "lineNumber": 956
+        },
+        {
+          "caller": "Dispatcher",
+          "callee": "registry.get(name).subs.delete",
+          "lineNumber": 958
+        },
+        {
+          "caller": "Dispatcher",
+          "callee": "registry.get",
+          "lineNumber": 958
+        },
+        {
+          "caller": "Dispatcher",
+          "callee": "ensureFetched",
+          "lineNumber": 961
+        },
+        {
+          "caller": "Dispatcher",
+          "callee": "h",
+          "lineNumber": 962
+        },
+        {
+          "caller": "getDC",
+          "callee": "named.set",
+          "lineNumber": 965
+        },
+        {
+          "caller": "isCustomElementName",
+          "callee": "n.includes",
+          "lineNumber": 975
+        },
+        {
+          "caller": "isCustomElementName",
+          "callee": "n.includes",
+          "lineNumber": 975
+        },
+        {
+          "caller": "isRenderableType",
+          "callee": "isElementClass",
+          "lineNumber": 977
+        },
+        {
+          "caller": "resolveDottedPath",
+          "callee": "name.split",
+          "lineNumber": 982
+        },
+        {
+          "caller": "ensureBabel",
+          "callee": "Promise.resolve",
+          "lineNumber": 997
+        },
+        {
+          "caller": "ensureBabel",
+          "callee": "document.createElement",
+          "lineNumber": 1000
+        },
+        {
+          "caller": "ensureBabel",
+          "callee": "res",
+          "lineNumber": 1003
+        },
+        {
+          "caller": "ensureBabel",
+          "callee": "document.head.appendChild",
+          "lineNumber": 1005
+        },
+        {
+          "caller": "load",
+          "callee": "cache.has",
+          "lineNumber": 1010
+        },
+        {
+          "caller": "load",
+          "callee": "cache.set",
+          "lineNumber": 1011
+        },
+        {
+          "caller": "load",
+          "callee": "console.info",
+          "lineNumber": 1012
+        },
+        {
+          "caller": "load",
+          "callee": "ensureBabel",
+          "lineNumber": 1013
+        },
+        {
+          "caller": "load",
+          "callee": "Promise.resolve",
+          "lineNumber": 1013
+        },
+        {
+          "caller": "load",
+          "callee": "ready.then(() => fetch(url)).then((r) => {\n        if (!r.ok) throw new Error(\"HTTP \" + r.status);\n        return r.text();\n      }).then((src) => {\n        const code = kind === \"jsx\" ? window.Babel.transform(src, {\n          filename: url,\n          presets: [\"react\", \"typescript\"]\n        }).code : src;\n        const module = { exports: {} };\n        const before = new Set(Object.keys(window));\n        //! nosemgrep: eval-and-function-constructor\n        new Function(\"React\", \"module\", \"exports\", \"require\", code)(\n          getReact(),\n          module,\n          module.exports,\n          () => ({})\n        );\n        const globals = {};\n        for (const k of Object.keys(window)) {\n          if (!before.has(k) && typeof window[k] === \"function\") {\n            globals[k] = window[k];\n          }\n        }\n        cache.set(url, { mod: module.exports, globals });\n        console.info(\n          \"[dc-runtime] x-import: loaded\",\n          url,\n          \"\\u2014 exports:\",\n          Object.keys(module.exports),\n          \"window globals:\",\n          Object.keys(globals)\n        );\n        onResolved();\n      }).catch",
+          "lineNumber": 1014
+        },
+        {
+          "caller": "load",
+          "callee": "ready.then(() => fetch(url)).then((r) => {\n        if (!r.ok) throw new Error(\"HTTP \" + r.status);\n        return r.text();\n      }).then",
+          "lineNumber": 1014
+        },
+        {
+          "caller": "load",
+          "callee": "ready.then(() => fetch(url)).then",
+          "lineNumber": 1014
+        },
+        {
+          "caller": "load",
+          "callee": "ready.then",
+          "lineNumber": 1014
+        },
+        {
+          "caller": "load",
+          "callee": "fetch",
+          "lineNumber": 1014
+        },
+        {
+          "caller": "load",
+          "callee": "r.text",
+          "lineNumber": 1016
+        },
+        {
+          "caller": "load",
+          "callee": "window.Babel.transform",
+          "lineNumber": 1018
+        },
+        {
+          "caller": "load",
+          "callee": "Object.keys",
+          "lineNumber": 1023
+        },
+        {
+          "caller": "load",
+          "callee": "new Function(\"React\", \"module\", \"exports\", \"require\", code)",
+          "lineNumber": 1025
+        },
+        {
+          "caller": "load",
+          "callee": "getReact",
+          "lineNumber": 1026
+        },
+        {
+          "caller": "load",
+          "callee": "Object.keys",
+          "lineNumber": 1032
+        },
+        {
+          "caller": "load",
+          "callee": "before.has",
+          "lineNumber": 1033
+        },
+        {
+          "caller": "load",
+          "callee": "cache.set",
+          "lineNumber": 1037
+        },
+        {
+          "caller": "load",
+          "callee": "console.info",
+          "lineNumber": 1038
+        },
+        {
+          "caller": "load",
+          "callee": "Object.keys",
+          "lineNumber": 1042
+        },
+        {
+          "caller": "load",
+          "callee": "Object.keys",
+          "lineNumber": 1044
+        },
+        {
+          "caller": "load",
+          "callee": "onResolved",
+          "lineNumber": 1046
+        },
+        {
+          "caller": "load",
+          "callee": "cache.set",
+          "lineNumber": 1048
+        },
+        {
+          "caller": "load",
+          "callee": "String",
+          "lineNumber": 1051
+        },
+        {
+          "caller": "load",
+          "callee": "console.error",
+          "lineNumber": 1053
+        },
+        {
+          "caller": "load",
+          "callee": "onResolved",
+          "lineNumber": 1059
+        },
+        {
+          "caller": "resolve2",
+          "callee": "cache.get",
+          "lineNumber": 1063
+        },
+        {
+          "caller": "resolve2",
+          "callee": "reportedMissing.has",
+          "lineNumber": 1069
+        },
+        {
+          "caller": "resolve2",
+          "callee": "reportedMissing.set",
+          "lineNumber": 1070
+        },
+        {
+          "caller": "resolve2",
+          "callee": "Object.keys(mod).join",
+          "lineNumber": 1072
+        },
+        {
+          "caller": "resolve2",
+          "callee": "Object.keys",
+          "lineNumber": 1072
+        },
+        {
+          "caller": "resolve2",
+          "callee": "console.error",
+          "lineNumber": 1074
+        },
+        {
+          "caller": "resolve2",
+          "callee": "JSON.stringify",
+          "lineNumber": 1078
+        },
+        {
+          "caller": "resolve2",
+          "callee": "Object.keys",
+          "lineNumber": 1080
+        },
+        {
+          "caller": "resolve2",
+          "callee": "Object.keys",
+          "lineNumber": 1082
+        },
+        {
+          "caller": "waitForGlobal",
+          "callee": "polling.has",
+          "lineNumber": 1089
+        },
+        {
+          "caller": "waitForGlobal",
+          "callee": "polling.add",
+          "lineNumber": 1090
+        },
+        {
+          "caller": "waitForGlobal",
+          "callee": "Date.now",
+          "lineNumber": 1091
+        },
+        {
+          "caller": "waitForGlobal",
+          "callee": "isCustomElementName",
+          "lineNumber": 1092
+        },
+        {
+          "caller": "tick",
+          "callee": "customElements.get",
+          "lineNumber": 1094
+        },
+        {
+          "caller": "tick",
+          "callee": "isRenderableType",
+          "lineNumber": 1094
+        },
+        {
+          "caller": "tick",
+          "callee": "resolveDottedPath",
+          "lineNumber": 1094
+        },
+        {
+          "caller": "tick",
+          "callee": "polling.delete",
+          "lineNumber": 1096
+        },
+        {
+          "caller": "tick",
+          "callee": "onResolved",
+          "lineNumber": 1097
+        },
+        {
+          "caller": "tick",
+          "callee": "Date.now",
+          "lineNumber": 1100
+        },
+        {
+          "caller": "tick",
+          "callee": "console.warn",
+          "lineNumber": 1101
+        },
+        {
+          "caller": "tick",
+          "callee": "JSON.stringify",
+          "lineNumber": 1103
+        },
+        {
+          "caller": "tick",
+          "callee": "setTimeout",
+          "lineNumber": 1108
+        },
+        {
+          "caller": "waitForGlobal",
+          "callee": "setTimeout",
+          "lineNumber": 1110
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "isCustomElementName",
+          "lineNumber": 1113
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "customElements.get",
+          "lineNumber": 1116
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "waitForGlobal",
+          "lineNumber": 1117
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "resolveDottedPath",
+          "lineNumber": 1120
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "isRenderableType",
+          "lineNumber": 1121
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "waitForGlobal",
+          "lineNumber": 1122
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "cache.get",
+          "lineNumber": 1125
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "customElements.get",
+          "lineNumber": 1127
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "resolveDottedPath",
+          "lineNumber": 1128
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "isRenderableType",
+          "lineNumber": 1129
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "name.includes",
+          "lineNumber": 1130
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "reportedMissing.has",
+          "lineNumber": 1132
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "reportedMissing.set",
+          "lineNumber": 1133
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "customElements.get",
+          "lineNumber": 1134
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "console.warn",
+          "lineNumber": 1135
+        },
+        {
+          "caller": "resolveGlobal",
+          "callee": "JSON.stringify",
+          "lineNumber": 1139
+        },
+        {
+          "caller": "getError",
+          "callee": "cache.get",
+          "lineNumber": 1147
+        },
+        {
+          "caller": "getError",
+          "callee": "reportedMissing.get",
+          "lineNumber": 1149
+        },
+        {
+          "caller": "compile",
+          "callee": "isStreaming",
+          "lineNumber": 1170
+        },
+        {
+          "caller": "compile",
+          "callee": "child.getAttribute",
+          "lineNumber": 1177
+        },
+        {
+          "caller": "compile",
+          "callee": "mounted.has",
+          "lineNumber": 1178
+        },
+        {
+          "caller": "compile",
+          "callee": "mounted.add",
+          "lineNumber": 1179
+        },
+        {
+          "caller": "compile",
+          "callee": "doc.createElement",
+          "lineNumber": 1180
+        },
+        {
+          "caller": "compile",
+          "callee": "el.setAttribute",
+          "lineNumber": 1182
+        },
+        {
+          "caller": "compile",
+          "callee": "doc.head.appendChild",
+          "lineNumber": 1184
+        },
+        {
+          "caller": "compile",
+          "callee": "child.getAttribute",
+          "lineNumber": 1187
+        },
+        {
+          "caller": "compile",
+          "callee": "child.getAttribute",
+          "lineNumber": 1187
+        },
+        {
+          "caller": "compile",
+          "callee": "mounted.has",
+          "lineNumber": 1188
+        },
+        {
+          "caller": "compile",
+          "callee": "mounted.add",
+          "lineNumber": 1189
+        },
+        {
+          "caller": "compile",
+          "callee": "doc.head.appendChild",
+          "lineNumber": 1190
+        },
+        {
+          "caller": "compile",
+          "callee": "child.cloneNode",
+          "lineNumber": 1190
+        },
+        {
+          "caller": "compile",
+          "callee": "live.get",
+          "lineNumber": 1193
+        },
+        {
+          "caller": "compile",
+          "callee": "el.remove",
+          "lineNumber": 1195
+        },
+        {
+          "caller": "compile",
+          "callee": "doc.createElement",
+          "lineNumber": 1196
+        },
+        {
+          "caller": "compile",
+          "callee": "tag.toLowerCase",
+          "lineNumber": 1196
+        },
+        {
+          "caller": "compile",
+          "callee": "live.set",
+          "lineNumber": 1197
+        },
+        {
+          "caller": "compile",
+          "callee": "doc.head.appendChild",
+          "lineNumber": 1198
+        },
+        {
+          "caller": "compile",
+          "callee": "el.getAttribute",
+          "lineNumber": 1201
+        },
+        {
+          "caller": "compile",
+          "callee": "el.setAttribute",
+          "lineNumber": 1201
+        },
+        {
+          "caller": "createPseudoSheet",
+          "callee": "cache.get",
+          "lineNumber": 1220
+        },
+        {
+          "caller": "createPseudoSheet",
+          "callee": "doc.createElement",
+          "lineNumber": 1223
+        },
+        {
+          "caller": "createPseudoSheet",
+          "callee": "doc.head.appendChild",
+          "lineNumber": 1224
+        },
+        {
+          "caller": "createPseudoSheet",
+          "callee": "(n++).toString",
+          "lineNumber": 1226
+        },
+        {
+          "caller": "createPseudoSheet",
+          "callee": "el.sheet.insertRule",
+          "lineNumber": 1228
+        },
+        {
+          "caller": "createPseudoSheet",
+          "callee": "cache.set",
+          "lineNumber": 1229
+        },
+        {
+          "caller": "createRegistry",
+          "callee": "Object.create",
+          "lineNumber": 1236
+        },
+        {
+          "caller": "bump",
+          "callee": "get",
+          "lineNumber": 1250
+        },
+        {
+          "caller": "bump",
+          "callee": "fn",
+          "lineNumber": 1252
+        },
+        {
+          "caller": "bumpAll",
+          "callee": "bump",
+          "lineNumber": 1259
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "createRegistry",
+          "lineNumber": 1267
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "createPseudoSheet",
+          "lineNumber": 1268
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "createHelmetManager",
+          "lineNumber": 1269
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "registry.get",
+          "lineNumber": 1271
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "createExternalModules",
+          "lineNumber": 1273
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "registry.bumpAll",
+          "lineNumber": 1273
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "createComponentFactory",
+          "lineNumber": 1274
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "factory.getDC",
+          "lineNumber": 1276
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "h",
+          "lineNumber": 1277
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "helmet.compile",
+          "lineNumber": 1278
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "external.load",
+          "lineNumber": 1279
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "external.resolve",
+          "lineNumber": 1280
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "external.resolveGlobal",
+          "lineNumber": 1281
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "external.getError",
+          "lineNumber": 1282
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "registry.get",
+          "lineNumber": 1286
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "encodeURIComponent",
+          "lineNumber": 1289
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "fetch(url).then((res) => {\n        if (!res.ok) {\n          console.error(\n            \"[dc-runtime] sibling fetch for <\" + name + \"/> failed:\",\n            url,\n            \"returned\",\n            res.status,\n            \"\\u2014 the reference renders as an empty placeholder.\"\n          );\n          return \"\";\n        }\n        return res.text();\n      }).then((t) => {\n        if (!t) return;\n        const parsed = parseDcText(t);\n        if (!parsed) {\n          console.error(\n            \"[dc-runtime] sibling fetch for <\" + name + \"/>:\",\n            url,\n            \"has no <x-dc> block \\u2014 not a Design Component.\"\n          );\n          return;\n        }\n        if (parsed.props) r.propsMeta = parsed.props;\n        if (parsed.preview) r.preview = parsed.preview;\n        if (parsed.template && !r.html) updateHtml(name, parsed.template);\n        if (parsed.js && !r.Logic) updateJs(name, parsed.js);\n      }).catch",
+          "lineNumber": 1290
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "fetch(url).then((res) => {\n        if (!res.ok) {\n          console.error(\n            \"[dc-runtime] sibling fetch for <\" + name + \"/> failed:\",\n            url,\n            \"returned\",\n            res.status,\n            \"\\u2014 the reference renders as an empty placeholder.\"\n          );\n          return \"\";\n        }\n        return res.text();\n      }).then",
+          "lineNumber": 1290
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "fetch(url).then",
+          "lineNumber": 1290
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "fetch",
+          "lineNumber": 1290
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "console.error",
+          "lineNumber": 1292
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "res.text",
+          "lineNumber": 1301
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "parseDcText",
+          "lineNumber": 1304
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "console.error",
+          "lineNumber": 1306
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "updateHtml",
+          "lineNumber": 1315
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "updateJs",
+          "lineNumber": 1316
+        },
+        {
+          "caller": "ensureFetched",
+          "callee": "console.error",
+          "lineNumber": 1318
+        },
+        {
+          "caller": "updateHtml",
+          "callee": "registry.get",
+          "lineNumber": 1326
+        },
+        {
+          "caller": "updateHtml",
+          "callee": "compileTemplate",
+          "lineNumber": 1329
+        },
+        {
+          "caller": "updateHtml",
+          "callee": "console.error",
+          "lineNumber": 1331
+        },
+        {
+          "caller": "updateHtml",
+          "callee": "registry.bump",
+          "lineNumber": 1333
+        },
+        {
+          "caller": "updateJs",
+          "callee": "registry.get",
+          "lineNumber": 1336
+        },
+        {
+          "caller": "updateJs",
+          "callee": "evalDcLogic",
+          "lineNumber": 1339
+        },
+        {
+          "caller": "updateJs",
+          "callee": "console.error",
+          "lineNumber": 1349
+        },
+        {
+          "caller": "updateJs",
+          "callee": "String",
+          "lineNumber": 1355
+        },
+        {
+          "caller": "updateJs",
+          "callee": "registry.bump",
+          "lineNumber": 1357
+        },
+        {
+          "caller": "setStreaming",
+          "callee": "registry.get",
+          "lineNumber": 1360
+        },
+        {
+          "caller": "setStreaming",
+          "callee": "doc.documentElement.classList.toggle",
+          "lineNumber": 1371
+        },
+        {
+          "caller": "setStreaming",
+          "callee": "registry.bump",
+          "lineNumber": 1372
+        },
+        {
+          "caller": "dcUpdate",
+          "callee": "registry.get",
+          "lineNumber": 1375
+        },
+        {
+          "caller": "dcUpdate",
+          "callee": "setStreaming",
+          "lineNumber": 1377
+        },
+        {
+          "caller": "dcUpdate",
+          "callee": "updateHtml",
+          "lineNumber": 1378
+        },
+        {
+          "caller": "dcUpdate",
+          "callee": "setStreaming",
+          "lineNumber": 1380
+        },
+        {
+          "caller": "dcUpdate",
+          "callee": "updateJs",
+          "lineNumber": 1381
+        },
+        {
+          "caller": "dcUpdate",
+          "callee": "parseDataProps",
+          "lineNumber": 1383
+        },
+        {
+          "caller": "dcUpdate",
+          "callee": "registry.get",
+          "lineNumber": 1384
+        },
+        {
+          "caller": "dcUpdate",
+          "callee": "registry.bump",
+          "lineNumber": 1387
+        },
+        {
+          "caller": "setProps",
+          "callee": "registry.get",
+          "lineNumber": 1391
+        },
+        {
+          "caller": "setProps",
+          "callee": "registry.bump",
+          "lineNumber": 1392
+        },
+        {
+          "caller": "adoptParsed",
+          "callee": "registry.get",
+          "lineNumber": 1396
+        },
+        {
+          "caller": "adoptParsed",
+          "callee": "updateHtml",
+          "lineNumber": 1399
+        },
+        {
+          "caller": "adoptParsed",
+          "callee": "updateJs",
+          "lineNumber": 1400
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "registry.get",
+          "lineNumber": 1411
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "registry.get",
+          "lineNumber": 1414
+        },
+        {
+          "caller": "createRuntime",
+          "callee": "registry.get",
+          "lineNumber": 1417
+        },
+        {
+          "caller": "hideRawTemplate",
+          "callee": "document.createElement",
+          "lineNumber": 1428
+        },
+        {
+          "caller": "hideRawTemplate",
+          "callee": "document.head.appendChild",
+          "lineNumber": 1430
+        },
+        {
+          "caller": "loadScript",
+          "callee": "document.createElement",
+          "lineNumber": 1435
+        },
+        {
+          "caller": "loadScript",
+          "callee": "resolve2",
+          "lineNumber": 1440
+        },
+        {
+          "caller": "loadScript",
+          "callee": "reject",
+          "lineNumber": 1441
+        },
+        {
+          "caller": "loadScript",
+          "callee": "document.head.appendChild",
+          "lineNumber": 1442
+        },
+        {
+          "caller": "loadReactUmd",
+          "callee": "Promise.resolve",
+          "lineNumber": 1447
+        },
+        {
+          "caller": "loadReactUmd",
+          "callee": "Promise.all([\n      loadScript(REACT_URL, REACT_SRI),\n      loadScript(REACT_DOM_URL, REACT_DOM_SRI)\n    ]).then",
+          "lineNumber": 1448
+        },
+        {
+          "caller": "loadReactUmd",
+          "callee": "Promise.all",
+          "lineNumber": 1448
+        },
+        {
+          "caller": "loadReactUmd",
+          "callee": "loadScript",
+          "lineNumber": 1449
+        },
+        {
+          "caller": "loadReactUmd",
+          "callee": "loadScript",
+          "lineNumber": 1450
+        },
+        {
+          "caller": "init",
+          "callee": "createRuntime",
+          "lineNumber": 1454
+        },
+        {
+          "caller": "init",
+          "callee": "document.createElement",
+          "lineNumber": 1456
+        },
+        {
+          "caller": "init",
+          "callee": "document.head.prepend",
+          "lineNumber": 1458
+        },
+        {
+          "caller": "notifyHost",
+          "callee": "window.parent.postMessage",
+          "lineNumber": 1463
+        },
+        {
+          "caller": "init",
+          "callee": "runtime.dcUpdate",
+          "lineNumber": 1477
+        },
+        {
+          "caller": "init",
+          "callee": "notifyHost",
+          "lineNumber": 1478
+        },
+        {
+          "caller": "init",
+          "callee": "runtime.setProps",
+          "lineNumber": 1480
+        },
+        {
+          "caller": "init",
+          "callee": "runtime.annotatedTemplate",
+          "lineNumber": 1489
+        },
+        {
+          "caller": "init",
+          "callee": "runtime.templateSource",
+          "lineNumber": 1491
+        },
+        {
+          "caller": "init",
+          "callee": "boot",
+          "lineNumber": 1493
+        },
+        {
+          "caller": "init",
+          "callee": "notifyHost",
+          "lineNumber": 1494
+        },
+        {
+          "caller": "init",
+          "callee": "runtime.getDC",
+          "lineNumber": 1497
+        },
+        {
+          "caller": "init",
+          "callee": "Object.assign",
+          "lineNumber": 1503
+        },
+        {
+          "caller": "init",
+          "callee": "api.__dcBoot",
+          "lineNumber": 1504
+        },
+        {
+          "caller": "init",
+          "callee": "document.addEventListener",
+          "lineNumber": 1505
+        },
+        {
+          "caller": "init",
+          "callee": "api.__dcBoot",
+          "lineNumber": 1505
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "website/vite.config.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 20,
+      "nonEmptyLines": 19,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    }
+  ]
+}

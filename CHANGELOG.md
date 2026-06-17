@@ -1,0 +1,25 @@
+# Changelog
+
+All notable changes to this project are documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Added
+
+- LICENSE, CHANGELOG, editorconfig, and GitHub issue/PR templates.
+
+### Fixed
+
+- JavaScript task blocks now support top-level `await` and ESM `import` (previously crashed via `require`).
+- `fsr scripts` no longer crashes when selecting a package.json script.
+- Timestamps in task output now show minutes correctly (were showing the month).
+- `fsr bump` no longer creates an unwanted git commit/tag when you decline tagging.
+- Shell completions now resolve task names correctly.
+- Removed a large amount of dead/orphaned code and a destructive `doctor --fix` path that ran `npm install` without consent.
+
+## [7.3.4]
+
+- Baseline release.

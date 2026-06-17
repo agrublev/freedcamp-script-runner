@@ -1,0 +1,297 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 2,
+  "filesSkipped": [
+    "lib/encryption/decryptConfig.js"
+  ],
+  "results": [
+    {
+      "path": "lib/encryption/encryption.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 176,
+      "nonEmptyLines": 167,
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "lib/utils/encryption.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 59,
+      "nonEmptyLines": 53,
+      "functions": [
+        {
+          "name": "deriveKeyIv",
+          "startLine": 10,
+          "endLine": 20,
+          "params": [
+            "password",
+            "salt"
+          ]
+        },
+        {
+          "name": "encrypt",
+          "startLine": 22,
+          "endLine": 29,
+          "params": [
+            "toEncrypt",
+            "password"
+          ]
+        },
+        {
+          "name": "decryptLegacy",
+          "startLine": 31,
+          "endLine": 39,
+          "params": [
+            "toDecrypt",
+            "password"
+          ]
+        },
+        {
+          "name": "decrypt",
+          "startLine": 41,
+          "endLine": 57,
+          "params": [
+            "toDecrypt",
+            "password"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "decrypt",
+          "line": 59,
+          "isDefault": false
+        },
+        {
+          "name": "encrypt",
+          "line": 59,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "deriveKeyIv",
+          "callee": "Buffer.from",
+          "lineNumber": 11
+        },
+        {
+          "caller": "deriveKeyIv",
+          "callee": "Buffer.alloc",
+          "lineNumber": 12
+        },
+        {
+          "caller": "deriveKeyIv",
+          "callee": "Buffer.alloc",
+          "lineNumber": 13
+        },
+        {
+          "caller": "deriveKeyIv",
+          "callee": "crypto.createHash(\"md5\").update(Buffer.concat([block, pass, salt])).digest",
+          "lineNumber": 16
+        },
+        {
+          "caller": "deriveKeyIv",
+          "callee": "crypto.createHash(\"md5\").update",
+          "lineNumber": 16
+        },
+        {
+          "caller": "deriveKeyIv",
+          "callee": "crypto.createHash",
+          "lineNumber": 16
+        },
+        {
+          "caller": "deriveKeyIv",
+          "callee": "Buffer.concat",
+          "lineNumber": 16
+        },
+        {
+          "caller": "deriveKeyIv",
+          "callee": "Buffer.concat",
+          "lineNumber": 17
+        },
+        {
+          "caller": "deriveKeyIv",
+          "callee": "data.subarray",
+          "lineNumber": 19
+        },
+        {
+          "caller": "deriveKeyIv",
+          "callee": "data.subarray",
+          "lineNumber": 19
+        },
+        {
+          "caller": "encrypt",
+          "callee": "crypto.randomBytes",
+          "lineNumber": 23
+        },
+        {
+          "caller": "encrypt",
+          "callee": "deriveKeyIv",
+          "lineNumber": 24
+        },
+        {
+          "caller": "encrypt",
+          "callee": "crypto.createCipheriv",
+          "lineNumber": 25
+        },
+        {
+          "caller": "encrypt",
+          "callee": "Buffer.isBuffer",
+          "lineNumber": 26
+        },
+        {
+          "caller": "encrypt",
+          "callee": "Buffer.from",
+          "lineNumber": 26
+        },
+        {
+          "caller": "encrypt",
+          "callee": "Buffer.concat",
+          "lineNumber": 27
+        },
+        {
+          "caller": "encrypt",
+          "callee": "cipher.update",
+          "lineNumber": 27
+        },
+        {
+          "caller": "encrypt",
+          "callee": "cipher.final",
+          "lineNumber": 27
+        },
+        {
+          "caller": "encrypt",
+          "callee": "Buffer.concat([MAGIC, salt, ciphertext]).toString",
+          "lineNumber": 28
+        },
+        {
+          "caller": "encrypt",
+          "callee": "Buffer.concat",
+          "lineNumber": 28
+        },
+        {
+          "caller": "decryptLegacy",
+          "callee": "crypto.scryptSync",
+          "lineNumber": 32
+        },
+        {
+          "caller": "decryptLegacy",
+          "callee": "Buffer.alloc",
+          "lineNumber": 33
+        },
+        {
+          "caller": "decryptLegacy",
+          "callee": "crypto.createDecipheriv",
+          "lineNumber": 34
+        },
+        {
+          "caller": "decryptLegacy",
+          "callee": "Buffer.concat",
+          "lineNumber": 35
+        },
+        {
+          "caller": "decryptLegacy",
+          "callee": "decipher.update",
+          "lineNumber": 36
+        },
+        {
+          "caller": "decryptLegacy",
+          "callee": "Buffer.from",
+          "lineNumber": 36
+        },
+        {
+          "caller": "decryptLegacy",
+          "callee": "String(toDecrypt).trim",
+          "lineNumber": 36
+        },
+        {
+          "caller": "decryptLegacy",
+          "callee": "String",
+          "lineNumber": 36
+        },
+        {
+          "caller": "decryptLegacy",
+          "callee": "decipher.final",
+          "lineNumber": 37
+        },
+        {
+          "caller": "decrypt",
+          "callee": "String(toDecrypt).trim",
+          "lineNumber": 42
+        },
+        {
+          "caller": "decrypt",
+          "callee": "String",
+          "lineNumber": 42
+        },
+        {
+          "caller": "decrypt",
+          "callee": "Buffer.from",
+          "lineNumber": 43
+        },
+        {
+          "caller": "decrypt",
+          "callee": "data.subarray(0, 8).equals",
+          "lineNumber": 44
+        },
+        {
+          "caller": "decrypt",
+          "callee": "data.subarray",
+          "lineNumber": 44
+        },
+        {
+          "caller": "decrypt",
+          "callee": "decryptLegacy",
+          "lineNumber": 46
+        },
+        {
+          "caller": "decrypt",
+          "callee": "data.subarray",
+          "lineNumber": 48
+        },
+        {
+          "caller": "decrypt",
+          "callee": "data.subarray",
+          "lineNumber": 49
+        },
+        {
+          "caller": "decrypt",
+          "callee": "deriveKeyIv",
+          "lineNumber": 50
+        },
+        {
+          "caller": "decrypt",
+          "callee": "crypto.createDecipheriv",
+          "lineNumber": 51
+        },
+        {
+          "caller": "decrypt",
+          "callee": "Buffer.concat",
+          "lineNumber": 53
+        },
+        {
+          "caller": "decrypt",
+          "callee": "decipher.update",
+          "lineNumber": 53
+        },
+        {
+          "caller": "decrypt",
+          "callee": "decipher.final",
+          "lineNumber": 53
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    }
+  ]
+}

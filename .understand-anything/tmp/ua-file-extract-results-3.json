@@ -1,0 +1,2474 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 8,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "examples/cache-demo.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 109,
+      "nonEmptyLines": 83,
+      "functions": [
+        {
+          "name": "demo",
+          "startLine": 13,
+          "endLine": 106,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 14
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.bold.cyan",
+          "lineNumber": 14
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 15
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.bold.cyan",
+          "lineNumber": 15
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 16
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.bold.cyan",
+          "lineNumber": 16
+        },
+        {
+          "caller": "demo",
+          "callee": "getCache",
+          "lineNumber": 18
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 22
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.bold.yellow",
+          "lineNumber": 22
+        },
+        {
+          "caller": "demo",
+          "callee": "cache.clear",
+          "lineNumber": 23
+        },
+        {
+          "caller": "demo",
+          "callee": "performance.now",
+          "lineNumber": 25
+        },
+        {
+          "caller": "demo",
+          "callee": "parseScriptFile",
+          "lineNumber": 26
+        },
+        {
+          "caller": "demo",
+          "callee": "performance.now",
+          "lineNumber": 27
+        },
+        {
+          "caller": "demo",
+          "callee": "monitor.recordColdCache",
+          "lineNumber": 29
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 31
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.green",
+          "lineNumber": 31
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 32
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.yellow",
+          "lineNumber": 32
+        },
+        {
+          "caller": "demo",
+          "callee": "coldTime.toFixed",
+          "lineNumber": 32
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 33
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.gray",
+          "lineNumber": 33
+        },
+        {
+          "caller": "demo",
+          "callee": "cache.size",
+          "lineNumber": 33
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 36
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.bold.green",
+          "lineNumber": 36
+        },
+        {
+          "caller": "demo",
+          "callee": "performance.now",
+          "lineNumber": 40
+        },
+        {
+          "caller": "demo",
+          "callee": "parseScriptFile",
+          "lineNumber": 41
+        },
+        {
+          "caller": "demo",
+          "callee": "performance.now",
+          "lineNumber": 42
+        },
+        {
+          "caller": "demo",
+          "callee": "warmTimes.push",
+          "lineNumber": 43
+        },
+        {
+          "caller": "demo",
+          "callee": "monitor.recordWarmCache",
+          "lineNumber": 44
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 46
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.green",
+          "lineNumber": 46
+        },
+        {
+          "caller": "demo",
+          "callee": "warmTime.toFixed",
+          "lineNumber": 46
+        },
+        {
+          "caller": "demo",
+          "callee": "warmTimes.reduce",
+          "lineNumber": 49
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 52
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.bold.green",
+          "lineNumber": 52
+        },
+        {
+          "caller": "demo",
+          "callee": "avgWarmTime.toFixed",
+          "lineNumber": 52
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 53
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.bold.cyan",
+          "lineNumber": 53
+        },
+        {
+          "caller": "demo",
+          "callee": "speedup.toFixed",
+          "lineNumber": 53
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 56
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.bold.magenta",
+          "lineNumber": 56
+        },
+        {
+          "caller": "demo",
+          "callee": "cache.getStats",
+          "lineNumber": 58
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 59
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.cyan",
+          "lineNumber": 59
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 60
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.green",
+          "lineNumber": 60
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 61
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.yellow",
+          "lineNumber": 61
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 62
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.bold.green",
+          "lineNumber": 62
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 63
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.gray",
+          "lineNumber": 63
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 66
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.bold.blue",
+          "lineNumber": 66
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 68
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.yellow",
+          "lineNumber": 68
+        },
+        {
+          "caller": "demo",
+          "callee": "coldTime.toFixed",
+          "lineNumber": 68
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 69
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.green",
+          "lineNumber": 69
+        },
+        {
+          "caller": "demo",
+          "callee": "avgWarmTime.toFixed",
+          "lineNumber": 69
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 70
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.red",
+          "lineNumber": 70
+        },
+        {
+          "caller": "demo",
+          "callee": "(coldTime - avgWarmTime).toFixed",
+          "lineNumber": 70
+        },
+        {
+          "caller": "demo",
+          "callee": "((coldTime - avgWarmTime) / coldTime * 100).toFixed",
+          "lineNumber": 72
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 73
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.bold.green",
+          "lineNumber": 73
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 76
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.bold.cyan",
+          "lineNumber": 76
+        },
+        {
+          "caller": "demo",
+          "callee": "parseFloat",
+          "lineNumber": 82
+        },
+        {
+          "caller": "demo",
+          "callee": "targets.forEach",
+          "lineNumber": 85
+        },
+        {
+          "caller": "demo",
+          "callee": "name.includes",
+          "lineNumber": 86
+        },
+        {
+          "caller": "demo",
+          "callee": "name.includes",
+          "lineNumber": 86
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.green",
+          "lineNumber": 87
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.red",
+          "lineNumber": 87
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.yellow",
+          "lineNumber": 88
+        },
+        {
+          "caller": "demo",
+          "callee": "actual.toFixed",
+          "lineNumber": 88
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.gray",
+          "lineNumber": 89
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 91
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 95
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.bold.cyan",
+          "lineNumber": 95
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 96
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.bold.cyan",
+          "lineNumber": 96
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 97
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.bold.cyan",
+          "lineNumber": 97
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 100
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.bold.green",
+          "lineNumber": 100
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 102
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.bold.yellow",
+          "lineNumber": 102
+        },
+        {
+          "caller": "demo",
+          "callee": "speedup.toFixed",
+          "lineNumber": 102
+        },
+        {
+          "caller": "demo",
+          "callee": "console.log",
+          "lineNumber": 105
+        },
+        {
+          "caller": "demo",
+          "callee": "chalk.gray",
+          "lineNumber": 105
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "lib/cache/cli.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 152,
+      "nonEmptyLines": 122,
+      "functions": [
+        {
+          "name": "showCacheStats",
+          "startLine": 15,
+          "endLine": 22,
+          "params": []
+        },
+        {
+          "name": "clearCache",
+          "startLine": 27,
+          "endLine": 34,
+          "params": []
+        },
+        {
+          "name": "resetCacheInstance",
+          "startLine": 39,
+          "endLine": 42,
+          "params": []
+        },
+        {
+          "name": "listCacheEntries",
+          "startLine": 49,
+          "endLine": 74,
+          "params": []
+        },
+        {
+          "name": "exportCacheStats",
+          "startLine": 80,
+          "endLine": 94,
+          "params": [
+            "outputPath"
+          ]
+        },
+        {
+          "name": "benchmarkCache",
+          "startLine": 99,
+          "endLine": 143,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "showCacheStats",
+          "line": 15,
+          "isDefault": false
+        },
+        {
+          "name": "clearCache",
+          "line": 27,
+          "isDefault": false
+        },
+        {
+          "name": "resetCacheInstance",
+          "line": 39,
+          "isDefault": false
+        },
+        {
+          "name": "listCacheEntries",
+          "line": 49,
+          "isDefault": false
+        },
+        {
+          "name": "exportCacheStats",
+          "line": 80,
+          "isDefault": false
+        },
+        {
+          "name": "benchmarkCache",
+          "line": 99,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "showCacheStats",
+          "callee": "getCache",
+          "lineNumber": 16
+        },
+        {
+          "caller": "showCacheStats",
+          "callee": "monitor.printStats",
+          "lineNumber": 19
+        },
+        {
+          "caller": "showCacheStats",
+          "callee": "monitor.getStats",
+          "lineNumber": 21
+        },
+        {
+          "caller": "clearCache",
+          "callee": "getCache",
+          "lineNumber": 28
+        },
+        {
+          "caller": "clearCache",
+          "callee": "cache.size",
+          "lineNumber": 29
+        },
+        {
+          "caller": "clearCache",
+          "callee": "cache.clear",
+          "lineNumber": 31
+        },
+        {
+          "caller": "clearCache",
+          "callee": "console.log",
+          "lineNumber": 33
+        },
+        {
+          "caller": "clearCache",
+          "callee": "chalk.green",
+          "lineNumber": 33
+        },
+        {
+          "caller": "resetCacheInstance",
+          "callee": "resetCache",
+          "lineNumber": 40
+        },
+        {
+          "caller": "resetCacheInstance",
+          "callee": "console.log",
+          "lineNumber": 41
+        },
+        {
+          "caller": "resetCacheInstance",
+          "callee": "chalk.green",
+          "lineNumber": 41
+        },
+        {
+          "caller": "listCacheEntries",
+          "callee": "getCache",
+          "lineNumber": 50
+        },
+        {
+          "caller": "listCacheEntries",
+          "callee": "cache.keys",
+          "lineNumber": 52
+        },
+        {
+          "caller": "listCacheEntries",
+          "callee": "console.log",
+          "lineNumber": 54
+        },
+        {
+          "caller": "listCacheEntries",
+          "callee": "chalk.bold.cyan",
+          "lineNumber": 54
+        },
+        {
+          "caller": "listCacheEntries",
+          "callee": "console.log",
+          "lineNumber": 57
+        },
+        {
+          "caller": "listCacheEntries",
+          "callee": "chalk.gray",
+          "lineNumber": 57
+        },
+        {
+          "caller": "listCacheEntries",
+          "callee": "keys.slice",
+          "lineNumber": 61
+        },
+        {
+          "caller": "listCacheEntries",
+          "callee": "displayKeys.forEach",
+          "lineNumber": 63
+        },
+        {
+          "caller": "listCacheEntries",
+          "callee": "cache.isValid",
+          "lineNumber": 64
+        },
+        {
+          "caller": "listCacheEntries",
+          "callee": "chalk.green",
+          "lineNumber": 65
+        },
+        {
+          "caller": "listCacheEntries",
+          "callee": "chalk.red",
+          "lineNumber": 65
+        },
+        {
+          "caller": "listCacheEntries",
+          "callee": "console.log",
+          "lineNumber": 66
+        },
+        {
+          "caller": "listCacheEntries",
+          "callee": "chalk.gray",
+          "lineNumber": 66
+        },
+        {
+          "caller": "listCacheEntries",
+          "callee": "console.log",
+          "lineNumber": 70
+        },
+        {
+          "caller": "listCacheEntries",
+          "callee": "chalk.gray",
+          "lineNumber": 70
+        },
+        {
+          "caller": "listCacheEntries",
+          "callee": "console.log",
+          "lineNumber": 73
+        },
+        {
+          "caller": "exportCacheStats",
+          "callee": "getCache",
+          "lineNumber": 81
+        },
+        {
+          "caller": "exportCacheStats",
+          "callee": "monitor.toJSON",
+          "lineNumber": 83
+        },
+        {
+          "caller": "exportCacheStats",
+          "callee": "import",
+          "lineNumber": 86
+        },
+        {
+          "caller": "exportCacheStats",
+          "callee": "fs.writeFileSync",
+          "lineNumber": 87
+        },
+        {
+          "caller": "exportCacheStats",
+          "callee": "console.log",
+          "lineNumber": 88
+        },
+        {
+          "caller": "exportCacheStats",
+          "callee": "chalk.green",
+          "lineNumber": 88
+        },
+        {
+          "caller": "exportCacheStats",
+          "callee": "console.log",
+          "lineNumber": 90
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "console.log",
+          "lineNumber": 100
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "chalk.bold.cyan",
+          "lineNumber": 100
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "import",
+          "lineNumber": 102
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "getCache",
+          "lineNumber": 103
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "console.log",
+          "lineNumber": 107
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "chalk.yellow",
+          "lineNumber": 107
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "cache.clear",
+          "lineNumber": 108
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "performance.now",
+          "lineNumber": 109
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "parseScriptFile",
+          "lineNumber": 110
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "performance.now",
+          "lineNumber": 111
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "monitor.recordColdCache",
+          "lineNumber": 112
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "console.log",
+          "lineNumber": 114
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "chalk.green",
+          "lineNumber": 114
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "coldTime.toFixed",
+          "lineNumber": 114
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "console.log",
+          "lineNumber": 117
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "chalk.yellow",
+          "lineNumber": 117
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "performance.now",
+          "lineNumber": 121
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "parseScriptFile",
+          "lineNumber": 122
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "performance.now",
+          "lineNumber": 123
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "warmTimes.push",
+          "lineNumber": 124
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "monitor.recordWarmCache",
+          "lineNumber": 125
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "warmTimes.reduce",
+          "lineNumber": 128
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "console.log",
+          "lineNumber": 131
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "chalk.green",
+          "lineNumber": 131
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "avgWarmTime.toFixed",
+          "lineNumber": 131
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "console.log",
+          "lineNumber": 132
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "chalk.bold.green",
+          "lineNumber": 132
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "speedup.toFixed",
+          "lineNumber": 132
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "console.log",
+          "lineNumber": 135
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "chalk.bold.green",
+          "lineNumber": 135
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "console.log",
+          "lineNumber": 137
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "chalk.bold.yellow",
+          "lineNumber": 137
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "speedup.toFixed",
+          "lineNumber": 137
+        },
+        {
+          "caller": "benchmarkCache",
+          "callee": "console.log",
+          "lineNumber": 140
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 6,
+        "functionCount": 6,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "lib/cache/file-watcher.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 193,
+      "nonEmptyLines": 166,
+      "classes": [
+        {
+          "name": "FileWatcher",
+          "startLine": 15,
+          "endLine": 191,
+          "methods": [
+            "constructor",
+            "watch",
+            "unwatch",
+            "_handleChange",
+            "_invalidateFile",
+            "unwatchAll",
+            "getStats",
+            "isWatching",
+            "destroy"
+          ],
+          "properties": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 23
+        },
+        {
+          "caller": "watch",
+          "callee": "resolve",
+          "lineNumber": 44
+        },
+        {
+          "caller": "watch",
+          "callee": "this.watchers.has",
+          "lineNumber": 47
+        },
+        {
+          "caller": "watch",
+          "callee": "watch",
+          "lineNumber": 52
+        },
+        {
+          "caller": "watch",
+          "callee": "this._handleChange",
+          "lineNumber": 53
+        },
+        {
+          "caller": "watch",
+          "callee": "watcher.unref",
+          "lineNumber": 58
+        },
+        {
+          "caller": "watch",
+          "callee": "watcher.on",
+          "lineNumber": 61
+        },
+        {
+          "caller": "watch",
+          "callee": "console.warn",
+          "lineNumber": 62
+        },
+        {
+          "caller": "watch",
+          "callee": "this.unwatch",
+          "lineNumber": 63
+        },
+        {
+          "caller": "watch",
+          "callee": "this.watchers.set",
+          "lineNumber": 66
+        },
+        {
+          "caller": "watch",
+          "callee": "this.emit",
+          "lineNumber": 69
+        },
+        {
+          "caller": "watch",
+          "callee": "console.warn",
+          "lineNumber": 71
+        },
+        {
+          "caller": "unwatch",
+          "callee": "resolve",
+          "lineNumber": 81
+        },
+        {
+          "caller": "unwatch",
+          "callee": "this.watchers.get",
+          "lineNumber": 82
+        },
+        {
+          "caller": "unwatch",
+          "callee": "watcher.close",
+          "lineNumber": 85
+        },
+        {
+          "caller": "unwatch",
+          "callee": "this.watchers.delete",
+          "lineNumber": 86
+        },
+        {
+          "caller": "unwatch",
+          "callee": "this.emit",
+          "lineNumber": 88
+        },
+        {
+          "caller": "_handleChange",
+          "callee": "this.debounceTimers.has",
+          "lineNumber": 103
+        },
+        {
+          "caller": "_handleChange",
+          "callee": "clearTimeout",
+          "lineNumber": 104
+        },
+        {
+          "caller": "_handleChange",
+          "callee": "this.debounceTimers.get",
+          "lineNumber": 104
+        },
+        {
+          "caller": "_handleChange",
+          "callee": "setTimeout",
+          "lineNumber": 108
+        },
+        {
+          "caller": "_handleChange",
+          "callee": "this._invalidateFile",
+          "lineNumber": 109
+        },
+        {
+          "caller": "_handleChange",
+          "callee": "this.debounceTimers.delete",
+          "lineNumber": 110
+        },
+        {
+          "caller": "_handleChange",
+          "callee": "timer.unref",
+          "lineNumber": 113
+        },
+        {
+          "caller": "_handleChange",
+          "callee": "this.debounceTimers.set",
+          "lineNumber": 116
+        },
+        {
+          "caller": "_invalidateFile",
+          "callee": "this.cacheManager.invalidateFile",
+          "lineNumber": 128
+        },
+        {
+          "caller": "_invalidateFile",
+          "callee": "this.emit",
+          "lineNumber": 132
+        },
+        {
+          "caller": "unwatchAll",
+          "callee": "this.watchers.entries",
+          "lineNumber": 145
+        },
+        {
+          "caller": "unwatchAll",
+          "callee": "watcher.close",
+          "lineNumber": 146
+        },
+        {
+          "caller": "unwatchAll",
+          "callee": "this.watchers.clear",
+          "lineNumber": 148
+        },
+        {
+          "caller": "unwatchAll",
+          "callee": "this.debounceTimers.values",
+          "lineNumber": 152
+        },
+        {
+          "caller": "unwatchAll",
+          "callee": "clearTimeout",
+          "lineNumber": 153
+        },
+        {
+          "caller": "unwatchAll",
+          "callee": "this.debounceTimers.clear",
+          "lineNumber": 155
+        },
+        {
+          "caller": "unwatchAll",
+          "callee": "this.emit",
+          "lineNumber": 157
+        },
+        {
+          "caller": "getStats",
+          "callee": "Array.from",
+          "lineNumber": 169
+        },
+        {
+          "caller": "getStats",
+          "callee": "this.watchers.keys",
+          "lineNumber": 169
+        },
+        {
+          "caller": "isWatching",
+          "callee": "resolve",
+          "lineNumber": 179
+        },
+        {
+          "caller": "isWatching",
+          "callee": "this.watchers.has",
+          "lineNumber": 180
+        },
+        {
+          "caller": "destroy",
+          "callee": "this.unwatchAll",
+          "lineNumber": 188
+        },
+        {
+          "caller": "destroy",
+          "callee": "this.removeAllListeners",
+          "lineNumber": 189
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "lib/cache/index.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 422,
+      "nonEmptyLines": 376,
+      "functions": [
+        {
+          "name": "getCache",
+          "startLine": 403,
+          "endLine": 408,
+          "params": [
+            "options"
+          ]
+        },
+        {
+          "name": "resetCache",
+          "startLine": 414,
+          "endLine": 419,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "CacheManager",
+          "startLine": 37,
+          "endLine": 393,
+          "methods": [
+            "constructor",
+            "generateFileKey",
+            "_hash",
+            "get",
+            "set",
+            "invalidate",
+            "invalidateFile",
+            "clear",
+            "isValid",
+            "_isExpired",
+            "getStats",
+            "resetStats",
+            "_cleanup",
+            "_evictOldest",
+            "_recordHit",
+            "_recordMiss",
+            "destroy",
+            "keys",
+            "size",
+            "has"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "getCache",
+          "line": 403,
+          "isDefault": false
+        },
+        {
+          "name": "resetCache",
+          "line": 414,
+          "isDefault": false
+        },
+        {
+          "name": "CacheManager",
+          "line": 421,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 46
+        },
+        {
+          "caller": "constructor",
+          "callee": "Date.now",
+          "lineNumber": 59
+        },
+        {
+          "caller": "constructor",
+          "callee": "setInterval",
+          "lineNumber": 64
+        },
+        {
+          "caller": "constructor",
+          "callee": "this._cleanup",
+          "lineNumber": 64
+        },
+        {
+          "caller": "constructor",
+          "callee": "this.cleanupInterval.unref",
+          "lineNumber": 66
+        },
+        {
+          "caller": "constructor",
+          "callee": "process.on",
+          "lineNumber": 70
+        },
+        {
+          "caller": "constructor",
+          "callee": "this.destroy",
+          "lineNumber": 70
+        },
+        {
+          "caller": "generateFileKey",
+          "callee": "statSync",
+          "lineNumber": 80
+        },
+        {
+          "caller": "generateFileKey",
+          "callee": "this._hash",
+          "lineNumber": 82
+        },
+        {
+          "caller": "_hash",
+          "callee": "createHash('sha256').update(input).digest('hex').substring",
+          "lineNumber": 95
+        },
+        {
+          "caller": "_hash",
+          "callee": "createHash('sha256').update(input).digest",
+          "lineNumber": 95
+        },
+        {
+          "caller": "_hash",
+          "callee": "createHash('sha256').update",
+          "lineNumber": 95
+        },
+        {
+          "caller": "_hash",
+          "callee": "createHash",
+          "lineNumber": 95
+        },
+        {
+          "caller": "get",
+          "callee": "this.cache.get",
+          "lineNumber": 105
+        },
+        {
+          "caller": "get",
+          "callee": "this._recordMiss",
+          "lineNumber": 108
+        },
+        {
+          "caller": "get",
+          "callee": "this._isExpired",
+          "lineNumber": 113
+        },
+        {
+          "caller": "get",
+          "callee": "this.invalidate",
+          "lineNumber": 114
+        },
+        {
+          "caller": "get",
+          "callee": "this._recordMiss",
+          "lineNumber": 115
+        },
+        {
+          "caller": "get",
+          "callee": "statSync",
+          "lineNumber": 122
+        },
+        {
+          "caller": "get",
+          "callee": "this.invalidate",
+          "lineNumber": 124
+        },
+        {
+          "caller": "get",
+          "callee": "this._recordMiss",
+          "lineNumber": 125
+        },
+        {
+          "caller": "get",
+          "callee": "this.invalidate",
+          "lineNumber": 130
+        },
+        {
+          "caller": "get",
+          "callee": "this._recordMiss",
+          "lineNumber": 131
+        },
+        {
+          "caller": "get",
+          "callee": "this._recordHit",
+          "lineNumber": 136
+        },
+        {
+          "caller": "get",
+          "callee": "this.emit",
+          "lineNumber": 137
+        },
+        {
+          "caller": "set",
+          "callee": "this.cache.has",
+          "lineNumber": 153
+        },
+        {
+          "caller": "set",
+          "callee": "this._evictOldest",
+          "lineNumber": 154
+        },
+        {
+          "caller": "set",
+          "callee": "Date.now",
+          "lineNumber": 160
+        },
+        {
+          "caller": "set",
+          "callee": "statSync",
+          "lineNumber": 168
+        },
+        {
+          "caller": "set",
+          "callee": "console.warn",
+          "lineNumber": 172
+        },
+        {
+          "caller": "set",
+          "callee": "this.cache.set",
+          "lineNumber": 176
+        },
+        {
+          "caller": "set",
+          "callee": "this.emit",
+          "lineNumber": 177
+        },
+        {
+          "caller": "invalidate",
+          "callee": "this.cache.delete",
+          "lineNumber": 186
+        },
+        {
+          "caller": "invalidate",
+          "callee": "this.emit",
+          "lineNumber": 189
+        },
+        {
+          "caller": "invalidateFile",
+          "callee": "this.cache.entries",
+          "lineNumber": 201
+        },
+        {
+          "caller": "invalidateFile",
+          "callee": "this.invalidate",
+          "lineNumber": 203
+        },
+        {
+          "caller": "clear",
+          "callee": "this.cache.clear",
+          "lineNumber": 216
+        },
+        {
+          "caller": "clear",
+          "callee": "this.emit",
+          "lineNumber": 218
+        },
+        {
+          "caller": "isValid",
+          "callee": "this.cache.get",
+          "lineNumber": 227
+        },
+        {
+          "caller": "isValid",
+          "callee": "this._isExpired",
+          "lineNumber": 230
+        },
+        {
+          "caller": "isValid",
+          "callee": "statSync",
+          "lineNumber": 235
+        },
+        {
+          "caller": "_isExpired",
+          "callee": "Date.now",
+          "lineNumber": 253
+        },
+        {
+          "caller": "getStats",
+          "callee": "Date.now",
+          "lineNumber": 263
+        },
+        {
+          "caller": "getStats",
+          "callee": "hitRate.toFixed",
+          "lineNumber": 272
+        },
+        {
+          "caller": "resetStats",
+          "callee": "Date.now",
+          "lineNumber": 288
+        },
+        {
+          "caller": "_cleanup",
+          "callee": "this.cache.entries",
+          "lineNumber": 299
+        },
+        {
+          "caller": "_cleanup",
+          "callee": "this._isExpired",
+          "lineNumber": 300
+        },
+        {
+          "caller": "_cleanup",
+          "callee": "this.cache.delete",
+          "lineNumber": 301
+        },
+        {
+          "caller": "_cleanup",
+          "callee": "this.emit",
+          "lineNumber": 307
+        },
+        {
+          "caller": "_evictOldest",
+          "callee": "this.cache.entries",
+          "lineNumber": 322
+        },
+        {
+          "caller": "_evictOldest",
+          "callee": "this.cache.delete",
+          "lineNumber": 330
+        },
+        {
+          "caller": "_evictOldest",
+          "callee": "this.emit",
+          "lineNumber": 332
+        },
+        {
+          "caller": "destroy",
+          "callee": "clearInterval",
+          "lineNumber": 362
+        },
+        {
+          "caller": "destroy",
+          "callee": "this.clear",
+          "lineNumber": 365
+        },
+        {
+          "caller": "destroy",
+          "callee": "this.removeAllListeners",
+          "lineNumber": 366
+        },
+        {
+          "caller": "keys",
+          "callee": "Array.from",
+          "lineNumber": 374
+        },
+        {
+          "caller": "keys",
+          "callee": "this.cache.keys",
+          "lineNumber": 374
+        },
+        {
+          "caller": "has",
+          "callee": "this.cache.has",
+          "lineNumber": 391
+        },
+        {
+          "caller": "has",
+          "callee": "this.isValid",
+          "lineNumber": 391
+        },
+        {
+          "caller": "resetCache",
+          "callee": "globalCache.destroy",
+          "lineNumber": 416
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 2,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "lib/cache/monitor.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 224,
+      "nonEmptyLines": 193,
+      "classes": [
+        {
+          "name": "CacheMonitor",
+          "startLine": 12,
+          "endLine": 222,
+          "methods": [
+            "constructor",
+            "_attachListeners",
+            "recordColdCache",
+            "recordWarmCache",
+            "_updateAverages",
+            "getStats",
+            "printStats",
+            "_colorizeHitRate",
+            "getSummary",
+            "toJSON",
+            "resetMetrics"
+          ],
+          "properties": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "constructor",
+          "callee": "this._attachListeners",
+          "lineNumber": 32
+        },
+        {
+          "caller": "_attachListeners",
+          "callee": "this.cacheManager.on",
+          "lineNumber": 40
+        },
+        {
+          "caller": "_attachListeners",
+          "callee": "this.cacheManager.on",
+          "lineNumber": 44
+        },
+        {
+          "caller": "_attachListeners",
+          "callee": "this.cacheManager.on",
+          "lineNumber": 48
+        },
+        {
+          "caller": "_attachListeners",
+          "callee": "this.cacheManager.on",
+          "lineNumber": 52
+        },
+        {
+          "caller": "_attachListeners",
+          "callee": "this.cacheManager.on",
+          "lineNumber": 56
+        },
+        {
+          "caller": "recordColdCache",
+          "callee": "this.metrics.coldCacheTime.push",
+          "lineNumber": 66
+        },
+        {
+          "caller": "recordColdCache",
+          "callee": "this._updateAverages",
+          "lineNumber": 67
+        },
+        {
+          "caller": "recordWarmCache",
+          "callee": "this.metrics.warmCacheTime.push",
+          "lineNumber": 75
+        },
+        {
+          "caller": "recordWarmCache",
+          "callee": "this._updateAverages",
+          "lineNumber": 76
+        },
+        {
+          "caller": "_updateAverages",
+          "callee": "this.metrics.coldCacheTime.reduce",
+          "lineNumber": 85
+        },
+        {
+          "caller": "_updateAverages",
+          "callee": "this.metrics.warmCacheTime.reduce",
+          "lineNumber": 90
+        },
+        {
+          "caller": "getStats",
+          "callee": "this.cacheManager.getStats",
+          "lineNumber": 104
+        },
+        {
+          "caller": "getStats",
+          "callee": "this.fileWatcher.getStats",
+          "lineNumber": 105
+        },
+        {
+          "caller": "getStats",
+          "callee": "Math.round",
+          "lineNumber": 111
+        },
+        {
+          "caller": "getStats",
+          "callee": "Math.round",
+          "lineNumber": 112
+        },
+        {
+          "caller": "getStats",
+          "callee": "this.metrics.speedup.toFixed",
+          "lineNumber": 113
+        },
+        {
+          "caller": "printStats",
+          "callee": "this.getStats",
+          "lineNumber": 127
+        },
+        {
+          "caller": "printStats",
+          "callee": "console.log",
+          "lineNumber": 129
+        },
+        {
+          "caller": "printStats",
+          "callee": "chalk.bold.cyan",
+          "lineNumber": 129
+        },
+        {
+          "caller": "printStats",
+          "callee": "console.log",
+          "lineNumber": 132
+        },
+        {
+          "caller": "printStats",
+          "callee": "chalk.bold",
+          "lineNumber": 132
+        },
+        {
+          "caller": "printStats",
+          "callee": "console.log",
+          "lineNumber": 133
+        },
+        {
+          "caller": "printStats",
+          "callee": "chalk.green",
+          "lineNumber": 133
+        },
+        {
+          "caller": "printStats",
+          "callee": "console.log",
+          "lineNumber": 134
+        },
+        {
+          "caller": "printStats",
+          "callee": "chalk.green",
+          "lineNumber": 134
+        },
+        {
+          "caller": "printStats",
+          "callee": "console.log",
+          "lineNumber": 135
+        },
+        {
+          "caller": "printStats",
+          "callee": "chalk.yellow",
+          "lineNumber": 135
+        },
+        {
+          "caller": "printStats",
+          "callee": "console.log",
+          "lineNumber": 136
+        },
+        {
+          "caller": "printStats",
+          "callee": "this._colorizeHitRate",
+          "lineNumber": 136
+        },
+        {
+          "caller": "printStats",
+          "callee": "console.log",
+          "lineNumber": 137
+        },
+        {
+          "caller": "printStats",
+          "callee": "chalk.yellow",
+          "lineNumber": 137
+        },
+        {
+          "caller": "printStats",
+          "callee": "console.log",
+          "lineNumber": 138
+        },
+        {
+          "caller": "printStats",
+          "callee": "chalk.yellow",
+          "lineNumber": 138
+        },
+        {
+          "caller": "printStats",
+          "callee": "console.log",
+          "lineNumber": 142
+        },
+        {
+          "caller": "printStats",
+          "callee": "chalk.bold",
+          "lineNumber": 142
+        },
+        {
+          "caller": "printStats",
+          "callee": "console.log",
+          "lineNumber": 143
+        },
+        {
+          "caller": "printStats",
+          "callee": "chalk.yellow",
+          "lineNumber": 143
+        },
+        {
+          "caller": "printStats",
+          "callee": "console.log",
+          "lineNumber": 144
+        },
+        {
+          "caller": "printStats",
+          "callee": "chalk.green",
+          "lineNumber": 144
+        },
+        {
+          "caller": "printStats",
+          "callee": "console.log",
+          "lineNumber": 145
+        },
+        {
+          "caller": "printStats",
+          "callee": "chalk.bold.green",
+          "lineNumber": 145
+        },
+        {
+          "caller": "printStats",
+          "callee": "console.log",
+          "lineNumber": 150
+        },
+        {
+          "caller": "printStats",
+          "callee": "chalk.bold",
+          "lineNumber": 150
+        },
+        {
+          "caller": "printStats",
+          "callee": "console.log",
+          "lineNumber": 151
+        },
+        {
+          "caller": "printStats",
+          "callee": "chalk.green",
+          "lineNumber": 151
+        },
+        {
+          "caller": "printStats",
+          "callee": "console.log",
+          "lineNumber": 152
+        },
+        {
+          "caller": "printStats",
+          "callee": "chalk.yellow",
+          "lineNumber": 152
+        },
+        {
+          "caller": "printStats",
+          "callee": "console.log",
+          "lineNumber": 153
+        },
+        {
+          "caller": "printStats",
+          "callee": "chalk.yellow",
+          "lineNumber": 153
+        },
+        {
+          "caller": "printStats",
+          "callee": "console.log",
+          "lineNumber": 156
+        },
+        {
+          "caller": "printStats",
+          "callee": "chalk.bold",
+          "lineNumber": 156
+        },
+        {
+          "caller": "printStats",
+          "callee": "stats.watcher.watchedFiles.forEach",
+          "lineNumber": 157
+        },
+        {
+          "caller": "printStats",
+          "callee": "console.log",
+          "lineNumber": 158
+        },
+        {
+          "caller": "printStats",
+          "callee": "chalk.gray",
+          "lineNumber": 158
+        },
+        {
+          "caller": "printStats",
+          "callee": "Math.floor",
+          "lineNumber": 164
+        },
+        {
+          "caller": "printStats",
+          "callee": "console.log",
+          "lineNumber": 165
+        },
+        {
+          "caller": "printStats",
+          "callee": "chalk.bold",
+          "lineNumber": 165
+        },
+        {
+          "caller": "printStats",
+          "callee": "chalk.green",
+          "lineNumber": 165
+        },
+        {
+          "caller": "printStats",
+          "callee": "console.log",
+          "lineNumber": 167
+        },
+        {
+          "caller": "printStats",
+          "callee": "chalk.bold.cyan",
+          "lineNumber": 167
+        },
+        {
+          "caller": "_colorizeHitRate",
+          "callee": "parseFloat",
+          "lineNumber": 177
+        },
+        {
+          "caller": "_colorizeHitRate",
+          "callee": "chalk.green",
+          "lineNumber": 178
+        },
+        {
+          "caller": "_colorizeHitRate",
+          "callee": "chalk.yellow",
+          "lineNumber": 179
+        },
+        {
+          "caller": "_colorizeHitRate",
+          "callee": "chalk.red",
+          "lineNumber": 180
+        },
+        {
+          "caller": "getSummary",
+          "callee": "this.getStats",
+          "lineNumber": 188
+        },
+        {
+          "caller": "getSummary",
+          "callee": "parts.push",
+          "lineNumber": 195
+        },
+        {
+          "caller": "getSummary",
+          "callee": "parts.join",
+          "lineNumber": 198
+        },
+        {
+          "caller": "toJSON",
+          "callee": "JSON.stringify",
+          "lineNumber": 206
+        },
+        {
+          "caller": "toJSON",
+          "callee": "this.getStats",
+          "lineNumber": 206
+        },
+        {
+          "caller": "resetMetrics",
+          "callee": "this.cacheManager.resetStats",
+          "lineNumber": 220
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "lib/completions/generator.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 152,
+      "nonEmptyLines": 137,
+      "functions": [
+        {
+          "name": "getAvailableTasks",
+          "startLine": 15,
+          "endLine": 36,
+          "params": []
+        },
+        {
+          "name": "getAvailableCommands",
+          "startLine": 41,
+          "endLine": 59,
+          "params": []
+        },
+        {
+          "name": "getCompletionSubcommands",
+          "startLine": 64,
+          "endLine": 71,
+          "params": []
+        },
+        {
+          "name": "generateTaskNames",
+          "startLine": 76,
+          "endLine": 79,
+          "params": []
+        },
+        {
+          "name": "generateBashCompletionData",
+          "startLine": 84,
+          "endLine": 94,
+          "params": []
+        },
+        {
+          "name": "generateZshCompletionData",
+          "startLine": 99,
+          "endLine": 112,
+          "params": []
+        },
+        {
+          "name": "generateFishCompletionData",
+          "startLine": 117,
+          "endLine": 136,
+          "params": []
+        },
+        {
+          "name": "exportTasksForCompletion",
+          "startLine": 141,
+          "endLine": 144,
+          "params": []
+        },
+        {
+          "name": "clearTaskCache",
+          "startLine": 149,
+          "endLine": 152,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "getAvailableTasks",
+          "line": 15,
+          "isDefault": false
+        },
+        {
+          "name": "getAvailableCommands",
+          "line": 41,
+          "isDefault": false
+        },
+        {
+          "name": "getCompletionSubcommands",
+          "line": 64,
+          "isDefault": false
+        },
+        {
+          "name": "generateTaskNames",
+          "line": 76,
+          "isDefault": false
+        },
+        {
+          "name": "generateBashCompletionData",
+          "line": 84,
+          "isDefault": false
+        },
+        {
+          "name": "generateZshCompletionData",
+          "line": 99,
+          "isDefault": false
+        },
+        {
+          "name": "generateFishCompletionData",
+          "line": 117,
+          "isDefault": false
+        },
+        {
+          "name": "exportTasksForCompletion",
+          "line": 141,
+          "isDefault": false
+        },
+        {
+          "name": "clearTaskCache",
+          "line": 149,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getAvailableTasks",
+          "callee": "Date.now",
+          "lineNumber": 16
+        },
+        {
+          "caller": "getAvailableTasks",
+          "callee": "parseScriptFile",
+          "lineNumber": 24
+        },
+        {
+          "caller": "getAvailableTasks",
+          "callee": "allTasks.map",
+          "lineNumber": 25
+        },
+        {
+          "caller": "generateTaskNames",
+          "callee": "getAvailableTasks",
+          "lineNumber": 77
+        },
+        {
+          "caller": "generateTaskNames",
+          "callee": "tasks.map",
+          "lineNumber": 78
+        },
+        {
+          "caller": "generateBashCompletionData",
+          "callee": "getAvailableTasks",
+          "lineNumber": 85
+        },
+        {
+          "caller": "generateBashCompletionData",
+          "callee": "getAvailableCommands",
+          "lineNumber": 86
+        },
+        {
+          "caller": "generateBashCompletionData",
+          "callee": "getCompletionSubcommands",
+          "lineNumber": 87
+        },
+        {
+          "caller": "generateBashCompletionData",
+          "callee": "commands.map",
+          "lineNumber": 90
+        },
+        {
+          "caller": "generateBashCompletionData",
+          "callee": "tasks.map",
+          "lineNumber": 91
+        },
+        {
+          "caller": "generateBashCompletionData",
+          "callee": "completionCmds.map",
+          "lineNumber": 92
+        },
+        {
+          "caller": "generateZshCompletionData",
+          "callee": "getAvailableTasks",
+          "lineNumber": 100
+        },
+        {
+          "caller": "generateZshCompletionData",
+          "callee": "getAvailableCommands",
+          "lineNumber": 101
+        },
+        {
+          "caller": "generateZshCompletionData",
+          "callee": "getCompletionSubcommands",
+          "lineNumber": 102
+        },
+        {
+          "caller": "generateZshCompletionData",
+          "callee": "commands.map",
+          "lineNumber": 105
+        },
+        {
+          "caller": "generateZshCompletionData",
+          "callee": "tasks.map",
+          "lineNumber": 106
+        },
+        {
+          "caller": "generateZshCompletionData",
+          "callee": "t.description.replace(/[:\\n]/g, \" \").trim",
+          "lineNumber": 107
+        },
+        {
+          "caller": "generateZshCompletionData",
+          "callee": "t.description.replace",
+          "lineNumber": 107
+        },
+        {
+          "caller": "generateZshCompletionData",
+          "callee": "completionCmds.map",
+          "lineNumber": 110
+        },
+        {
+          "caller": "generateFishCompletionData",
+          "callee": "getAvailableTasks",
+          "lineNumber": 118
+        },
+        {
+          "caller": "generateFishCompletionData",
+          "callee": "getAvailableCommands",
+          "lineNumber": 119
+        },
+        {
+          "caller": "generateFishCompletionData",
+          "callee": "getCompletionSubcommands",
+          "lineNumber": 120
+        },
+        {
+          "caller": "generateFishCompletionData",
+          "callee": "commands.map",
+          "lineNumber": 123
+        },
+        {
+          "caller": "generateFishCompletionData",
+          "callee": "tasks.map",
+          "lineNumber": 127
+        },
+        {
+          "caller": "generateFishCompletionData",
+          "callee": "completionCmds.map",
+          "lineNumber": 131
+        },
+        {
+          "caller": "exportTasksForCompletion",
+          "callee": "getAvailableTasks",
+          "lineNumber": 142
+        },
+        {
+          "caller": "exportTasksForCompletion",
+          "callee": "tasks.map((t) => t.name).join",
+          "lineNumber": 143
+        },
+        {
+          "caller": "exportTasksForCompletion",
+          "callee": "tasks.map",
+          "lineNumber": 143
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 9,
+        "functionCount": 9,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "lib/parsers/parseScriptsMd.cached.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 208,
+      "nonEmptyLines": 182,
+      "functions": [
+        {
+          "name": "getOrCreateCache",
+          "startLine": 19,
+          "endLine": 28,
+          "params": []
+        },
+        {
+          "name": "getOrCreateWatcher",
+          "startLine": 33,
+          "endLine": 41,
+          "params": []
+        },
+        {
+          "name": "parse",
+          "startLine": 47,
+          "endLine": 97,
+          "params": [
+            "mdContent"
+          ]
+        },
+        {
+          "name": "parseScriptFile",
+          "startLine": 106,
+          "endLine": 173,
+          "params": []
+        },
+        {
+          "name": "clearCache",
+          "startLine": 178,
+          "endLine": 182,
+          "params": []
+        },
+        {
+          "name": "getCacheStats",
+          "startLine": 187,
+          "endLine": 192,
+          "params": []
+        },
+        {
+          "name": "destroyCache",
+          "startLine": 197,
+          "endLine": 206,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "clearCache",
+          "line": 178,
+          "isDefault": false
+        },
+        {
+          "name": "getCacheStats",
+          "line": 187,
+          "isDefault": false
+        },
+        {
+          "name": "destroyCache",
+          "line": 197,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getOrCreateCache",
+          "callee": "getCache",
+          "lineNumber": 21
+        },
+        {
+          "caller": "getOrCreateWatcher",
+          "callee": "getOrCreateCache",
+          "lineNumber": 35
+        },
+        {
+          "caller": "parse",
+          "callee": "marked.lexer",
+          "lineNumber": 48
+        },
+        {
+          "caller": "parse",
+          "callee": "js.filter",
+          "lineNumber": 49
+        },
+        {
+          "caller": "parse",
+          "callee": "js.slice",
+          "lineNumber": 51
+        },
+        {
+          "caller": "parse",
+          "callee": "listMe.forEach",
+          "lineNumber": 57
+        },
+        {
+          "caller": "parse",
+          "callee": "Object.keys(tempItem).map",
+          "lineNumber": 89
+        },
+        {
+          "caller": "parse",
+          "callee": "Object.keys",
+          "lineNumber": 89
+        },
+        {
+          "caller": "parse",
+          "callee": "Object.keys(ts).map",
+          "lineNumber": 91
+        },
+        {
+          "caller": "parse",
+          "callee": "Object.keys",
+          "lineNumber": 91
+        },
+        {
+          "caller": "parseScriptFile",
+          "callee": "path.resolve",
+          "lineNumber": 110
+        },
+        {
+          "caller": "parseScriptFile",
+          "callee": "process.cwd",
+          "lineNumber": 110
+        },
+        {
+          "caller": "parseScriptFile",
+          "callee": "fs.existsSync",
+          "lineNumber": 113
+        },
+        {
+          "caller": "parseScriptFile",
+          "callee": "getOrCreateCache",
+          "lineNumber": 119
+        },
+        {
+          "caller": "parseScriptFile",
+          "callee": "cacheInstance.generateFileKey",
+          "lineNumber": 120
+        },
+        {
+          "caller": "parseScriptFile",
+          "callee": "cacheInstance.get",
+          "lineNumber": 121
+        },
+        {
+          "caller": "parseScriptFile",
+          "callee": "fs.readFileSync",
+          "lineNumber": 129
+        },
+        {
+          "caller": "parseScriptFile",
+          "callee": "cacheInstance.set",
+          "lineNumber": 137
+        },
+        {
+          "caller": "parseScriptFile",
+          "callee": "data.split",
+          "lineNumber": 141
+        },
+        {
+          "caller": "parseScriptFile",
+          "callee": "parse",
+          "lineNumber": 143
+        },
+        {
+          "caller": "parseScriptFile",
+          "callee": "cacheInstance.set",
+          "lineNumber": 146
+        },
+        {
+          "caller": "parseScriptFile",
+          "callee": "getOrCreateWatcher",
+          "lineNumber": 150
+        },
+        {
+          "caller": "parseScriptFile",
+          "callee": "watcher.isWatching",
+          "lineNumber": 151
+        },
+        {
+          "caller": "parseScriptFile",
+          "callee": "watcher.watch",
+          "lineNumber": 152
+        },
+        {
+          "caller": "parseScriptFile",
+          "callee": "fs.readFileSync",
+          "lineNumber": 159
+        },
+        {
+          "caller": "parseScriptFile",
+          "callee": "data.split",
+          "lineNumber": 169
+        },
+        {
+          "caller": "parseScriptFile",
+          "callee": "parse",
+          "lineNumber": 171
+        },
+        {
+          "caller": "clearCache",
+          "callee": "cache.clear",
+          "lineNumber": 180
+        },
+        {
+          "caller": "getCacheStats",
+          "callee": "cache.getStats",
+          "lineNumber": 189
+        },
+        {
+          "caller": "destroyCache",
+          "callee": "fileWatcher.destroy",
+          "lineNumber": 199
+        },
+        {
+          "caller": "destroyCache",
+          "callee": "cache.destroy",
+          "lineNumber": 203
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 3,
+        "functionCount": 7,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "lib/parsers/parseScriptsMd.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 44,
+      "nonEmptyLines": 38,
+      "functions": [
+        {
+          "name": "parseScriptFile",
+          "startLine": 16,
+          "endLine": 42,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "parseScriptFile",
+          "callee": "import",
+          "lineNumber": 21
+        },
+        {
+          "caller": "parseScriptFile",
+          "callee": "cachedParse",
+          "lineNumber": 22
+        },
+        {
+          "caller": "parseScriptFile",
+          "callee": "console.warn",
+          "lineNumber": 25
+        },
+        {
+          "caller": "parseScriptFile",
+          "callee": "path.resolve",
+          "lineNumber": 29
+        },
+        {
+          "caller": "parseScriptFile",
+          "callee": "process.cwd",
+          "lineNumber": 29
+        },
+        {
+          "caller": "parseScriptFile",
+          "callee": "fs.existsSync",
+          "lineNumber": 30
+        },
+        {
+          "caller": "parseScriptFile",
+          "callee": "fs.readFileSync",
+          "lineNumber": 34
+        },
+        {
+          "caller": "parseScriptFile",
+          "callee": "data.split",
+          "lineNumber": 39
+        },
+        {
+          "caller": "parseScriptFile",
+          "callee": "parse",
+          "lineNumber": 41
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    }
+  ]
+}

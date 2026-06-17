@@ -1,0 +1,27 @@
+{
+  "projectRoot": "/Users/agrublev/DEVELOPMENT/freedcamp-script-runner",
+  "batchFiles": [
+    {"path": "index.js", "language": "javascript", "sizeLines": 552, "fileCategory": "code"},
+    {"path": "lib/completions/completion.js", "language": "javascript", "sizeLines": 342, "fileCategory": "code"},
+    {"path": "lib/generators/index.js", "language": "javascript", "sizeLines": 2, "fileCategory": "code"},
+    {"path": "lib/optionList.js", "language": "javascript", "sizeLines": 69, "fileCategory": "code"},
+    {"path": "lib/plugins/deployment/index.js", "language": "javascript", "sizeLines": 112, "fileCategory": "code"},
+    {"path": "lib/release/bump.js", "language": "javascript", "sizeLines": 60, "fileCategory": "code"},
+    {"path": "lib/running/index.js", "language": "javascript", "sizeLines": 3, "fileCategory": "code"},
+    {"path": "lib/upgradePackages.js", "language": "javascript", "sizeLines": 75, "fileCategory": "code"},
+    {"path": "lib/utils/index.js", "language": "javascript", "sizeLines": 2, "fileCategory": "code"},
+    {"path": "lib/utils/prompt.js", "language": "javascript", "sizeLines": 29, "fileCategory": "code"}
+  ],
+  "batchImportData": {
+    "index.js": ["lib/startScripts.js", "lib/parsers/parseScriptsMd.js", "lib/optionList.js", "lib/utils/helpers.js", "lib/completions/completion.js", "lib/generators/index.js", "lib/running/index.js", "lib/upgradePackages.js"],
+    "lib/completions/completion.js": ["lib/completions/generator.js"],
+    "lib/generators/index.js": ["lib/generators/generateFScripts.js", "lib/generators/generateToc.js"],
+    "lib/optionList.js": ["lib/utils/helpers.js"],
+    "lib/plugins/deployment/index.js": [],
+    "lib/release/bump.js": ["lib/utils/helpers.js"],
+    "lib/running/index.js": ["lib/running/runCLICommand.js", "lib/running/runParallel.js", "lib/running/runSequence.js"],
+    "lib/upgradePackages.js": ["lib/utils/helpers.js"],
+    "lib/utils/index.js": [],
+    "lib/utils/prompt.js": []
+  }
+}

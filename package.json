@@ -13,13 +13,7 @@
         "start:run": "node dist/index.js",
         "watch": "nodemon --watch lib --watch index.js --ext js --exec \"mkdir -p dist/lib && cp -r lib/. dist/lib && cp index.js dist/index.js && node scripts/build-ui.mjs\" --ignore 'node_modules' -I",
         "test": "vitest run",
-        "test:watch": "vitest",
-        "test:ui": "vitest --ui",
-        "test:coverage": "vitest run --coverage",
-        "test:unit": "vitest run tests/unit",
-        "test:integration": "vitest run tests/integration",
-        "test:e2e": "vitest run tests/e2e",
-        "test:performance": "vitest run tests/performance"
+        "test:coverage": "vitest run --coverage"
     },
     "fscripts": {
         "encryptedFiles": [

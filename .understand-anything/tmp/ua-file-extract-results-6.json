@@ -1,0 +1,1271 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 6,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "lib/parsers/parseScriptsPackage.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 10,
+      "nonEmptyLines": 9,
+      "functions": [
+        {
+          "name": "parseScriptFile",
+          "startLine": 5,
+          "endLine": 8,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "parseScriptFile",
+          "callee": "readJson",
+          "lineNumber": 6
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "lib/startScripts.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 160,
+      "nonEmptyLines": 145,
+      "functions": [
+        {
+          "name": "getConfig",
+          "startLine": 16,
+          "endLine": 23,
+          "params": []
+        },
+        {
+          "name": "taskListAutoComplete",
+          "startLine": 25,
+          "endLine": 45,
+          "params": [
+            "tasks",
+            "title"
+          ]
+        },
+        {
+          "name": "startScripts",
+          "startLine": 47,
+          "endLine": 122,
+          "params": []
+        },
+        {
+          "name": "startPackageScripts",
+          "startLine": 124,
+          "endLine": 149,
+          "params": []
+        },
+        {
+          "name": "clearRecent",
+          "startLine": 151,
+          "endLine": 153,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "startScripts",
+          "line": 155,
+          "isDefault": false
+        },
+        {
+          "name": "taskListAutoComplete",
+          "line": 155,
+          "isDefault": false
+        },
+        {
+          "name": "clearRecent",
+          "line": 155,
+          "isDefault": false
+        },
+        {
+          "name": "startPackageScripts",
+          "line": 155,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getConfig",
+          "callee": "path.resolve",
+          "lineNumber": 18
+        },
+        {
+          "caller": "getConfig",
+          "callee": "process.cwd",
+          "lineNumber": 18
+        },
+        {
+          "caller": "getConfig",
+          "callee": "JSON.parse",
+          "lineNumber": 19
+        },
+        {
+          "caller": "getConfig",
+          "callee": "fs.readFileSync",
+          "lineNumber": 19
+        },
+        {
+          "caller": "taskListAutoComplete",
+          "callee": "tasks.map",
+          "lineNumber": 26
+        },
+        {
+          "caller": "taskListAutoComplete",
+          "callee": "t.indexOf",
+          "lineNumber": 27
+        },
+        {
+          "caller": "taskListAutoComplete",
+          "callee": "t.slice(0, i).trim",
+          "lineNumber": 29
+        },
+        {
+          "caller": "taskListAutoComplete",
+          "callee": "t.slice",
+          "lineNumber": 29
+        },
+        {
+          "caller": "taskListAutoComplete",
+          "callee": "t.slice(i + separator.length).trim",
+          "lineNumber": 29
+        },
+        {
+          "caller": "taskListAutoComplete",
+          "callee": "t.slice",
+          "lineNumber": 29
+        },
+        {
+          "caller": "taskListAutoComplete",
+          "callee": "t.slice(0, i).trim",
+          "lineNumber": 29
+        },
+        {
+          "caller": "taskListAutoComplete",
+          "callee": "t.slice",
+          "lineNumber": 29
+        },
+        {
+          "caller": "taskListAutoComplete",
+          "callee": "t.trim",
+          "lineNumber": 30
+        },
+        {
+          "caller": "taskListAutoComplete",
+          "callee": "t.trim",
+          "lineNumber": 30
+        },
+        {
+          "caller": "taskListAutoComplete",
+          "callee": "render",
+          "lineNumber": 35
+        },
+        {
+          "caller": "taskListAutoComplete",
+          "callee": "React.createElement",
+          "lineNumber": 36
+        },
+        {
+          "caller": "taskListAutoComplete",
+          "callee": "waitUntilExit().then",
+          "lineNumber": 43
+        },
+        {
+          "caller": "taskListAutoComplete",
+          "callee": "waitUntilExit",
+          "lineNumber": 43
+        },
+        {
+          "caller": "taskListAutoComplete",
+          "callee": "resolve",
+          "lineNumber": 43
+        },
+        {
+          "caller": "startScripts",
+          "callee": "parseScriptFile",
+          "lineNumber": 48
+        },
+        {
+          "caller": "startScripts",
+          "callee": "getConfig",
+          "lineNumber": 52
+        },
+        {
+          "caller": "startScripts",
+          "callee": "config.get",
+          "lineNumber": 53
+        },
+        {
+          "caller": "startScripts",
+          "callee": "Object.keys(recentTasks)\n        .map((taskName) => {\n            let task = recentTasks[taskName];\n            return { name: taskName, lastExecuted: task.lastExecuted };\n        })\n        .sort((a, b) =>\n            a.lastExecuted > b.lastExecuted ? 1 : b.lastExecuted > a.lastExecuted ? -1 : 0\n        )\n        .reverse()\n        .slice",
+          "lineNumber": 54
+        },
+        {
+          "caller": "startScripts",
+          "callee": "Object.keys(recentTasks)\n        .map((taskName) => {\n            let task = recentTasks[taskName];\n            return { name: taskName, lastExecuted: task.lastExecuted };\n        })\n        .sort((a, b) =>\n            a.lastExecuted > b.lastExecuted ? 1 : b.lastExecuted > a.lastExecuted ? -1 : 0\n        )\n        .reverse",
+          "lineNumber": 54
+        },
+        {
+          "caller": "startScripts",
+          "callee": "Object.keys(recentTasks)\n        .map((taskName) => {\n            let task = recentTasks[taskName];\n            return { name: taskName, lastExecuted: task.lastExecuted };\n        })\n        .sort",
+          "lineNumber": 54
+        },
+        {
+          "caller": "startScripts",
+          "callee": "Object.keys(recentTasks)\n        .map",
+          "lineNumber": 54
+        },
+        {
+          "caller": "startScripts",
+          "callee": "Object.keys",
+          "lineNumber": 54
+        },
+        {
+          "caller": "startScripts",
+          "callee": "recentTaskArr.map",
+          "lineNumber": 64
+        },
+        {
+          "caller": "startScripts",
+          "callee": "moment(task.lastExecuted).calendar",
+          "lineNumber": 65
+        },
+        {
+          "caller": "startScripts",
+          "callee": "moment",
+          "lineNumber": 65
+        },
+        {
+          "caller": "startScripts",
+          "callee": "taskList",
+          "lineNumber": 70
+        },
+        {
+          "caller": "startScripts",
+          "callee": "taskListAutoComplete",
+          "lineNumber": 73
+        },
+        {
+          "caller": "startScripts",
+          "callee": "tasks.map",
+          "lineNumber": 74
+        },
+        {
+          "caller": "startScripts",
+          "callee": "console.log",
+          "lineNumber": 80
+        },
+        {
+          "caller": "startScripts",
+          "callee": "chalk.green.bold",
+          "lineNumber": 80
+        },
+        {
+          "caller": "startScripts",
+          "callee": "Date.now",
+          "lineNumber": 85
+        },
+        {
+          "caller": "startScripts",
+          "callee": "Date.now",
+          "lineNumber": 87
+        },
+        {
+          "caller": "startScripts",
+          "callee": "config.set",
+          "lineNumber": 89
+        },
+        {
+          "caller": "startScripts",
+          "callee": "FcScripts.allTasks.find",
+          "lineNumber": 91
+        },
+        {
+          "caller": "startScripts",
+          "callee": "console.error",
+          "lineNumber": 93
+        },
+        {
+          "caller": "startScripts",
+          "callee": "chalk.bold.underline.red",
+          "lineNumber": 93
+        },
+        {
+          "caller": "startScripts",
+          "callee": "script.split",
+          "lineNumber": 98
+        },
+        {
+          "caller": "startScripts",
+          "callee": "pars[0].includes",
+          "lineNumber": 101
+        },
+        {
+          "caller": "startScripts",
+          "callee": "type.split",
+          "lineNumber": 102
+        },
+        {
+          "caller": "startScripts",
+          "callee": "pars.shift",
+          "lineNumber": 105
+        },
+        {
+          "caller": "startScripts",
+          "callee": "pars.shift",
+          "lineNumber": 106
+        },
+        {
+          "caller": "startScripts",
+          "callee": "pars.join",
+          "lineNumber": 107
+        },
+        {
+          "caller": "startScripts",
+          "callee": "pars.shift",
+          "lineNumber": 109
+        },
+        {
+          "caller": "startScripts",
+          "callee": "pars.join",
+          "lineNumber": 110
+        },
+        {
+          "caller": "startScripts",
+          "callee": "runCLICommand",
+          "lineNumber": 112
+        },
+        {
+          "caller": "startScripts",
+          "callee": "script.split",
+          "lineNumber": 119
+        },
+        {
+          "caller": "startPackageScripts",
+          "callee": "parsePackageFile",
+          "lineNumber": 125
+        },
+        {
+          "caller": "startPackageScripts",
+          "callee": "Object.keys(packageScripts).map",
+          "lineNumber": 127
+        },
+        {
+          "caller": "startPackageScripts",
+          "callee": "Object.keys",
+          "lineNumber": 127
+        },
+        {
+          "caller": "startPackageScripts",
+          "callee": "taskListAutoComplete",
+          "lineNumber": 131
+        },
+        {
+          "caller": "startPackageScripts",
+          "callee": "tasks.map",
+          "lineNumber": 132
+        },
+        {
+          "caller": "startPackageScripts",
+          "callee": "console.log",
+          "lineNumber": 137
+        },
+        {
+          "caller": "startPackageScripts",
+          "callee": "chalk.green.bold",
+          "lineNumber": 137
+        },
+        {
+          "caller": "startPackageScripts",
+          "callee": "runCLICommand",
+          "lineNumber": 140
+        },
+        {
+          "caller": "startPackageScripts",
+          "callee": "taskToRun.script.split(\" \").slice",
+          "lineNumber": 146
+        },
+        {
+          "caller": "startPackageScripts",
+          "callee": "taskToRun.script.split",
+          "lineNumber": 146
+        },
+        {
+          "caller": "clearRecent",
+          "callee": "getConfig().set",
+          "lineNumber": 152
+        },
+        {
+          "caller": "clearRecent",
+          "callee": "getConfig",
+          "lineNumber": 152
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 4,
+        "functionCount": 5,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "lib/taskList.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 34,
+      "nonEmptyLines": 31,
+      "functions": [
+        {
+          "name": "taskList",
+          "startLine": 6,
+          "endLine": 18,
+          "params": [
+            "FcScripts",
+            "recentTaskOptions"
+          ]
+        },
+        {
+          "name": "selectPlugin",
+          "startLine": 20,
+          "endLine": 32,
+          "params": [
+            "items"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "selectPlugin",
+          "line": 20,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "taskList",
+          "callee": "render",
+          "lineNumber": 9
+        },
+        {
+          "caller": "taskList",
+          "callee": "React.createElement",
+          "lineNumber": 10
+        },
+        {
+          "caller": "taskList",
+          "callee": "waitUntilExit().then",
+          "lineNumber": 16
+        },
+        {
+          "caller": "taskList",
+          "callee": "waitUntilExit",
+          "lineNumber": 16
+        },
+        {
+          "caller": "taskList",
+          "callee": "resolve",
+          "lineNumber": 16
+        },
+        {
+          "caller": "selectPlugin",
+          "callee": "render",
+          "lineNumber": 23
+        },
+        {
+          "caller": "selectPlugin",
+          "callee": "React.createElement",
+          "lineNumber": 24
+        },
+        {
+          "caller": "selectPlugin",
+          "callee": "waitUntilExit().then",
+          "lineNumber": 30
+        },
+        {
+          "caller": "selectPlugin",
+          "callee": "waitUntilExit",
+          "lineNumber": 30
+        },
+        {
+          "caller": "selectPlugin",
+          "callee": "resolve",
+          "lineNumber": 30
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "lib/ui/AutoComplete.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 97,
+      "nonEmptyLines": 88,
+      "functions": [
+        {
+          "name": "AutoComplete",
+          "startLine": 4,
+          "endLine": 97,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "AutoComplete",
+          "line": 4,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "AutoComplete",
+          "callee": "useApp",
+          "lineNumber": 5
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "useWindowSize",
+          "lineNumber": 6
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "useState",
+          "lineNumber": 8
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "useState",
+          "lineNumber": 9
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "useState",
+          "lineNumber": 10
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "Math.max",
+          "lineNumber": 12
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "Math.max",
+          "lineNumber": 13
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "useMemo",
+          "lineNumber": 15
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "query.toLowerCase",
+          "lineNumber": 17
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "items.filter",
+          "lineNumber": 18
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "item.label.toLowerCase().includes",
+          "lineNumber": 19
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "item.label.toLowerCase",
+          "lineNumber": 19
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "(item.sublabel || '').toLowerCase().includes",
+          "lineNumber": 20
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "(item.sublabel || '').toLowerCase",
+          "lineNumber": 20
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "useEffect",
+          "lineNumber": 24
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "setIdx",
+          "lineNumber": 25
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "Math.min",
+          "lineNumber": 25
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "Math.max",
+          "lineNumber": 25
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "setScroll",
+          "lineNumber": 26
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "useEffect",
+          "lineNumber": 29
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "setScroll",
+          "lineNumber": 30
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "Math.max",
+          "lineNumber": 32
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "useInput",
+          "lineNumber": 37
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "setIdx",
+          "lineNumber": 38
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "Math.max",
+          "lineNumber": 38
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "setIdx",
+          "lineNumber": 39
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "Math.min",
+          "lineNumber": 39
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "onSelect",
+          "lineNumber": 42
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "exit",
+          "lineNumber": 42
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "onCancel",
+          "lineNumber": 44
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "exit",
+          "lineNumber": 44
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "setQuery",
+          "lineNumber": 46
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "q.slice",
+          "lineNumber": 46
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "setQuery",
+          "lineNumber": 48
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "filtered.slice",
+          "lineNumber": 53
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "'─'.repeat",
+          "lineNumber": 62
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "visible.map",
+          "lineNumber": 70
+        },
+        {
+          "caller": "AutoComplete",
+          "callee": "'─'.repeat",
+          "lineNumber": 89
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "lib/ui/PluginPicker.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 99,
+      "nonEmptyLines": 89,
+      "functions": [
+        {
+          "name": "PluginPicker",
+          "startLine": 4,
+          "endLine": 99,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "PluginPicker",
+          "line": 4,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "PluginPicker",
+          "callee": "useApp",
+          "lineNumber": 5
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "useWindowSize",
+          "lineNumber": 6
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "useState",
+          "lineNumber": 8
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "useState",
+          "lineNumber": 9
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "Math.ceil",
+          "lineNumber": 11
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "Math.floor",
+          "lineNumber": 12
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "Math.max",
+          "lineNumber": 13
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "Math.max",
+          "lineNumber": 16
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "Math.floor",
+          "lineNumber": 16
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "Math.min",
+          "lineNumber": 17
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "Math.floor",
+          "lineNumber": 19
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "useEffect",
+          "lineNumber": 23
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "setScrollRow",
+          "lineNumber": 24
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "useInput",
+          "lineNumber": 31
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "setIdx",
+          "lineNumber": 32
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "Math.min",
+          "lineNumber": 32
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "setIdx",
+          "lineNumber": 33
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "Math.max",
+          "lineNumber": 33
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "setIdx",
+          "lineNumber": 34
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "Math.min",
+          "lineNumber": 34
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "setIdx",
+          "lineNumber": 35
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "Math.max",
+          "lineNumber": 35
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "onSelect",
+          "lineNumber": 38
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "exit",
+          "lineNumber": 38
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "onCancel",
+          "lineNumber": 40
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "exit",
+          "lineNumber": 40
+        },
+        {
+          "caller": "renderCol",
+          "callee": "Array.from({ length: visibleRows }, (_, vi) => {\n            const gridRow = scrollRow + vi;\n            const itemIdx = colIdx === 0 ? gridRow : gridRow + totalGridRows;\n            if (gridRow >= totalGridRows || itemIdx >= items.length) return null;\n            const item = items[itemIdx];\n            const isSel = itemIdx === idx;\n            return (\n                <Box\n                    key={`c${colIdx}-${gridRow}`}\n                    height={cardHeight}\n                    flexDirection=\"row\"\n                    alignItems=\"center\"\n                    borderStyle={isSel ? \"round\" : \"single\"}\n                    borderColor={isSel ? \"cyanBright\" : \"gray\"}\n                    paddingX={1}\n                    width={colWidth}\n                >\n                    <Box marginRight={2}>\n                        <Text bold color={isSel ? \"cyanBright\" : \"greenBright\"}>{item.name}</Text>\n                    </Box>\n                    <Box flexShrink={1}>\n                        <Text italic dimColor wrap=\"wrap\">{item.message}</Text>\n                    </Box>\n                </Box>\n            );\n        }).filter",
+          "lineNumber": 45
+        },
+        {
+          "caller": "renderCol",
+          "callee": "Array.from",
+          "lineNumber": 45
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "\"─\".repeat",
+          "lineNumber": 81
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "renderCol",
+          "lineNumber": 85
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "renderCol",
+          "lineNumber": 86
+        },
+        {
+          "caller": "PluginPicker",
+          "callee": "\"─\".repeat",
+          "lineNumber": 90
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "lib/ui/TaskPicker.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 179,
+      "nonEmptyLines": 161,
+      "functions": [
+        {
+          "name": "parseOpt",
+          "startLine": 6,
+          "endLine": 11,
+          "params": [
+            "opt"
+          ]
+        },
+        {
+          "name": "buildMain",
+          "startLine": 13,
+          "endLine": 28,
+          "params": [
+            "FcScripts",
+            "recents"
+          ]
+        },
+        {
+          "name": "buildTasks",
+          "startLine": 30,
+          "endLine": 38,
+          "params": [
+            "cat"
+          ]
+        },
+        {
+          "name": "nextSel",
+          "startLine": 40,
+          "endLine": 47,
+          "params": [
+            "list",
+            "cur",
+            "dir"
+          ]
+        },
+        {
+          "name": "firstSel",
+          "startLine": 49,
+          "endLine": 52,
+          "params": [
+            "list"
+          ]
+        },
+        {
+          "name": "TaskPicker",
+          "startLine": 54,
+          "endLine": 179,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "TaskPicker",
+          "line": 54,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "parseOpt",
+          "callee": "opt.indexOf",
+          "lineNumber": 7
+        },
+        {
+          "caller": "parseOpt",
+          "callee": "opt.slice(0, i).trim",
+          "lineNumber": 9
+        },
+        {
+          "caller": "parseOpt",
+          "callee": "opt.slice",
+          "lineNumber": 9
+        },
+        {
+          "caller": "parseOpt",
+          "callee": "opt.slice(i + SEP.length).trim",
+          "lineNumber": 9
+        },
+        {
+          "caller": "parseOpt",
+          "callee": "opt.slice",
+          "lineNumber": 9
+        },
+        {
+          "caller": "parseOpt",
+          "callee": "opt.trim",
+          "lineNumber": 10
+        },
+        {
+          "caller": "buildMain",
+          "callee": "list.push",
+          "lineNumber": 16
+        },
+        {
+          "caller": "buildMain",
+          "callee": "parseOpt",
+          "lineNumber": 18
+        },
+        {
+          "caller": "buildMain",
+          "callee": "list.push",
+          "lineNumber": 19
+        },
+        {
+          "caller": "buildMain",
+          "callee": "list.push",
+          "lineNumber": 21
+        },
+        {
+          "caller": "buildMain",
+          "callee": "list.push",
+          "lineNumber": 23
+        },
+        {
+          "caller": "buildMain",
+          "callee": "list.push",
+          "lineNumber": 25
+        },
+        {
+          "caller": "buildTasks",
+          "callee": "Object.entries(cat.tasks).map",
+          "lineNumber": 31
+        },
+        {
+          "caller": "buildTasks",
+          "callee": "Object.entries",
+          "lineNumber": 31
+        },
+        {
+          "caller": "buildTasks",
+          "callee": "task.description.replace(/\\n/g, ' ').trim",
+          "lineNumber": 35
+        },
+        {
+          "caller": "buildTasks",
+          "callee": "task.description.replace",
+          "lineNumber": 35
+        },
+        {
+          "caller": "firstSel",
+          "callee": "list.findIndex",
+          "lineNumber": 50
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "useApp",
+          "lineNumber": 55
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "useWindowSize",
+          "lineNumber": 56
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "useState",
+          "lineNumber": 58
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "useState",
+          "lineNumber": 59
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "buildMain",
+          "lineNumber": 61
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "useState",
+          "lineNumber": 62
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "firstSel",
+          "lineNumber": 62
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "useState",
+          "lineNumber": 63
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "useState",
+          "lineNumber": 64
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "useState",
+          "lineNumber": 65
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "buildTasks",
+          "lineNumber": 67
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "Math.max",
+          "lineNumber": 73
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "Math.max",
+          "lineNumber": 74
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "useEffect",
+          "lineNumber": 76
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "setScroll",
+          "lineNumber": 77
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "Math.max",
+          "lineNumber": 79
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "useInput",
+          "lineNumber": 84
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "setIdx",
+          "lineNumber": 85
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "nextSel",
+          "lineNumber": 85
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "setIdx",
+          "lineNumber": 86
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "nextSel",
+          "lineNumber": 86
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "setActiveCat",
+          "lineNumber": 91
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "setScreen",
+          "lineNumber": 92
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "buildTasks",
+          "lineNumber": 93
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "setTIdx",
+          "lineNumber": 94
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "firstSel",
+          "lineNumber": 94
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "setTScroll",
+          "lineNumber": 95
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "onSelect",
+          "lineNumber": 97
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "exit",
+          "lineNumber": 98
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "setScreen",
+          "lineNumber": 102
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "onSelect",
+          "lineNumber": 104
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "exit",
+          "lineNumber": 105
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "onSelect",
+          "lineNumber": 108
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "exit",
+          "lineNumber": 109
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "list.slice",
+          "lineNumber": 114
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "'─'.repeat",
+          "lineNumber": 127
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "visible.map",
+          "lineNumber": 130
+        },
+        {
+          "caller": "TaskPicker",
+          "callee": "'─'.repeat",
+          "lineNumber": 161
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 6,
+        "classCount": 0
+      }
+    }
+  ]
+}

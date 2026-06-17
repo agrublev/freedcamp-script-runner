@@ -1,0 +1,11 @@
+{
+  "projectRoot": "/Users/agrublev/DEVELOPMENT/freedcamp-script-runner",
+  "batchFiles": [
+    {"path": "CONTRIBUTING.md", "language": "markdown", "sizeLines": 155, "fileCategory": "docs"},
+    {"path": "Readme.md", "language": "markdown", "sizeLines": 260, "fileCategory": "docs"},
+    {"path": "encrypt.json", "language": "json", "sizeLines": 3, "fileCategory": "config"},
+    {"path": "fscripts.md", "language": "markdown", "sizeLines": 130, "fileCategory": "docs"},
+    {"path": "package.json", "language": "json", "sizeLines": 81, "fileCategory": "config"}
+  ],
+  "batchImportData": {"CONTRIBUTING.md": [], "Readme.md": [], "encrypt.json": [], "fscripts.md": [], "package.json": []}
+}

@@ -1,0 +1,592 @@
+{
+  "nodes": [
+    {
+      "id": "file:examples/cache-demo.js",
+      "type": "file",
+      "name": "cache-demo.js",
+      "filePath": "examples/cache-demo.js",
+      "summary": "Runnable demonstration script that exercises the cache layer by benchmarking cold vs. warm parse times, printing hit-rate statistics, and validating speedup targets against expected thresholds.",
+      "tags": ["utility", "benchmark", "cache"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:examples/cache-demo.js:demo",
+      "type": "function",
+      "name": "demo",
+      "filePath": "examples/cache-demo.js",
+      "lineRange": [13, 106],
+      "summary": "Async function that performs a full cache benchmark cycle — cold parse, multiple warm parses, statistics collection, and speedup validation with colored terminal output.",
+      "tags": ["benchmark", "cache", "utility"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:lib/cache/cli.js",
+      "type": "file",
+      "name": "cli.js",
+      "filePath": "lib/cache/cli.js",
+      "summary": "Exports CLI-facing utility functions for inspecting and managing the script cache: showing stats, clearing entries, resetting the instance, listing keys, exporting stats to JSON, and benchmarking.",
+      "tags": ["utility", "cache", "api-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:lib/cache/cli.js:showCacheStats",
+      "type": "function",
+      "name": "showCacheStats",
+      "filePath": "lib/cache/cli.js",
+      "lineRange": [15, 22],
+      "summary": "Retrieves the current cache instance and prints performance statistics to the terminal via the monitor.",
+      "tags": ["utility", "cache", "monitoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/cache/cli.js:clearCache",
+      "type": "function",
+      "name": "clearCache",
+      "filePath": "lib/cache/cli.js",
+      "lineRange": [27, 34],
+      "summary": "Clears all entries from the cache instance and logs the number of entries that were removed.",
+      "tags": ["utility", "cache"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/cache/cli.js:resetCacheInstance",
+      "type": "function",
+      "name": "resetCacheInstance",
+      "filePath": "lib/cache/cli.js",
+      "lineRange": [39, 42],
+      "summary": "Destroys and resets the global cache singleton, useful for forcing a clean state in tests or after config changes.",
+      "tags": ["utility", "cache"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/cache/cli.js:listCacheEntries",
+      "type": "function",
+      "name": "listCacheEntries",
+      "filePath": "lib/cache/cli.js",
+      "lineRange": [49, 74],
+      "summary": "Lists cached entry keys with their validity status, capping the display at 20 entries and showing a remainder count.",
+      "tags": ["utility", "cache", "monitoring"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:lib/cache/cli.js:exportCacheStats",
+      "type": "function",
+      "name": "exportCacheStats",
+      "filePath": "lib/cache/cli.js",
+      "lineRange": [80, 94],
+      "summary": "Serializes current cache monitor statistics to a JSON file at the specified output path.",
+      "tags": ["utility", "cache", "serialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/cache/cli.js:benchmarkCache",
+      "type": "function",
+      "name": "benchmarkCache",
+      "filePath": "lib/cache/cli.js",
+      "lineRange": [99, 143],
+      "summary": "Runs a cold-then-warm benchmark against the current fscripts.md file, reporting parse times and speedup ratio.",
+      "tags": ["benchmark", "cache", "utility"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:lib/cache/file-watcher.js",
+      "type": "file",
+      "name": "file-watcher.js",
+      "filePath": "lib/cache/file-watcher.js",
+      "summary": "Provides the FileWatcher EventEmitter class that watches fscripts.md for filesystem changes and automatically invalidates related cache entries with debounced change handling.",
+      "tags": ["cache", "event-handler", "service"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/cache/file-watcher.js:FileWatcher",
+      "type": "class",
+      "name": "FileWatcher",
+      "filePath": "lib/cache/file-watcher.js",
+      "lineRange": [15, 191],
+      "summary": "EventEmitter subclass that uses Node's fs.watch to monitor files, debounces change events, and delegates invalidation to the CacheManager when a watched file is modified or renamed.",
+      "tags": ["cache", "event-handler", "service"],
+      "complexity": "complex",
+      "languageNotes": "Extends EventEmitter; uses unref() on timers and watchers so the process can exit naturally even when watches are active."
+    },
+    {
+      "id": "file:lib/cache/index.js",
+      "type": "file",
+      "name": "index.js",
+      "filePath": "lib/cache/index.js",
+      "summary": "Core cache module exporting the CacheManager class (LRU-style in-memory cache with TTL, file-mtime validation, hit/miss tracking, and EventEmitter events) plus getCache/resetCache singleton factory helpers.",
+      "tags": ["cache", "service", "singleton"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/cache/index.js:CacheManager",
+      "type": "class",
+      "name": "CacheManager",
+      "filePath": "lib/cache/index.js",
+      "lineRange": [37, 393],
+      "summary": "EventEmitter-based in-memory cache with configurable TTL, max-size eviction, file mtime invalidation, periodic cleanup, and detailed hit/miss/eviction statistics.",
+      "tags": ["cache", "service", "singleton"],
+      "complexity": "complex",
+      "languageNotes": "Emits named events (hit, miss, set, invalidate, evict, cleanup, clear, destroy) enabling the monitor and watcher subsystems to react without tight coupling."
+    },
+    {
+      "id": "function:lib/cache/index.js:getCache",
+      "type": "function",
+      "name": "getCache",
+      "filePath": "lib/cache/index.js",
+      "lineRange": [403, 408],
+      "summary": "Singleton factory that returns the global CacheManager instance, creating it with the given options on first call.",
+      "tags": ["cache", "singleton", "factory"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/cache/index.js:resetCache",
+      "type": "function",
+      "name": "resetCache",
+      "filePath": "lib/cache/index.js",
+      "lineRange": [414, 419],
+      "summary": "Destroys the current global cache instance and clears the singleton reference so the next getCache() call creates a fresh instance.",
+      "tags": ["cache", "singleton"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/cache/monitor.js",
+      "type": "file",
+      "name": "monitor.js",
+      "filePath": "lib/cache/monitor.js",
+      "summary": "Provides the CacheMonitor class that attaches to a CacheManager and FileWatcher to collect cold/warm parse timings, compute hit rates and speedup ratios, and print formatted statistics to the terminal.",
+      "tags": ["monitoring", "cache", "utility"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:lib/cache/monitor.js:CacheMonitor",
+      "type": "class",
+      "name": "CacheMonitor",
+      "filePath": "lib/cache/monitor.js",
+      "lineRange": [12, 222],
+      "summary": "Observes a CacheManager via its emitted events and exposes methods to record timing samples, compute performance summaries, print colored stats tables, and serialize metrics to JSON.",
+      "tags": ["monitoring", "cache", "utility"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:lib/completions/generator.js",
+      "type": "file",
+      "name": "generator.js",
+      "filePath": "lib/completions/generator.js",
+      "summary": "Generates shell completion data for bash, zsh, and fish by reading available task names from fscripts.md and mapping them alongside built-in CLI commands and subcommands.",
+      "tags": ["utility", "completions", "service"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:lib/completions/generator.js:getAvailableTasks",
+      "type": "function",
+      "name": "getAvailableTasks",
+      "filePath": "lib/completions/generator.js",
+      "lineRange": [15, 36],
+      "summary": "Reads and parses fscripts.md to return a cached array of available task objects; uses a simple time-based cache to avoid redundant file reads.",
+      "tags": ["utility", "completions", "cache"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:lib/completions/generator.js:generateBashCompletionData",
+      "type": "function",
+      "name": "generateBashCompletionData",
+      "filePath": "lib/completions/generator.js",
+      "lineRange": [84, 94],
+      "summary": "Assembles a flat array of bash completion words from commands, task names, and completion subcommands.",
+      "tags": ["utility", "completions"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/completions/generator.js:generateZshCompletionData",
+      "type": "function",
+      "name": "generateZshCompletionData",
+      "filePath": "lib/completions/generator.js",
+      "lineRange": [99, 112],
+      "summary": "Assembles zsh completion entries as name:description pairs with sanitized descriptions for commands, tasks, and completion subcommands.",
+      "tags": ["utility", "completions"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/completions/generator.js:generateFishCompletionData",
+      "type": "function",
+      "name": "generateFishCompletionData",
+      "filePath": "lib/completions/generator.js",
+      "lineRange": [117, 136],
+      "summary": "Assembles fish shell completion objects with name, description, and exclusive flag for each command, task, and completion subcommand.",
+      "tags": ["utility", "completions"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/parsers/parseScriptsMd.cached.js",
+      "type": "file",
+      "name": "parseScriptsMd.cached.js",
+      "filePath": "lib/parsers/parseScriptsMd.cached.js",
+      "summary": "Cache-aware wrapper around the base Markdown parser that integrates CacheManager and FileWatcher to serve parsed script results from memory on repeated reads, invalidating automatically when fscripts.md changes.",
+      "tags": ["cache", "service", "utility"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:lib/parsers/parseScriptsMd.cached.js:parseScriptFile",
+      "type": "function",
+      "name": "parseScriptFile",
+      "filePath": "lib/parsers/parseScriptsMd.cached.js",
+      "lineRange": [106, 173],
+      "summary": "Resolves the fscripts.md path, checks the cache for a valid entry, and on miss reads and parses the file before storing the result; also sets up a file watcher on first access.",
+      "tags": ["cache", "service", "utility"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:lib/parsers/parseScriptsMd.cached.js:parse",
+      "type": "function",
+      "name": "parse",
+      "filePath": "lib/parsers/parseScriptsMd.cached.js",
+      "lineRange": [47, 97],
+      "summary": "Parses raw Markdown content using the marked lexer to extract code-block sections and build a structured task/script object map.",
+      "tags": ["utility", "serialization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/parsers/parseScriptsMd.js",
+      "type": "file",
+      "name": "parseScriptsMd.js",
+      "filePath": "lib/parsers/parseScriptsMd.js",
+      "summary": "Lightweight fallback parser that reads fscripts.md from disk and parses it without caching; dynamically attempts to load the cached variant first and falls back to direct parsing if unavailable.",
+      "tags": ["utility", "service"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/parsers/parseScriptsMd.js:parseScriptFile",
+      "type": "function",
+      "name": "parseScriptFile",
+      "filePath": "lib/parsers/parseScriptsMd.js",
+      "lineRange": [16, 42],
+      "summary": "Attempts to delegate to the cached parser module; if that fails, falls back to reading fscripts.md synchronously and parsing its Markdown content directly.",
+      "tags": ["utility", "service"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:examples/cache-demo.js",
+      "target": "file:lib/cache/index.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/cache/cli.js",
+      "target": "file:lib/cache/index.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/cache/file-watcher.js",
+      "target": "file:lib/cache/index.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/cache/monitor.js",
+      "target": "file:lib/cache/index.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/completions/generator.js",
+      "target": "file:lib/utils/helpers.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/parsers/parseScriptsMd.cached.js",
+      "target": "file:lib/cache/index.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/parsers/parseScriptsMd.cached.js",
+      "target": "file:lib/parsers/parseScriptsMd.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:examples/cache-demo.js",
+      "target": "function:examples/cache-demo.js:demo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/cache/cli.js",
+      "target": "function:lib/cache/cli.js:showCacheStats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/cache/cli.js",
+      "target": "function:lib/cache/cli.js:clearCache",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/cache/cli.js",
+      "target": "function:lib/cache/cli.js:resetCacheInstance",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/cache/cli.js",
+      "target": "function:lib/cache/cli.js:listCacheEntries",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/cache/cli.js",
+      "target": "function:lib/cache/cli.js:exportCacheStats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/cache/cli.js",
+      "target": "function:lib/cache/cli.js:benchmarkCache",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/cache/cli.js",
+      "target": "function:lib/cache/cli.js:showCacheStats",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/cache/cli.js",
+      "target": "function:lib/cache/cli.js:clearCache",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/cache/cli.js",
+      "target": "function:lib/cache/cli.js:resetCacheInstance",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/cache/cli.js",
+      "target": "function:lib/cache/cli.js:listCacheEntries",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/cache/cli.js",
+      "target": "function:lib/cache/cli.js:exportCacheStats",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/cache/cli.js",
+      "target": "function:lib/cache/cli.js:benchmarkCache",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/cache/file-watcher.js",
+      "target": "class:lib/cache/file-watcher.js:FileWatcher",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/cache/index.js",
+      "target": "class:lib/cache/index.js:CacheManager",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/cache/index.js",
+      "target": "function:lib/cache/index.js:getCache",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/cache/index.js",
+      "target": "function:lib/cache/index.js:resetCache",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/cache/index.js",
+      "target": "class:lib/cache/index.js:CacheManager",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/cache/index.js",
+      "target": "function:lib/cache/index.js:getCache",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/cache/index.js",
+      "target": "function:lib/cache/index.js:resetCache",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/cache/monitor.js",
+      "target": "class:lib/cache/monitor.js:CacheMonitor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/completions/generator.js",
+      "target": "function:lib/completions/generator.js:getAvailableTasks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/completions/generator.js",
+      "target": "function:lib/completions/generator.js:generateBashCompletionData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/completions/generator.js",
+      "target": "function:lib/completions/generator.js:generateZshCompletionData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/completions/generator.js",
+      "target": "function:lib/completions/generator.js:generateFishCompletionData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/completions/generator.js",
+      "target": "function:lib/completions/generator.js:getAvailableTasks",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/completions/generator.js",
+      "target": "function:lib/completions/generator.js:generateBashCompletionData",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/completions/generator.js",
+      "target": "function:lib/completions/generator.js:generateZshCompletionData",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/completions/generator.js",
+      "target": "function:lib/completions/generator.js:generateFishCompletionData",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/parsers/parseScriptsMd.cached.js",
+      "target": "function:lib/parsers/parseScriptsMd.cached.js:parseScriptFile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/parsers/parseScriptsMd.cached.js",
+      "target": "function:lib/parsers/parseScriptsMd.cached.js:parse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/parsers/parseScriptsMd.js",
+      "target": "function:lib/parsers/parseScriptsMd.js:parseScriptFile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/cache/file-watcher.js",
+      "target": "class:lib/cache/index.js:CacheManager",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:lib/cache/monitor.js",
+      "target": "class:lib/cache/index.js:CacheManager",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:lib/cache/monitor.js",
+      "target": "class:lib/cache/file-watcher.js:FileWatcher",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "function:lib/parsers/parseScriptsMd.cached.js:parseScriptFile",
+      "target": "function:lib/cache/index.js:getCache",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/cache/cli.js:benchmarkCache",
+      "target": "function:lib/cache/index.js:getCache",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/cache/cli.js:resetCacheInstance",
+      "target": "function:lib/cache/index.js:resetCache",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/completions/generator.js:getAvailableTasks",
+      "target": "file:lib/utils/helpers.js",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

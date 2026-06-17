@@ -5,7 +5,7 @@ import parseScriptFile from "./lib/parsers/parseScriptsMd.js";
 import upgradePackages from "./lib/upgradePackages.js";
 import { runCLICommand, runParallel, runSequence } from "./lib/running/index.js";
 import { clearRecent, startPackageScripts, startScripts } from "./lib/startScripts.js";
-import optionList from "./lib/optionList.js";
+import parseTask from "./lib/running/parseTask.js";
 import { selectPlugin } from "./lib/taskList.js";
 import validateNotInDev from "./lib/git/validateNotDev.js";
 import encrypt from "./lib/encryption/encryption.js";
@@ -30,17 +30,17 @@ const textDescription = chalk.rgb(159, 161, 181);
  * @returns {Promise<unknown>}
  */
 const runCmd = async (app, argsList = []) => {
-    let shell;
-
-    shell = spawn(app, argsList, {
+    const shell = spawn(app, argsList, {
         stdio: "inherit",
         cwd: process.cwd(),
-        env: { ...process.env, ...{ FORCE_COLOR: true } }
+        env: { ...process.env, FORCE_COLOR: "1" }
     });
     return new Promise((resolve) => {
-        shell.on("close", (code) => {
+        shell.on("error", (err) => {
+            console.error(`${chalk.red("ERROR")} ${err.message}`);
             resolve();
         });
+        shell.on("close", () => resolve());
     });
 };
 
@@ -74,9 +74,7 @@ const runCmd = async (app, argsList = []) => {
             "Choose category then task to run",
             (yargs) => {},
             async () => {
-                await startScripts(); // if ((await startScripts()) === false) {
-                //     await startPackageScripts();
-                // }
+                await startScripts();
             }
         )
         .example(`${taskName("$0 start")}`, `${textDescription("Open a task selection selector")}`)
@@ -108,7 +106,6 @@ const runCmd = async (app, argsList = []) => {
             () => {},
             async function (argv) {
                 await startScripts(false);
-                // const tasks = await scriptsParsed().allTasks;
             }
         )
         .example(`${taskName("$0 list")}`, `${textDescription("Show you all tasks you can run")}`)
@@ -127,59 +124,18 @@ const runCmd = async (app, argsList = []) => {
                 });
             },
             async function (argv) {
-                let { task } = argv;
+                const { task } = argv;
                 const parsed = await parseScriptFile();
                 if (!parsed) {
                     console.error(`${chalk.bold.underline.red("No fscripts.md file found")}`);
                     return;
                 }
-                const { allTasks } = parsed;
-                const taskData = allTasks.find((t) => t.name === task);
+                const taskData = parsed.allTasks.find((t) => t.name === task);
                 if (!taskData) {
-                    console.error(`${chalk.bold.underline.red("Task not found")}`);
+                    console.error(`${chalk.bold.underline.red("Task not found")} ${task}`);
                     return;
                 }
-                let { script, lang } = taskData;
-
-                if (lang === "javascript") {
-                    // For JavaScript, use the script as-is without parsing
-                    await runCLICommand({
-                        task: { name: task },
-                        script: {
-                            lang: lang,
-                            env: {},
-                            type: "node",
-                            full: script,
-                            rest: []
-                        }
-                    });
-                } else {
-                    // For bash scripts, parse command and environment variables
-                    let pars = script.split(" ");
-                    let type = pars[0];
-                    let env = {};
-                    if (pars[0].includes("=")) {
-                        let envs = type.split("=");
-                        env[envs[0]] = envs[1];
-                        type = pars[1];
-                        pars.shift();
-                        pars.shift();
-                        script = pars.join(" ");
-                    } else {
-                        pars.shift();
-                        script = pars.join(" ");
-                    }
-                    await runCLICommand({
-                        task: { name: task },
-                        script: {
-                            lang: lang,
-                            env: env,
-                            type: type,
-                            full: script,
-                            rest: script.split(" ")
-                        }
-                    });
-                }
+                await runCLICommand(parseTask(taskData));
             }
         )
         .example(`${taskName("$0 run start:web")}`, `${textDescription("Run task 'start:web'")}`)
