@@ -15,6 +15,14 @@
   * [threez](#threez)
 <!-- end toc -->
 
+## say:hello
+
+Say hello task outside any category.
+
+```javascript
+console.log("Say hello to my little friend!");
+```
+
 # Run
 
 Run description here **test** sasa
