@@ -16,8 +16,11 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - run: yarn install --frozen-lockfile
       - run: bun scripts/bun.build.mjs
+      - run: cd website && yarn install --frozen-lockfile
+      - run: cd website && yarn build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_FSCR_4A87C }}
           projectId: fscr-4a87c
+          entryPoint: website
