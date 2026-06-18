@@ -12,12 +12,8 @@
 -   [Testing](#testing)
     -   [test](#test)
     -   [test:watch](#testwatch)
-    -   [test:ui](#testui)
     -   [test:coverage](#testcoverage)
-    -   [test:unit](#testunit)
-    -   [test:integration](#testintegration)
-    -   [test:e2e](#teste2e)
-    -   [test:performance](#testperformance)
+    -   [test:coverage:open](#testcoverageopen)
 
 <!-- end toc -->
 
@@ -133,14 +129,6 @@ Starts Vitest in interactive watch mode. Re-runs only the affected tests on ever
 vitest
 ```
 
-## test:ui
-
-Opens the Vitest browser UI. Provides a visual dashboard to browse test files, inspect individual results, and re-run tests interactively without reading terminal logs.
-
-```bash
-vitest --ui
-```
-
 ## test:coverage
 
 Runs the full test suite once and generates a V8 coverage report via `@vitest/coverage-v8`. Writes HTML/JSON details to `coverage/`. Use before a release or PR to verify coverage targets.
@@ -149,34 +137,31 @@ Runs the full test suite once and generates a V8 coverage report via `@vitest/co
 vitest run --coverage
 ```
 
-## test:unit
+## test:coverage:open
 
-Runs only the files inside `tests/unit/` — fast, isolated unit tests for individual functions and modules with no external dependencies.
+Generates the V8 coverage report and opens the HTML dashboard (`coverage/index.html`) in your default browser. Cross-platform (macOS/Windows/Linux). Unlike `test:coverage`, it ignores the exit code so the report still opens even when tests fail or coverage thresholds are not met — useful for inspecting gaps while iterating.
 
-```bash
-vitest run tests/unit
-```
+```javascript
+import { spawnSync } from "node:child_process";
+import path from "node:path";
 
-## test:integration
+const binDir = path.resolve("node_modules/.bin");
+const env = {
+    ...process.env,
+    PATH: `${binDir}${path.delimiter}${process.env.PATH}`,
+    FORCE_COLOR: "1"
+};
 
-Runs only the files inside `tests/integration/` — tests that exercise multiple modules together (parser + runner pipeline, file I/O, CLI command handlers). Slower than unit tests but still headless.
+spawnSync("vitest", ["run", "--coverage"], { stdio: "inherit", shell: true, env });
 
-```bash
-vitest run tests/integration
-```
+const report = path.resolve("coverage/index.html");
+const opener =
+    process.platform === "darwin"
+        ? { cmd: "open", args: [report] }
+        : process.platform === "win32"
+          ? { cmd: "start", args: ["", report] }
+          : { cmd: "xdg-open", args: [report] };
 
-## test:e2e
-
-Runs only the files inside `tests/e2e/` — end-to-end tests that invoke the full CLI from the outside, simulating real user invocations. These are the slowest tests and validate complete user-facing behavior.
-
-```bash
-vitest run tests/e2e
-```
-
-## test:performance
-
-Runs only the files inside `tests/performance/` — benchmark and regression tests that assert timing or throughput constraints. Use to catch regressions in hot paths such as parsing, task resolution, or plugin loading.
-
-```bash
-vitest run tests/performance
+spawnSync(opener.cmd, opener.args, { stdio: "inherit", shell: true });
+console.log(`\nCoverage report: ${report}`);
 ```
