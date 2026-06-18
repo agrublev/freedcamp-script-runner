@@ -31,5 +31,8 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      - name: Build dist
+        run: yarn fsr build
+
       - name: Run tests with coverage
         run: yarn fsr test:coverage
