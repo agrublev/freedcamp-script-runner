@@ -8,7 +8,8 @@
         "find-scripts-in-fscripts": "you can find all scripts in fscripts.md",
         "fsr": "bun ./dist/index.js",
         "start": "yarn fsr",
-        "list": "yarn fsr start"
+        "list": "yarn fsr start",
+        "test:coverage": "vitest run --coverage"
     },
     "fscripts": {
         "encryptedFiles": [
