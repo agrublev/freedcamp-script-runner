@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added confirmation prompt when fscripts.md already exists and improved generation to write directly to fscripts.md.
+
+### Fixed
+
+- Fixed cross-platform compatibility issues by using cross-spawn instead of child_process spawn/execFileSync.
+- Fixed PATH environment variable construction to work correctly on Windows.
+
+### Added
+
 - Added AI-powered smart commit command that analyzes changes and proposes logical commit groupings.
 
 ### Added
