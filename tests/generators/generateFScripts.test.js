@@ -14,7 +14,9 @@ vi.mock("../../lib/utils/helpers.js", () => ({
     writeFile: vi.fn().mockResolvedValue(undefined),
     appendToFile: vi.fn(),
     boxInform: vi.fn(),
-    readFile: vi.fn()
+    readFile: vi.fn(),
+    pathExists: vi.fn().mockResolvedValue(false),
+    timestamp: vi.fn().mockReturnValue("00:00:00")
 }));
 
 describe("generateFScripts", () => {
@@ -29,9 +31,9 @@ describe("generateFScripts", () => {
         writeFile = helpers.writeFile;
     });
 
-    it("generates sample.fscripts.md file", async () => {
+    it("generates fscripts.md in the current directory", async () => {
         await generateFScripts();
-        expect(writeFile).toHaveBeenCalledWith("./sample.fscripts.md", expect.any(String));
+        expect(writeFile).toHaveBeenCalledWith(expect.stringContaining("fscripts.md"), expect.any(String));
     });
 
     it("includes script names as h2 headings", async () => {
