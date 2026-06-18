@@ -44,6 +44,40 @@ describe("cache JSON CRUD", () => {
         expect(entry.changesLog[0]).toMatch(TIMESTAMP_RE);
     });
 
+    it("merges object values by default instead of replacing keys", async () => {
+        await writeCacheEntry("test", { test: 9889, trr: true });
+        await writeCacheEntry("test", { test: 222 });
+
+        const entry = await readCacheEntry("test");
+        expect(entry.value).toEqual({ test: 222, trr: true });
+    });
+
+    it("replaces value when replaceValue flag is true", async () => {
+        await writeCacheEntry("test", { test: 9889, trr: true });
+        await writeCacheEntry("test", { test: 222 }, true);
+
+        const entry = await readCacheEntry("test");
+        expect(entry.value).toEqual({ test: 222 });
+    });
+
+    it("replaces object with array when incoming value is not mergeable", async () => {
+        await writeCacheEntry("test", { keep: true, count: 1 });
+        await writeCacheEntry("test", ["fresh"]);
+
+        const entry = await readCacheEntry("test");
+        expect(entry.value).toEqual(["fresh"]);
+        expect(entry.changesLog).toHaveLength(2);
+    });
+
+    it("replaces primitive with object instead of merging", async () => {
+        await writeCacheEntry("test", 5);
+        await writeCacheEntry("test", { count: 2 });
+
+        const entry = await readCacheEntry("test");
+        expect(entry.value).toEqual({ count: 2 });
+        expect(entry.changesLog).toHaveLength(2);
+    });
+
     it("edits an existing entry and appends to changesLog", async () => {
         await writeCacheEntry("counter", { count: 1 });
         await editCacheEntry("counter", (prev) => ({ ...prev, count: prev.count + 1 }));

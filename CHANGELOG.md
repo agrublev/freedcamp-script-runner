@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed plugin loader to search multiple candidate directories and validate plugin structure before selecting the plugins directory.
 
+- Fixed cache writes to merge object values by default instead of dropping existing keys, and added an explicit replace-value mode to overwrite stored values when needed.
 ### Fixed
 
 - Fixed completion scripts not being found when running from bundled distribution.
