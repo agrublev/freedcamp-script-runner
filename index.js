@@ -23,12 +23,6 @@ import commit from "./lib/git/commit.js";
 const taskName = chalk.rgb(39, 173, 96).bold.underline;
 const textDescription = chalk.rgb(159, 161, 181);
 
-/**
- * RUN
- * @param app
- * @param argsList
- * @returns {Promise<unknown>}
- */
 const runCmd = async (app, argsList = []) => {
     const shell = spawn(app, argsList, {
         stdio: "inherit",
@@ -44,476 +38,236 @@ const runCmd = async (app, argsList = []) => {
     });
 };
 
+/**
+ * Single source of truth for all built-in fsr commands.
+ *
+ * Fields:
+ *   cmd      — yargs command string (e.g. "run [task]", "cache <action>")
+ *   desc     — description shown in --help and the interactive picker
+ *   builder  — optional yargs builder fn for positionals/options
+ *   handler  — async (argv) => void
+ *   examples — optional [[usage, description], ...] for multi-variant commands
+ *   menu     — include in the bare-`fsr` interactive picker (default false)
+ */
+const COMMANDS = [
+    {
+        cmd: "branch",
+        desc: "Create a new branch — prevents commits directly on master or development",
+        handler: async () => validateNotInDev(),
+    },
+    {
+        cmd: "commit",
+        desc: "Stage and commit changes with AI-generated conventional commit messages",
+        handler: async () => commit(),
+    },
+    {
+        cmd: "start",
+        desc: "Choose a category then a task to run interactively",
+        handler: async () => startScripts(),
+        menu: true,
+    },
+    {
+        cmd: "scripts",
+        desc: "Choose a script from package.json",
+        handler: async () => startPackageScripts(),
+        menu: true,
+    },
+    {
+        cmd: "list",
+        desc: "Select any task with text autocompletion",
+        handler: async () => startScripts(false),
+        menu: true,
+    },
+    {
+        cmd: "run [task]",
+        desc: "Run a specific task by name",
+        builder: (y) => y.positional("task", { describe: "task name", default: "" }),
+        handler: async (argv) => {
+            const { task } = argv;
+            const parsed = await parseScriptFile();
+            if (!parsed) {
+                fsrLog.error(chalk.bold.underline.red("No fscripts.md file found"));
+                return;
+            }
+            const taskData = parsed.allTasks.find((t) => t.name === task);
+            if (!taskData) {
+                fsrLog.error(`${chalk.bold.underline.red("Task not found")} ${task}`);
+                return;
+            }
+            await runCLICommand(parseTask(taskData));
+        },
+        examples: [["$0 run start:web", "Run task 'start:web'"]],
+        menu: true,
+    },
+    {
+        cmd: "upgrade",
+        desc: "Upgrade all packages except those listed in 'ignore-upgrade'",
+        handler: async () => upgradePackages(),
+        menu: true,
+    },
+    {
+        cmd: "bump",
+        desc: "Bump the version in package.json and beautify it",
+        handler: async (argv) => bump(argv.type, argv.skipGit === "true"),
+        menu: true,
+    },
+    {
+        cmd: "run-s [tasks..]",
+        desc: "Run a set of tasks sequentially",
+        handler: async (argv) => runSequence(argv.tasks || [], await parseScriptFile()),
+        examples: [["$0 run-s start:web start:desktop", "Run start:web then start:desktop"]],
+        menu: true,
+    },
+    {
+        cmd: "run-p [tasks..]",
+        desc: "Run tasks in parallel",
+        handler: async (argv) => runParallel(argv.tasks || [], await parseScriptFile()),
+        examples: [["$0 run-p start:web start:desktop", "Run start:web and start:desktop simultaneously"]],
+        menu: true,
+    },
+    {
+        cmd: "encryption",
+        desc: "Encrypt or decrypt secret files interactively",
+        handler: async () => encrypt.init(),
+        menu: true,
+    },
+    {
+        cmd: "encrypt",
+        desc: "Encrypt secret files",
+        handler: async () => encrypt.encrypt(),
+    },
+    {
+        cmd: "decrypt",
+        desc: "Decrypt secret files",
+        handler: async () => encrypt.decrypt(),
+    },
+    {
+        cmd: "clear",
+        desc: "Clear recent task history",
+        handler: async () => clearRecent(),
+    },
+    {
+        cmd: "generate",
+        desc: "Generate a sample fscripts.md from package.json",
+        handler: async () => generateFScripts(),
+        menu: true,
+    },
+    {
+        cmd: "toc",
+        desc: "Regenerate the Table of Contents in fscripts.md",
+        handler: async (argv) => generateToc(argv._[1]),
+        menu: true,
+    },
+    {
+        cmd: "doctor",
+        desc: "Run diagnostics and check system health",
+        builder: (y) =>
+            y
+                .option("fix", { alias: "f", type: "boolean", description: "Auto-fix issues when possible", default: false })
+                .option("json", { type: "boolean", description: "Output results as JSON", default: false })
+                .option("verbose", { alias: "v", type: "boolean", description: "Show verbose output", default: false }),
+        handler: async (argv) => doctor(argv),
+        examples: [
+            ["$0 doctor --fix", "Run diagnostics and auto-fix issues"],
+            ["$0 doctor --json", "Output results as JSON"],
+        ],
+        menu: true,
+    },
+    {
+        cmd: "cache <action>",
+        desc: "Manage the cache system",
+        builder: (y) =>
+            y
+                .positional("action", { describe: "Action to perform", choices: ["stats", "clear", "list", "benchmark", "export"] })
+                .option("verbose", { alias: "v", type: "boolean", description: "Show verbose output", default: false })
+                .option("limit", { alias: "l", type: "number", description: "Limit entries shown", default: 10 })
+                .option("output", { alias: "o", type: "string", description: "Export output path" }),
+        handler: async (argv) => {
+            const { action, verbose, limit, output } = argv;
+            switch (action) {
+                case "stats":     await cacheCommands.showCacheStats({ verbose }); break;
+                case "clear":     await cacheCommands.clearCache(); break;
+                case "list":      await cacheCommands.listCacheEntries({ limit }); break;
+                case "benchmark": await cacheCommands.benchmarkCache(); break;
+                case "export":    await cacheCommands.exportCacheStats(output); break;
+                default: fsrLog.log(chalk.yellow(`Unknown cache action: ${action}`));
+            }
+        },
+        examples: [
+            ["$0 cache stats",     "Show cache statistics"],
+            ["$0 cache clear",     "Clear all cache entries"],
+            ["$0 cache list",      "List cached entries"],
+            ["$0 cache benchmark", "Run cache performance benchmark"],
+        ],
+        menu: true,
+    },
+    {
+        cmd: "completion [action]",
+        desc: "Manage shell tab completions",
+        builder: (y) =>
+            y
+                .positional("action", { describe: "Action to perform", type: "string", choices: ["install", "uninstall", "status", "generate"] })
+                .option("shell", { alias: "s", type: "string", description: "Target shell", choices: ["bash", "zsh", "fish", "powershell"] })
+                .option("force", { alias: "f", type: "boolean", description: "Force reinstall", default: false }),
+        handler: async (argv) => completion(argv),
+        examples: [
+            ["$0 completion install",    "Install completions for your shell"],
+            ["$0 completion status",     "Check completion installation status"],
+            ["$0 completion --shell zsh","Install completions for zsh"],
+        ],
+        menu: true,
+    },
+];
+
 (async () => {
     clear();
     const { commands: pluginCommands, runnablePlugins } = await loadPlugins();
-    const yargsInstance = yargs(process.argv.slice(2))
-        .usage("Usage: $0 <command> [options]")
 
-        /**
-         *  fsr
-         * branch --
-         */
-        .command(
-            "branch",
-            "Create a new branch so you don't make commits in Master or Development braches!",
-            (yargs) => {},
-            async function () {
-                await validateNotInDev();
-            }
-        )
-        .example(`${taskName("$0")}`, `${textDescription("Validates branch and creates new")}`)
+    // Build yargs from COMMANDS — single source of truth for registration,
+    // examples, BUILTIN_COMMANDS, and the interactive picker menu.
+    let yi = yargs(process.argv.slice(2))
+        .usage("Usage: $0 <command> [options]");
 
-        /**
-         *  fsr
-         * branch --
-         */
-        .command(
-            "commit",
-            "Commit latest changes with AI automatically naming them for you!",
-            (yargs) => {},
-            async function () {
-                await commit();
-            }
-        )
-        .example(`${taskName("$0")}`, `${textDescription("Commit latest changes and stage any unstaged files! With automatic AI naming.")}`)
+    for (const { cmd, desc, builder, handler, examples } of COMMANDS) {
+        yi = yi.command(cmd, desc, builder || (() => {}), handler);
+        // Auto-generate a base example from the command name and description.
+        const base = cmd.split(" ")[0];
+        yi = yi.example(taskName(`$0 ${base}`), textDescription(desc));
+        for (const [ex, exDesc] of examples || []) {
+            yi = yi.example(taskName(ex), textDescription(exDesc));
+        }
+    }
 
-        /**
-         * fsr
-         * start --
-         */
-        .usage("$0 <task> name:of:task")
-        .command(
-            "start",
-            "Choose category then task to run",
-            (yargs) => {},
-            async () => {
-                await startScripts();
-            }
-        )
-        .example(`${taskName("$0 start")}`, `${textDescription("Open a task selection selector")}`)
+    yi = yi.help();
+    registerPluginCommands(yi, pluginCommands);
 
-        /**
-         * fsr
-         * scripts --
-         */
-        .command(
-            "scripts",
-            "Choose a script from package.json",
-            (yargs) => {},
-            async function () {
-                await startPackageScripts();
-            }
-        )
-        .example(
-            `${taskName("$0 scripts")}`,
-            `${textDescription("Choose a script from package.json")}`
-        )
-
-        /**
-         * fsr
-         * list --
-         */
-        .command(
-            "list",
-            "Select any task with text autocompletion",
-            () => {},
-            async function (argv) {
-                await startScripts(false);
-            }
-        )
-        .example(`${taskName("$0 list")}`, `${textDescription("Show you all tasks you can run")}`)
-
-        /**
-         * fsr
-         * run --
-         */
-        .command(
-            "run [task]",
-            "Run a specific task",
-            (yargs) => {
-                yargs.positional("task", {
-                    describe: "name of task to start",
-                    default: ""
-                });
-            },
-            async function (argv) {
-                const { task } = argv;
-                const parsed = await parseScriptFile();
-                if (!parsed) {
-                    fsrLog.error(`${chalk.bold.underline.red("No fscripts.md file found")}`);
-                    return;
-                }
-                const taskData = parsed.allTasks.find((t) => t.name === task);
-                if (!taskData) {
-                    fsrLog.error(`${chalk.bold.underline.red("Task not found")} ${task}`);
-                    return;
-                }
-                await runCLICommand(parseTask(taskData));
-            }
-        )
-        .example(`${taskName("$0 run start:web")}`, `${textDescription("Run task 'start:web'")}`)
-
-        /**
-         * fsr
-         * upgrade --
-         */
-        .command(
-            "upgrade",
-            "Upgrade all your packages except ones specified by 'ignore-upgrade':[]",
-            () => {},
-            async function (argv) {
-                let task = argv._[1];
-                await upgradePackages();
-            }
-        )
-        .example(`${taskName("$0 upgrade")}`, `${textDescription("Upgraded!")}`)
-
-        /**
-         * fsr
-         * bump --
-         */
-        .command(
-            "bump",
-            "Bump package.json and beautify it!",
-            () => {},
-            async function (argv) {
-                let type = argv.type;
-                let skipGit = argv.skipGit;
-                await bump(type, skipGit === "true");
-            }
-        )
-        .example(`${taskName("$0 bump")}`, `${textDescription("BUMPED AND PRETTY!")}`)
-
-        /**
-         * fsr
-         * run-s --
-         */
-        .command(
-            "run-s [tasks..]",
-            "Run a set of tasks one after another",
-            () => {},
-            async function (argv) {
-                let tasks = argv.tasks || [];
-                const FcScripts = await parseScriptFile();
-                await runSequence(tasks, FcScripts);
-            }
-        )
-        .example(
-            `${taskName("$0 run-s start:web start:desktop")}`,
-            `${textDescription("Run task 'start:web' and afterwards 'start:desktop'")}`
-        )
-
-        /**
-         * fsr
-         * run-p --
-         */
-        .command(
-            "run-p [tasks..]",
-            "Run tasks in parallel",
-            () => {},
-            async function (argv) {
-                let tasks = argv.tasks || [];
-
-                const FcScripts = await parseScriptFile();
-                await runParallel(tasks, FcScripts);
-            }
-        )
-        .example(
-            `${taskName("$0 run-p start:web start:desktop")}`,
-            `${textDescription("Run task 'start:web' and at the same time 'start:desktop'")}`
-        )
-        /**
-         * fsr
-         * encryption --
-         */
-        .command(
-            "encryption",
-            "Encrypt/Decrypt secret files",
-            () => {},
-            async function (argv) {
-                await encrypt.init();
-            }
-        )
-        /**
-         * fsr
-         * encrypt --
-         */
-        .command(
-            "encrypt",
-            "Encrypt a secret file/s",
-            () => {},
-            async function (argv) {
-                await encrypt.encrypt();
-            }
-        )
-        /**
-         * fsr
-         * decrypt --
-         */
-        .command(
-            "decrypt",
-            "Decrypt a secret file/s",
-            () => {},
-            async function (argv) {
-                await encrypt.decrypt();
-            }
-        )
-        .example(
-            `${taskName("$0 encryption")}`,
-            `${textDescription("Encrypt/Decrypt secret files")}`
-        )
-
-        /**
-         * fsr
-         * clear --
-         */
-        .command(
-            "clear",
-            "Clear recent task history",
-            () => {},
-            async function (argv) {
-                await clearRecent();
-            }
-        )
-        .example(`${taskName("$0 clear")}`, `${textDescription("Clear your recently run tasks")}`)
-        .example(`${taskName("$0 config")}`, `${textDescription("Update a config value")}`)
-        .command(
-            "generate",
-            "Generate a sample fscripts.md file from the package.json",
-            () => {},
-            async function (argv) {
-                await generateFScripts();
-            }
-        )
-        .example(
-            `${taskName("$0 generate")}`,
-            `${textDescription(
-                "Generates a sample.fscripts.md you can use as template for your fscripts file"
-            )}`
-        )
-        .command(
-            "toc",
-            "Generate updated Table of Contents on top of the fscripts.md file",
-            () => {},
-            async function (argv) {
-                let mdFile = argv._[1];
-                await generateToc(mdFile);
-            }
-        )
-        .example(
-            `${taskName("$0 toc")}`,
-            `${textDescription(
-                "Generate updated Table of Contents on top of the fscripts.md file"
-            )}`
-        )
-
-        /**
-         * fsr
-         * doctor --
-         */
-        .command(
-            "doctor",
-            "Run diagnostics and check system health",
-            (yargs) => {
-                yargs
-                    .option("fix", {
-                        alias: "f",
-                        type: "boolean",
-                        description: "Automatically fix issues when possible",
-                        default: false
-                    })
-                    .option("json", {
-                        type: "boolean",
-                        description: "Output results in JSON format",
-                        default: false
-                    })
-                    .option("verbose", {
-                        alias: "v",
-                        type: "boolean",
-                        description: "Show verbose output",
-                        default: false
-                    });
-            },
-            async function (argv) {
-                await doctor(argv);
-            }
-        )
-        .example(`${taskName("$0 doctor")}`, `${textDescription("Run system diagnostics")}`)
-        .example(
-            `${taskName("$0 doctor --fix")}`,
-            `${textDescription("Run diagnostics and auto-fix issues")}`
-        )
-        .example(`${taskName("$0 doctor --json")}`, `${textDescription("Output results as JSON")}`)
-
-        /**
-         * fsr
-         * cache --
-         */
-        .command(
-            "cache <action>",
-            "Manage cache system",
-            (yargs) => {
-                yargs
-                    .positional("action", {
-                        describe: "Cache action to perform",
-                        choices: ["stats", "clear", "list", "benchmark", "export"]
-                    })
-                    .option("verbose", {
-                        alias: "v",
-                        type: "boolean",
-                        description: "Show verbose output",
-                        default: false
-                    })
-                    .option("limit", {
-                        alias: "l",
-                        type: "number",
-                        description: "Limit number of entries to display",
-                        default: 10
-                    })
-                    .option("output", {
-                        alias: "o",
-                        type: "string",
-                        description: "Output file path for export"
-                    });
-            },
-            async function (argv) {
-                const { action, verbose, limit, output } = argv;
-
-                switch (action) {
-                    case "stats":
-                        await cacheCommands.showCacheStats({ verbose });
-                        break;
-                    case "clear":
-                        await cacheCommands.clearCache();
-                        break;
-                    case "list":
-                        await cacheCommands.listCacheEntries({ limit });
-                        break;
-                    case "benchmark":
-                        await cacheCommands.benchmarkCache();
-                        break;
-                    case "export":
-                        await cacheCommands.exportCacheStats(output);
-                        break;
-                    default:
-                        fsrLog.log(chalk.yellow(`Unknown cache action: ${action}`));
-                }
-            }
-        )
-        .example(`${taskName("$0 cache stats")}`, `${textDescription("Show cache statistics")}`)
-        .example(`${taskName("$0 cache clear")}`, `${textDescription("Clear all cache entries")}`)
-        .example(`${taskName("$0 cache list")}`, `${textDescription("List cached entries")}`)
-        .example(
-            `${taskName("$0 cache benchmark")}`,
-            `${textDescription("Run cache performance benchmark")}`
-        )
-
-        /**
-         * fsr
-         * completion --
-         */
-        .command(
-            "completion [action]",
-            "Manage shell completions",
-            (yargs) => {
-                yargs
-                    .positional("action", {
-                        describe: "Action to perform (install, uninstall, status, generate)",
-                        type: "string",
-                        choices: ["install", "uninstall", "status", "generate"]
-                    })
-                    .option("shell", {
-                        alias: "s",
-                        type: "string",
-                        description: "Target shell (bash, zsh, fish, powershell)",
-                        choices: ["bash", "zsh", "fish", "powershell"]
-                    })
-                    .option("force", {
-                        alias: "f",
-                        type: "boolean",
-                        description: "Force reinstall completions",
-                        default: false
-                    });
-            },
-            async function (argv) {
-                await completion(argv);
-            }
-        )
-        .example(
-            `${taskName("$0 completion install")}`,
-            `${textDescription("Install completions for your shell")}`
-        )
-        .example(
-            `${taskName("$0 completion status")}`,
-            `${textDescription("Check completion installation status")}`
-        )
-        .example(
-            `${taskName("$0 completion --shell zsh")}`,
-            `${textDescription("Install completions for zsh")}`
-        )
-        .help();
-
-    registerPluginCommands(yargsInstance, pluginCommands);
-
+    // Derived from COMMANDS — no manual maintenance required.
     const BUILTIN_COMMANDS = new Set([
-        "branch",
-        "start",
-        "scripts",
-        "list",
-        "run",
-        "upgrade",
-        "bump",
-        "run-s",
-        "run-p",
-        "encryption",
-        "encrypt",
-        "decrypt",
-        "clear",
-        "generate",
-        "toc",
-        "doctor",
-        "cache",
-        "completion",
+        ...COMMANDS.map((c) => c.cmd.split(" ")[0]),
         "help",
-        ...pluginCommands.map((c) => c.name)
+        ...pluginCommands.map((c) => c.name),
     ]);
 
-    const argv = yargsInstance.argv;
+    const argv = yi.argv;
 
     if (argv && argv._ && argv._.length === 0) {
-        // Combine commands and plugins into a single menu
-        const commandItems = [
-            { name: "start", message: "Choose category then task to run" },
-            { name: "scripts", message: "Choose a script from package.json" },
-            { name: "list", message: "Select any task with text autocompletion" },
-            { name: "run", message: "Run a specific task" },
-            { name: "upgrade", message: "Upgrade all your packages" },
-            { name: "bump", message: "Bump package.json and beautify it" },
-            { name: "run-s", message: "Run a set of tasks one after another" },
-            { name: "run-p", message: "Run tasks in parallel" },
-            { name: "encryption", message: "Encrypt/Decrypt secret files" },
-            { name: "doctor", message: "Run diagnostics and check system health" },
-            { name: "cache", message: "Manage cache system" },
-            { name: "completion", message: "Manage shell completions" },
-            { name: "generate", message: "Generate sample fscripts.md file" },
-            { name: "toc", message: "Generate Table of Contents" }
-        ];
+        // Interactive picker: menu-flagged commands + plugins.
+        const commandItems = COMMANDS
+            .filter((c) => c.menu)
+            .map((c) => ({ name: c.cmd.split(" ")[0], message: c.desc }));
 
         const pluginItems = runnablePlugins.map((p) => ({
             name: `plugin:${p.name}`,
             message: p.description
         }));
 
-        const allChoices = [...commandItems, ...pluginItems];
-        const choice = await selectPlugin(allChoices);
+        const choice = await selectPlugin([...commandItems, ...pluginItems]);
 
         if (!choice) {
             fsrLog.log(chalk.green.bold("See you soon!"));
             return;
         }
 
-        // Check if it's a plugin
         if (choice.startsWith("plugin:")) {
             const pluginName = choice.replace("plugin:", "");
             const pluginMatch = runnablePlugins.find((p) => p.name === pluginName);
@@ -521,24 +275,16 @@ const runCmd = async (app, argsList = []) => {
                 const start = Date.now();
                 try {
                     await pluginMatch.run();
-                    await fireHook("post-task", {
-                        taskName: pluginMatch.name,
-                        duration: Date.now() - start,
-                        success: true
-                    });
+                    await fireHook("post-task", { taskName: pluginMatch.name, duration: Date.now() - start, success: true });
                 } catch (err) {
-                    await fireHook("task-error", {
-                        taskName: pluginMatch.name,
-                        duration: Date.now() - start,
-                        error: err
-                    });
+                    await fireHook("task-error", { taskName: pluginMatch.name, duration: Date.now() - start, error: err });
                 }
             }
         } else {
-            // It's a regular command
             await runCmd("yarn", ["fsr", choice]);
         }
     } else if (argv._ && argv._.length > 0 && !BUILTIN_COMMANDS.has(argv._[0])) {
+        // Bare task shorthand: `fsr release:publish` → same as `fsr run release:publish`
         const taskArg = argv._[0];
         const parsed = await parseScriptFile();
         if (!parsed) {
