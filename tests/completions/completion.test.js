@@ -106,10 +106,14 @@ describe("getShellConfigPath", () => {
 
 describe("getCompletionScriptPath", () => {
     let getCompletionScriptPath;
+    let fsExtra;
 
     beforeEach(async () => {
         const mod = await import("../../lib/completions/completion.js");
         getCompletionScriptPath = mod.getCompletionScriptPath;
+        fsExtra = (await import("fs-extra")).default;
+        fsExtra.existsSync.mockReset();
+        fsExtra.existsSync.mockReturnValue(true);
     });
 
     it("returns a path ending in bash.sh for bash", () => {
@@ -130,6 +134,14 @@ describe("getCompletionScriptPath", () => {
     it("returns a path ending in powershell.ps1 for powershell", () => {
         const result = getCompletionScriptPath("powershell");
         expect(result).toMatch(/powershell\.ps1$/);
+    });
+
+    it("falls back to lib/completions/scripts when bundled path is missing", () => {
+        fsExtra.existsSync
+            .mockImplementationOnce(() => false)
+            .mockImplementationOnce(() => true);
+        const result = getCompletionScriptPath("zsh");
+        expect(result.replace(/\\/g, "/")).toMatch(/lib\/completions\/scripts\/zsh\.sh$/);
     });
 });
 
