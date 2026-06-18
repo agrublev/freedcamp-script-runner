@@ -1,4 +1,4 @@
-import { rm, mkdir } from "fs/promises";
+import { rm, mkdir, cp } from "fs/promises";
 import { fileURLToPath } from "url";
 import { dirname, resolve } from "path";
 
@@ -119,3 +119,8 @@ if (!result.success) {
 
 const [output] = result.outputs;
 console.log(`Bundle: ${(output.size / 1024).toFixed(1)} KB`);
+
+const completionScriptsSource = resolve(root, "lib/completions/scripts");
+const completionScriptsTarget = resolve(dist, "scripts");
+await cp(completionScriptsSource, completionScriptsTarget, { recursive: true, force: true });
+console.log("Copied completion scripts to dist/scripts");
