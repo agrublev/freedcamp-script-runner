@@ -10,9 +10,8 @@ import { selectPlugin } from "./lib/taskList.js";
 import validateNotInDev from "./lib/git/validateNotDev.js";
 import encrypt from "./lib/encryption/encryption.js";
 import { clear } from "./lib/utils/index.js";
-import doctor from "./lib/commands/doctor.js";
+import doctor from "./lib/doctor/doctor.js";
 import completion from "./lib/completions/completion.js";
-import * as cacheCommands from "./lib/cache/cli.js";
 import { loadPlugins, registerPluginCommands } from "./lib/plugins/loader.js";
 import { fireHook } from "./lib/plugins/hooks.js";
 import spawn from "cross-spawn";
@@ -42,7 +41,7 @@ const runCmd = async (app, argsList = []) => {
  * Single source of truth for all built-in fsr commands.
  *
  * Fields:
- *   cmd      — yargs command string (e.g. "run [task]", "cache <action>")
+ *   cmd      — yargs command string (e.g. "run [task]")
  *   desc     — description shown in --help and the interactive picker
  *   builder  — optional yargs builder fn for positionals/options
  *   handler  — async (argv) => void
@@ -170,34 +169,6 @@ const COMMANDS = [
         examples: [
             ["$0 doctor --fix", "Run diagnostics and auto-fix issues"],
             ["$0 doctor --json", "Output results as JSON"],
-        ],
-        menu: true,
-    },
-    {
-        cmd: "cache <action>",
-        desc: "Manage the cache system",
-        builder: (y) =>
-            y
-                .positional("action", { describe: "Action to perform", choices: ["stats", "clear", "list", "benchmark", "export"] })
-                .option("verbose", { alias: "v", type: "boolean", description: "Show verbose output", default: false })
-                .option("limit", { alias: "l", type: "number", description: "Limit entries shown", default: 10 })
-                .option("output", { alias: "o", type: "string", description: "Export output path" }),
-        handler: async (argv) => {
-            const { action, verbose, limit, output } = argv;
-            switch (action) {
-                case "stats":     await cacheCommands.showCacheStats({ verbose }); break;
-                case "clear":     await cacheCommands.clearCache(); break;
-                case "list":      await cacheCommands.listCacheEntries({ limit }); break;
-                case "benchmark": await cacheCommands.benchmarkCache(); break;
-                case "export":    await cacheCommands.exportCacheStats(output); break;
-                default: fsrLog.log(chalk.yellow(`Unknown cache action: ${action}`));
-            }
-        },
-        examples: [
-            ["$0 cache stats",     "Show cache statistics"],
-            ["$0 cache clear",     "Clear all cache entries"],
-            ["$0 cache list",      "List cached entries"],
-            ["$0 cache benchmark", "Run cache performance benchmark"],
         ],
         menu: true,
     },
