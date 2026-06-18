@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Improved diagnostics in the doctor command for better performance insights.
+
 ### Added
 
 - Added confirmation prompt when fscripts.md already exists and improved generation to write directly to fscripts.md.
