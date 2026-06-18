@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added AI-powered smart commit command that analyzes changes and proposes logical commit groupings.
+
+### Added
+
 - LICENSE, CHANGELOG, editorconfig, and GitHub issue/PR templates.
 
 ### Fixed
