@@ -30,7 +30,7 @@ Everything needed to compile source into `dist/` — from a full clean rebuild t
 Wipes `dist/`, recreates `dist/lib/`, copies the full `lib/` source tree and `index.js`, then transpiles the three JSX UI components via esbuild (overwriting the raw copies). Run before publishing or before running the CLI from `dist/`.
 
 ```bash
-node scripts/build.mjs
+bun scripts/bun.build.mjs
 ```
 
 ## build:ui
