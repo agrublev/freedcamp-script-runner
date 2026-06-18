@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed completion scripts not being found when running from bundled distribution.
+- Added clear error message when ANTHROPIC_API_KEY environment variable is missing.
+
+### Fixed
+
 - Fixed completions generator to work with updated module structure
 
 ### Fixed
