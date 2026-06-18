@@ -441,7 +441,13 @@ const runCmd = async (app, argsList = []) => {
         .help();
 
     registerPluginCommands(yargsInstance, pluginCommands);
-    yargsInstance.strict();
+
+    const BUILTIN_COMMANDS = new Set([
+        'branch', 'start', 'scripts', 'list', 'run', 'upgrade', 'bump',
+        'run-s', 'run-p', 'encryption', 'encrypt', 'decrypt', 'clear',
+        'generate', 'toc', 'doctor', 'cache', 'completion', 'help',
+        ...pluginCommands.map((c) => c.name),
+    ]);
 
     const argv = yargsInstance.argv;
 
@@ -502,5 +508,18 @@ const runCmd = async (app, argsList = []) => {
             // It's a regular command
             await runCmd("yarn", ["fsr", choice]);
         }
+    } else if (argv._ && argv._.length > 0 && !BUILTIN_COMMANDS.has(argv._[0])) {
+        const taskArg = argv._[0];
+        const parsed = await parseScriptFile();
+        if (!parsed) {
+            fsrLog.error(chalk.bold.underline.red("No fscripts.md file found"));
+            return;
+        }
+        const taskData = parsed.allTasks.find((t) => t.name === taskArg);
+        if (!taskData) {
+            fsrLog.error(`${chalk.bold.underline.red("Task not found:")} ${taskArg}`);
+            return;
+        }
+        await runCLICommand(parseTask(taskData));
     }
 })();
