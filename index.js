@@ -15,7 +15,7 @@ import completion from "./lib/completions/completion.js";
 import * as cacheCommands from "./lib/cache/cli.js";
 import { loadPlugins, registerPluginCommands } from "./lib/plugins/loader.js";
 import { fireHook } from "./lib/plugins/hooks.js";
-import { spawn } from "child_process";
+import spawn from "cross-spawn";
 import yargs from "yargs";
 import fsrLog from "./lib/utils/console.js";
 import commit from "./lib/git/commit.js";
