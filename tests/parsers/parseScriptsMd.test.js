@@ -213,3 +213,18 @@ describe("parseScriptsMd – empty file", () => {
         });
     });
 });
+
+describe("parseScriptsMd – missing file", () => {
+    it("returns false when fscripts.md does not exist in the cwd", async () => {
+        const { default: parseScriptFile } = await import("../../lib/parsers/parseScriptsMd.js");
+        const dir = mkdtempSync(join(tmpdir(), "fscr-missing-"));
+        const origCwd = process.cwd;
+        process.cwd = () => dir;
+        try {
+            const result = await parseScriptFile({ useCache: false });
+            expect(result).toBe(false);
+        } finally {
+            process.cwd = origCwd;
+        }
+    });
+});

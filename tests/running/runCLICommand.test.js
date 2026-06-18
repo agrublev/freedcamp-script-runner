@@ -28,6 +28,14 @@ const makeProcess = (code = 0) => {
     return emitter;
 };
 
+// Captures the registered event handlers so a test can drive `error`/`close`
+// deterministically (the source resolves only after `finish()` runs).
+const makeManualProcess = () => {
+    const handlers = {};
+    const emitter = { on: vi.fn((event, cb) => { handlers[event] = cb; }) };
+    return { emitter, handlers };
+};
+
 describe("runCLICommand – javascript lang", () => {
     beforeEach(() => {
         vi.clearAllMocks();
@@ -55,6 +63,19 @@ describe("runCLICommand – javascript lang", () => {
             "post-task",
             expect.objectContaining({ taskName: "my-task", success: true })
         );
+    });
+
+    it("fires task-error hook when a javascript task throws", async () => {
+        const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+        await runCLICommand({
+            task: { name: "js-fail" },
+            script: { lang: "javascript", full: "throw new Error('boom');", env: {}, type: "node", rest: [] }
+        });
+        expect(fireHook).toHaveBeenCalledWith(
+            "task-error",
+            expect.objectContaining({ taskName: "js-fail" })
+        );
+        errSpy.mockRestore();
     });
 });
 
@@ -109,5 +130,28 @@ describe("runCLICommand – bash lang", () => {
         );
         consoleSpy.mockRestore();
         expect(spawnNS.default).toHaveBeenCalled();
+    });
+
+    it("fires task-error and ignores a later close once the process emits an error", async () => {
+        const { emitter, handlers } = makeManualProcess();
+        spawnNS.default.mockReturnValue(emitter);
+        const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+        const p = runCLICommand({
+            task: { name: "err-task" },
+            script: { lang: "bash", type: "node", full: "boom.js", env: {}, rest: [] }
+        });
+
+        await handlers.error(new Error("spawn ENOENT"));
+        await p;
+
+        expect(fireHook).toHaveBeenCalledWith(
+            "task-error",
+            expect.objectContaining({ taskName: "err-task" })
+        );
+
+        // A trailing close must hit the settled guard and resolve to nothing.
+        await expect(handlers.close(1)).resolves.toBeUndefined();
+        errSpy.mockRestore();
     });
 });

@@ -19,6 +19,8 @@ vi.mock("../../lib/utils/helpers.js", () => ({
     timestamp: vi.fn().mockReturnValue("00:00:00")
 }));
 
+vi.mock("../../lib/utils/prompt.js", () => ({ default: vi.fn() }));
+
 describe("generateFScripts", () => {
     let generateFScripts;
     let writeFile;
@@ -55,5 +57,42 @@ describe("generateFScripts", () => {
         await generateFScripts();
         const [, content] = writeFile.mock.calls[0];
         expect(content).toContain("# First category of scripts");
+    });
+
+    it("prompts to overwrite when fscripts.md already exists and cancels on decline", async () => {
+        const helpers = await import("../../lib/utils/helpers.js");
+        const { default: promptQuestion } = await import("../../lib/utils/prompt.js");
+        helpers.pathExists.mockResolvedValue(true);
+        promptQuestion.mockResolvedValue(false);
+        helpers.writeFile.mockClear();
+        promptQuestion.mockClear();
+        const infoSpy = vi.spyOn(console, "info").mockImplementation(() => {});
+
+        await generateFScripts();
+
+        expect(promptQuestion).toHaveBeenCalledWith(expect.objectContaining({ type: "confirm" }));
+        expect(helpers.writeFile).not.toHaveBeenCalled();
+        infoSpy.mockRestore();
+    });
+
+    it("overwrites the existing fscripts.md when the user confirms", async () => {
+        const helpers = await import("../../lib/utils/helpers.js");
+        const { default: promptQuestion } = await import("../../lib/utils/prompt.js");
+        helpers.pathExists.mockResolvedValue(true);
+        promptQuestion.mockResolvedValue(true);
+        helpers.writeFile.mockClear();
+        promptQuestion.mockClear();
+        const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+        const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+        await generateFScripts();
+
+        expect(promptQuestion).toHaveBeenCalledWith(expect.objectContaining({ type: "confirm" }));
+        expect(helpers.writeFile).toHaveBeenCalledWith(
+            expect.stringContaining("fscripts.md"),
+            expect.any(String)
+        );
+        logSpy.mockRestore();
+        errSpy.mockRestore();
     });
 });

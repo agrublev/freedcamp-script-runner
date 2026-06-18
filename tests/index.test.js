@@ -195,3 +195,139 @@ describe("interactive picker (no args)", () => {
         expect(h.fireHook).toHaveBeenCalledWith("post-task", expect.objectContaining({ taskName: "deploy", success: true }));
     });
 });
+
+describe("command dispatch — remaining handlers", () => {
+    it("`commit` invokes commit()", async () => {
+        await runCli(["commit"]);
+        expect(h.commit).toHaveBeenCalledTimes(1);
+    });
+
+    it("`start` invokes startScripts() with no args (category flow)", async () => {
+        await runCli(["start"]);
+        expect(h.startScripts).toHaveBeenCalledTimes(1);
+        expect(h.startScripts.mock.calls[0]).toEqual([]);
+    });
+
+    it("`scripts` invokes startPackageScripts()", async () => {
+        await runCli(["scripts"]);
+        expect(h.startPackageScripts).toHaveBeenCalledTimes(1);
+    });
+
+    it("`list` invokes startScripts(false)", async () => {
+        await runCli(["list"]);
+        expect(h.startScripts).toHaveBeenCalledWith(false);
+    });
+
+    it("`bump` forwards the version type and a coerced skipGit boolean", async () => {
+        await runCli(["bump", "--type", "minor", "--skipGit", "true"]);
+        expect(h.bump).toHaveBeenCalledTimes(1);
+        expect(h.bump).toHaveBeenCalledWith("minor", true);
+    });
+
+    it("`run-p a b` forwards the task list to runParallel", async () => {
+        h.parseScriptFile.mockResolvedValue({ allTasks: [] });
+        await runCli(["run-p", "a", "b"]);
+        expect(h.runParallel).toHaveBeenCalledTimes(1);
+        expect(h.runParallel.mock.calls[0][0]).toEqual(["a", "b"]);
+    });
+
+    it("`run-p` with no tasks falls back to an empty list", async () => {
+        h.parseScriptFile.mockResolvedValue({ allTasks: [] });
+        await runCli(["run-p"]);
+        expect(h.runParallel).toHaveBeenCalledTimes(1);
+        expect(h.runParallel.mock.calls[0][0]).toEqual([]);
+    });
+
+    it("`run-s` with no tasks falls back to an empty list", async () => {
+        h.parseScriptFile.mockResolvedValue({ allTasks: [] });
+        await runCli(["run-s"]);
+        expect(h.runSequence).toHaveBeenCalledTimes(1);
+        expect(h.runSequence.mock.calls[0][0]).toEqual([]);
+    });
+
+    it("`encryption` invokes encrypt.init()", async () => {
+        await runCli(["encryption"]);
+        expect(h.encrypt.init).toHaveBeenCalledTimes(1);
+    });
+
+    it("`encrypt` invokes encrypt.encrypt()", async () => {
+        await runCli(["encrypt"]);
+        expect(h.encrypt.encrypt).toHaveBeenCalledTimes(1);
+    });
+
+    it("`decrypt` invokes encrypt.decrypt()", async () => {
+        await runCli(["decrypt"]);
+        expect(h.encrypt.decrypt).toHaveBeenCalledTimes(1);
+    });
+
+    it("`clear` invokes clearRecent()", async () => {
+        await runCli(["clear"]);
+        expect(h.clearRecent).toHaveBeenCalledTimes(1);
+    });
+
+    it("`generate` invokes generateFScripts()", async () => {
+        await runCli(["generate"]);
+        expect(h.generateFScripts).toHaveBeenCalledTimes(1);
+    });
+
+    it("`toc <file>` forwards the positional file path to generateToc", async () => {
+        await runCli(["toc", "myfile.md"]);
+        expect(h.generateToc).toHaveBeenCalledWith("myfile.md");
+    });
+
+    it("`completion install` builds the action positional and forwards argv", async () => {
+        await runCli(["completion", "install"]);
+        expect(h.completion).toHaveBeenCalledTimes(1);
+        expect(h.completion.mock.calls[0][0]).toMatchObject({ action: "install" });
+    });
+
+    it("plugin commands are folded into the builtin command set", async () => {
+        await runCli(["upgrade"], {
+            plugins: { commands: [{ name: "deploy" }], runnablePlugins: [] }
+        });
+        expect(h.upgradePackages).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe("interactive picker — error and plugin branches", () => {
+    it("logs an error when the spawned command emits 'error'", async () => {
+        h.selectPlugin.mockResolvedValue("start");
+        h.spawn.mockReturnValue({
+            on(ev, cb) {
+                if (ev === "error") queueMicrotask(() => cb(new Error("boom")));
+                return this;
+            }
+        });
+        await runCli([]);
+        expect(h.spawn).toHaveBeenCalledWith("yarn", ["fsr", "start"], expect.any(Object));
+        expect(h.fsrLog.error).toHaveBeenCalled();
+    });
+
+    it("ignores a plugin choice that matches no runnable plugin", async () => {
+        h.selectPlugin.mockResolvedValue("plugin:nope");
+        await runCli([], {
+            plugins: { commands: [], runnablePlugins: [{ name: "deploy", description: "d", run: vi.fn() }] }
+        });
+        expect(h.fireHook).not.toHaveBeenCalled();
+        expect(h.spawn).not.toHaveBeenCalled();
+    });
+
+    it("fires the task-error hook when a plugin run() throws", async () => {
+        const run = vi.fn().mockRejectedValue(new Error("plugin boom"));
+        h.selectPlugin.mockResolvedValue("plugin:deploy");
+        await runCli([], {
+            plugins: { commands: [], runnablePlugins: [{ name: "deploy", description: "d", run }] }
+        });
+        expect(run).toHaveBeenCalledTimes(1);
+        expect(h.fireHook).toHaveBeenCalledWith("task-error", expect.objectContaining({ taskName: "deploy" }));
+    });
+});
+
+describe("bare task shorthand — missing fscripts", () => {
+    it("errors when there is no fscripts.md", async () => {
+        h.parseScriptFile.mockResolvedValue(false);
+        await runCli(["some-unknown-task"]);
+        expect(h.fsrLog.error).toHaveBeenCalled();
+        expect(h.runCLICommand).not.toHaveBeenCalled();
+    });
+});

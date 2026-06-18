@@ -127,6 +127,18 @@ describe("task-notifier plugin", () => {
         expect(ctx.logger.info).not.toHaveBeenCalled();
     });
 
+    it("disabling notifications gates the task-error hook (no error notification fires)", async () => {
+        const cmd = getCommand(ctx, "notify");
+        const taskError = getHook(ctx, "task-error");
+
+        await cmd.handler({ disable: true }, ctx);
+        // notificationsEnabled closure flag is now false; clear records.
+        vi.clearAllMocks();
+
+        await taskError({ taskName: "build", error: new Error("boom") });
+        expect(ctx.logger.error).not.toHaveBeenCalled();
+    });
+
     it("re-enabling notifications restores the post-task hook", async () => {
         const cmd = getCommand(ctx, "notify");
         const postTask = getHook(ctx, "post-task");
