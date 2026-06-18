@@ -5,7 +5,15 @@
     -   [release:publish](#releasepublish)
     -   [start](#start)
 
-# First category of scripts
+## say:hello
+
+Say hello task outside any category.
+
+```javascript
+console.log("Say hello to my little friend!");
+```
+
+# Main Scripts
 
 Welcome to your new amazing fscripts.md file. It replaces the headaches of npm scripts! But so much more.
 

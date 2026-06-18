@@ -48,7 +48,8 @@ vi.mock("../../lib/utils/helpers.js", () => ({
     appendToFile: vi.fn(),
     boxInform: vi.fn(),
     readJson: vi.fn(),
-    readFile: vi.fn()
+    readFile: vi.fn(),
+    timestamp: vi.fn(() => "00:00:00")
 }));
 
 describe("generateToc", () => {

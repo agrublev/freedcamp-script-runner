@@ -17,8 +17,8 @@ import { loadPlugins, registerPluginCommands } from "./lib/plugins/loader.js";
 import { fireHook } from "./lib/plugins/hooks.js";
 import { spawn } from "child_process";
 import yargs from "yargs";
+import fsrLog from "./lib/utils/console.js";
 
-import "./lib/utils/console.js";
 
 const taskName = chalk.rgb(39, 173, 96).bold.underline;
 const textDescription = chalk.rgb(159, 161, 181);
@@ -37,7 +37,7 @@ const runCmd = async (app, argsList = []) => {
     });
     return new Promise((resolve) => {
         shell.on("error", (err) => {
-            console.error(`${chalk.red("ERROR")} ${err.message}`);
+            fsrLog.error(`${chalk.red("ERROR")} ${err.message}`);
             resolve();
         });
         shell.on("close", () => resolve());
@@ -127,12 +127,12 @@ const runCmd = async (app, argsList = []) => {
                 const { task } = argv;
                 const parsed = await parseScriptFile();
                 if (!parsed) {
-                    console.error(`${chalk.bold.underline.red("No fscripts.md file found")}`);
+                    fsrLog.error(`${chalk.bold.underline.red("No fscripts.md file found")}`);
                     return;
                 }
                 const taskData = parsed.allTasks.find((t) => t.name === task);
                 if (!taskData) {
-                    console.error(`${chalk.bold.underline.red("Task not found")} ${task}`);
+                    fsrLog.error(`${chalk.bold.underline.red("Task not found")} ${task}`);
                     return;
                 }
                 await runCLICommand(parseTask(taskData));
@@ -176,12 +176,11 @@ const runCmd = async (app, argsList = []) => {
          * run-s --
          */
         .command(
-            "run-s",
+            "run-s [tasks..]",
             "Run a set of tasks one after another",
             () => {},
             async function (argv) {
-                let tasks = argv._.slice();
-                tasks.shift();
+                let tasks = argv.tasks || [];
                 const FcScripts = await parseScriptFile();
                 await runSequence(tasks, FcScripts);
             }
@@ -196,12 +195,11 @@ const runCmd = async (app, argsList = []) => {
          * run-p --
          */
         .command(
-            "run-p",
+            "run-p [tasks..]",
             "Run tasks in parallel",
             () => {},
             async function (argv) {
-                let tasks = argv._.slice();
-                tasks.shift();
+                let tasks = argv.tasks || [];
 
                 const FcScripts = await parseScriptFile();
                 await runParallel(tasks, FcScripts);
@@ -385,7 +383,7 @@ const runCmd = async (app, argsList = []) => {
                         await cacheCommands.exportCacheStats(output);
                         break;
                     default:
-                        console.log(chalk.yellow(`Unknown cache action: ${action}`));
+                        fsrLog.log(chalk.yellow(`Unknown cache action: ${action}`));
                 }
             }
         )
@@ -475,7 +473,7 @@ const runCmd = async (app, argsList = []) => {
         const choice = await selectPlugin(allChoices);
 
         if (!choice) {
-            console.log(chalk.green.bold("See you soon!"));
+            fsrLog.log(chalk.green.bold("See you soon!"));
             return;
         }
 
