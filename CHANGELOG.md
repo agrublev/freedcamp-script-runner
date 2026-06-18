@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed plugin loader to search multiple candidate directories and validate plugin structure before selecting the plugins directory.
+
+### Fixed
+
 - Fixed completion scripts not being found when running from bundled distribution.
 - Added clear error message when ANTHROPIC_API_KEY environment variable is missing.
 
