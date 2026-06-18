@@ -1,25 +1,15 @@
 {
     "name": "fscr",
-    "version": "7.3.3",
+    "version": "7.4.0",
     "description": "Runs the fscripts.md file",
     "type": "module",
     "main": "./dist/index.js",
     "scripts": {
-        "build": "rimraf dist && mkdir -p dist/lib && cp -r lib/. dist/lib && cp index.js dist/index.js && node scripts/build-ui.mjs",
-        "fsr": "node dist/index.js",
-        "release": "yarn fsr bump && yarn build",
-        "release:publish": "node lib/release/publish.js",
-        "start": "run-s build start:run",
-        "start:run": "node dist/index.js",
-        "watch": "nodemon --watch lib --watch index.js --ext js --exec \"mkdir -p dist/lib && cp -r lib/. dist/lib && cp index.js dist/index.js && node scripts/build-ui.mjs\" --ignore 'node_modules' -I",
-        "test": "vitest run",
-        "test:watch": "vitest",
-        "test:ui": "vitest --ui",
-        "test:coverage": "vitest run --coverage",
-        "test:unit": "vitest run tests/unit",
-        "test:integration": "vitest run tests/integration",
-        "test:e2e": "vitest run tests/e2e",
-        "test:performance": "vitest run tests/performance"
+        "find-scripts-in-fscripts": "you can find all scripts in fscripts.md",
+        "fsr": "bun ./dist/index.js",
+        "start": "yarn fsr",
+        "list": "yarn fsr start",
+        "test:coverage": "vitest run --coverage"
     },
     "fscripts": {
         "encryptedFiles": [
@@ -44,32 +34,21 @@
         "fsr": "./bin"
     },
     "dependencies": {
+        "@anthropic-ai/sdk": "^0.104.2",
         "boxen": "^8.0.1",
         "chalk": "^5.6.2",
         "conf": "^15.1.0",
         "cross-spawn": "^7.0.6",
-        "detect-indent": "^7.0.2",
-        "enquirer": "^2.4.1",
-        "fc-filepick": "^1.3.0",
+        "fc-filepick": "^2.0.0",
         "fs-extra": "^11.3.5",
-        "git-changed-files": "^1.0.0",
-        "git-release-notes": "^5.0.0",
-        "git-state": "^4.1.0",
         "ink": "^7.0.6",
+        "ink-scroll-list": "^0.4.1",
         "inquirer": "^14.0.2",
-        "json-colorz": "^0.2.7",
         "markdown-toc": "^1.2.0",
         "marked": "^18.0.5",
         "moment-mini": "^2.29.4",
-        "open": "^11.0.0",
-        "pretty-ms": "^9.3.0",
         "react": "^19.2.7",
-        "require-from-string": "^2.0.2",
-        "server-destroy": "^1.0.1",
         "simple-git": "^3.36.0",
-        "sort-object-keys": "^2.1.0",
-        "staged-git-files": "^1.3.0",
-        "term-size": "^4.0.0",
         "yargs": "^18.0.0"
     },
     "devDependencies": {
@@ -78,10 +57,10 @@
         "nodemon": "^3.1.14",
         "npm-run-all": "^4.1.5",
         "rimraf": "^6.1.3",
+        "shx": "^0.4.0",
         "vitest": "^4.1.8"
     },
     "peerDependencies": {
         "chalk": "^4.1.2"
-    },
-    "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+    }
 }

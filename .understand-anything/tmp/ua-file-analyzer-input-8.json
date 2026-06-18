@@ -1,0 +1,7 @@
+{
+  "projectRoot": "/Users/agrublev/DEVELOPMENT/freedcamp-script-runner",
+  "batchFiles": [
+    {"path": ".github/workflows/test.yml", "language": "yaml", "sizeLines": 33, "fileCategory": "infra"}
+  ],
+  "batchImportData": {".github/workflows/test.yml": []}
+}

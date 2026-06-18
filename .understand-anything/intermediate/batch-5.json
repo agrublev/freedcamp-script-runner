@@ -1,0 +1,538 @@
+{
+  "nodes": [
+    {
+      "id": "file:lib/commands/doctor.js",
+      "type": "file",
+      "name": "doctor.js",
+      "filePath": "lib/commands/doctor.js",
+      "summary": "Implements the 'doctor' CLI command that orchestrates all diagnostic checks, runs them sequentially with auto-fix support, and renders a color-coded summary report of passed, warned, errored, and fixed checks.",
+      "tags": ["api-handler", "cli", "diagnostics", "entry-point"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:lib/commands/doctor.js:runDiagnostics",
+      "type": "function",
+      "name": "runDiagnostics",
+      "filePath": "lib/commands/doctor.js",
+      "lineRange": [20, 105],
+      "summary": "Runs all registered diagnostic check functions in sequence, attempts auto-fixes when available, collects results, and returns a structured summary with pass/warn/error/fixed counts.",
+      "tags": ["diagnostics", "orchestration", "utility"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:lib/commands/doctor.js:displaySummary",
+      "type": "function",
+      "name": "displaySummary",
+      "filePath": "lib/commands/doctor.js",
+      "lineRange": [134, 190],
+      "summary": "Renders the final diagnostic summary to the console using boxen-styled output with color-coded pass/warn/error/fixed counts and contextual recommendations.",
+      "tags": ["ui", "cli", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:lib/commands/doctor.js:doctor",
+      "type": "function",
+      "name": "doctor",
+      "filePath": "lib/commands/doctor.js",
+      "lineRange": [196, 225],
+      "summary": "Default-exported entry point for the doctor command; calls runDiagnostics, optionally outputs JSON results, and exits with a non-zero code when errors are found.",
+      "tags": ["api-handler", "entry-point", "cli"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/diagnostics/cache.js",
+      "type": "file",
+      "name": "cache.js",
+      "filePath": "lib/diagnostics/cache.js",
+      "summary": "Diagnostic module that checks the fscr script cache directory for existence, read/write accessibility, current size versus a configurable maximum, and reports warnings when the cache is bloated or unavailable.",
+      "tags": ["diagnostics", "cache", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:lib/diagnostics/cache.js:checkCache",
+      "type": "function",
+      "name": "checkCache",
+      "filePath": "lib/diagnostics/cache.js",
+      "lineRange": [20, 77],
+      "summary": "Exported diagnostic check that inspects the cache directory's existence, read/write permissions, and total size, returning a structured result with an optional auto-fix callback.",
+      "tags": ["diagnostics", "cache", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/diagnostics/fileSystem.js",
+      "type": "file",
+      "name": "fileSystem.js",
+      "filePath": "lib/diagnostics/fileSystem.js",
+      "summary": "Diagnostic module providing checks for the fscripts.md file (existence and size), package.json validity, TypeScript configuration, and file-system write/read permissions in the project directory.",
+      "tags": ["diagnostics", "file-system", "validation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:lib/diagnostics/fileSystem.js:checkFScriptsFile",
+      "type": "function",
+      "name": "checkFScriptsFile",
+      "filePath": "lib/diagnostics/fileSystem.js",
+      "lineRange": [10, 58],
+      "summary": "Checks whether fscripts.md exists, validates its size within acceptable bounds, and offers a fix that creates a minimal starter file when absent.",
+      "tags": ["diagnostics", "validation", "file-system"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:lib/diagnostics/fileSystem.js:checkPackageJson",
+      "type": "function",
+      "name": "checkPackageJson",
+      "filePath": "lib/diagnostics/fileSystem.js",
+      "lineRange": [65, 103],
+      "summary": "Validates the presence and parsability of package.json in the current working directory, reporting missing or malformed configurations.",
+      "tags": ["diagnostics", "validation", "configuration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:lib/diagnostics/fileSystem.js:checkTypeScript",
+      "type": "function",
+      "name": "checkTypeScript",
+      "filePath": "lib/diagnostics/fileSystem.js",
+      "lineRange": [110, 157],
+      "summary": "Optionally checks for a tsconfig.json and validates TypeScript compiler availability if the project uses TypeScript, including verification of tsconfig compiler options.",
+      "tags": ["diagnostics", "typescript", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:lib/diagnostics/fileSystem.js:checkFilePermissions",
+      "type": "function",
+      "name": "checkFilePermissions",
+      "filePath": "lib/diagnostics/fileSystem.js",
+      "lineRange": [164, 216],
+      "summary": "Probes the current directory for write and read access by creating, reading, and removing a temporary test file, reporting an error if permissions are insufficient.",
+      "tags": ["diagnostics", "validation", "file-system"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/diagnostics/gitCheck.js",
+      "type": "file",
+      "name": "gitCheck.js",
+      "filePath": "lib/diagnostics/gitCheck.js",
+      "summary": "Lightweight diagnostic module that checks whether git is installed and accessible on the system PATH, returning a warning (not an error) when git is absent.",
+      "tags": ["diagnostics", "git", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/diagnostics/gitCheck.js:checkGit",
+      "type": "function",
+      "name": "checkGit",
+      "filePath": "lib/diagnostics/gitCheck.js",
+      "lineRange": [9, 39],
+      "summary": "Exported diagnostic check that runs 'git --version' via execSync and returns a pass result with the detected version or a warning if git is not found.",
+      "tags": ["diagnostics", "git", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/diagnostics/nodeVersion.js",
+      "type": "file",
+      "name": "nodeVersion.js",
+      "filePath": "lib/diagnostics/nodeVersion.js",
+      "summary": "Diagnostic module that validates the running Node.js version against the minimum required version for fscr, providing clear error messaging when the version is insufficient.",
+      "tags": ["diagnostics", "validation", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/diagnostics/nodeVersion.js:checkNodeVersion",
+      "type": "function",
+      "name": "checkNodeVersion",
+      "filePath": "lib/diagnostics/nodeVersion.js",
+      "lineRange": [30, 66],
+      "summary": "Exported diagnostic check that reads process.version, compares it to the minimum required version using semver-style comparison, and returns pass or error.",
+      "tags": ["diagnostics", "validation", "node"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/diagnostics/packageManager.js",
+      "type": "file",
+      "name": "packageManager.js",
+      "filePath": "lib/diagnostics/packageManager.js",
+      "summary": "Diagnostic module that detects the active package manager (npm, yarn, or pnpm) by checking for lock files and verifying the detected tool is executable, reporting a warning when none is found.",
+      "tags": ["diagnostics", "utility", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/diagnostics/packageManager.js:checkPackageManager",
+      "type": "function",
+      "name": "checkPackageManager",
+      "filePath": "lib/diagnostics/packageManager.js",
+      "lineRange": [9, 62],
+      "summary": "Exported diagnostic check that sniffs lock files to identify the package manager in use, runs its --version command, and returns a structured pass/warn result.",
+      "tags": ["diagnostics", "validation", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/diagnostics/performance.js",
+      "type": "file",
+      "name": "performance.js",
+      "filePath": "lib/diagnostics/performance.js",
+      "summary": "Diagnostic module that measures CLI startup latency, current memory usage, and runs a micro-benchmark to assess runtime performance, warning when metrics exceed acceptable thresholds.",
+      "tags": ["diagnostics", "performance", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:lib/diagnostics/performance.js:checkStartupTime",
+      "type": "function",
+      "name": "checkStartupTime",
+      "filePath": "lib/diagnostics/performance.js",
+      "lineRange": [9, 49],
+      "summary": "Exported diagnostic check that uses performance.now() to measure startup latency from process init, classifying it as good, acceptable, or slow against fixed thresholds.",
+      "tags": ["diagnostics", "performance", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:lib/diagnostics/performance.js:checkMemoryUsage",
+      "type": "function",
+      "name": "checkMemoryUsage",
+      "filePath": "lib/diagnostics/performance.js",
+      "lineRange": [56, 100],
+      "summary": "Exported diagnostic check that reads process.memoryUsage() and warns when heap usage or RSS exceeds configurable thresholds.",
+      "tags": ["diagnostics", "performance", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:lib/diagnostics/performance.js:runBenchmark",
+      "type": "function",
+      "name": "runBenchmark",
+      "filePath": "lib/diagnostics/performance.js",
+      "lineRange": [107, 135],
+      "summary": "Exported diagnostic check that runs multiple timed iterations of a no-op async task, computes min/max/average/median latencies, and warns when the median exceeds target thresholds.",
+      "tags": ["diagnostics", "performance", "benchmark"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:lib/commands/doctor.js",
+      "target": "function:lib/commands/doctor.js:runDiagnostics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/commands/doctor.js",
+      "target": "function:lib/commands/doctor.js:displaySummary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/commands/doctor.js",
+      "target": "function:lib/commands/doctor.js:doctor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/commands/doctor.js",
+      "target": "function:lib/commands/doctor.js:runDiagnostics",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/commands/doctor.js",
+      "target": "function:lib/commands/doctor.js:doctor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/commands/doctor.js",
+      "target": "file:lib/diagnostics/cache.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/commands/doctor.js",
+      "target": "file:lib/diagnostics/fileSystem.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/commands/doctor.js",
+      "target": "file:lib/diagnostics/gitCheck.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/commands/doctor.js",
+      "target": "file:lib/diagnostics/nodeVersion.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/commands/doctor.js",
+      "target": "file:lib/diagnostics/packageManager.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/commands/doctor.js",
+      "target": "file:lib/diagnostics/performance.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:lib/commands/doctor.js:runDiagnostics",
+      "target": "function:lib/diagnostics/cache.js:checkCache",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/commands/doctor.js:runDiagnostics",
+      "target": "function:lib/diagnostics/fileSystem.js:checkFScriptsFile",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/commands/doctor.js:runDiagnostics",
+      "target": "function:lib/diagnostics/fileSystem.js:checkPackageJson",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/commands/doctor.js:runDiagnostics",
+      "target": "function:lib/diagnostics/fileSystem.js:checkTypeScript",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/commands/doctor.js:runDiagnostics",
+      "target": "function:lib/diagnostics/fileSystem.js:checkFilePermissions",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/commands/doctor.js:runDiagnostics",
+      "target": "function:lib/diagnostics/gitCheck.js:checkGit",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/commands/doctor.js:runDiagnostics",
+      "target": "function:lib/diagnostics/nodeVersion.js:checkNodeVersion",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/commands/doctor.js:runDiagnostics",
+      "target": "function:lib/diagnostics/packageManager.js:checkPackageManager",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/commands/doctor.js:runDiagnostics",
+      "target": "function:lib/diagnostics/performance.js:checkStartupTime",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/commands/doctor.js:runDiagnostics",
+      "target": "function:lib/diagnostics/performance.js:checkMemoryUsage",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/commands/doctor.js:runDiagnostics",
+      "target": "function:lib/diagnostics/performance.js:runBenchmark",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/commands/doctor.js:doctor",
+      "target": "function:lib/commands/doctor.js:runDiagnostics",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/diagnostics/cache.js",
+      "target": "function:lib/diagnostics/cache.js:checkCache",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/diagnostics/cache.js",
+      "target": "function:lib/diagnostics/cache.js:checkCache",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/diagnostics/cache.js",
+      "target": "file:lib/cache/index.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/diagnostics/fileSystem.js",
+      "target": "function:lib/diagnostics/fileSystem.js:checkFScriptsFile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/diagnostics/fileSystem.js",
+      "target": "function:lib/diagnostics/fileSystem.js:checkPackageJson",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/diagnostics/fileSystem.js",
+      "target": "function:lib/diagnostics/fileSystem.js:checkTypeScript",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/diagnostics/fileSystem.js",
+      "target": "function:lib/diagnostics/fileSystem.js:checkFilePermissions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/diagnostics/fileSystem.js",
+      "target": "function:lib/diagnostics/fileSystem.js:checkFScriptsFile",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/diagnostics/fileSystem.js",
+      "target": "function:lib/diagnostics/fileSystem.js:checkPackageJson",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/diagnostics/fileSystem.js",
+      "target": "function:lib/diagnostics/fileSystem.js:checkTypeScript",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/diagnostics/fileSystem.js",
+      "target": "function:lib/diagnostics/fileSystem.js:checkFilePermissions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/diagnostics/gitCheck.js",
+      "target": "function:lib/diagnostics/gitCheck.js:checkGit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/diagnostics/gitCheck.js",
+      "target": "function:lib/diagnostics/gitCheck.js:checkGit",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/diagnostics/nodeVersion.js",
+      "target": "function:lib/diagnostics/nodeVersion.js:checkNodeVersion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/diagnostics/nodeVersion.js",
+      "target": "function:lib/diagnostics/nodeVersion.js:checkNodeVersion",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/diagnostics/packageManager.js",
+      "target": "function:lib/diagnostics/packageManager.js:checkPackageManager",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/diagnostics/packageManager.js",
+      "target": "function:lib/diagnostics/packageManager.js:checkPackageManager",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/diagnostics/performance.js",
+      "target": "function:lib/diagnostics/performance.js:checkStartupTime",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/diagnostics/performance.js",
+      "target": "function:lib/diagnostics/performance.js:checkMemoryUsage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/diagnostics/performance.js",
+      "target": "function:lib/diagnostics/performance.js:runBenchmark",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/diagnostics/performance.js",
+      "target": "function:lib/diagnostics/performance.js:checkStartupTime",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/diagnostics/performance.js",
+      "target": "function:lib/diagnostics/performance.js:checkMemoryUsage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/diagnostics/performance.js",
+      "target": "function:lib/diagnostics/performance.js:runBenchmark",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/diagnostics/performance.js",
+      "target": "file:lib/performance/monitor.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

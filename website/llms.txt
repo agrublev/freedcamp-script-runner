@@ -1,0 +1,69 @@
+# fsr — Freedcamp Script Runner
+Last updated: 2026-06-18
+
+
+fsr (installed as the npm package `fscr`) is a free, open-source CLI tool that replaces your `package.json` scripts with a single documented Markdown file called `fscripts.md`. The file is simultaneously your documentation AND your script runner — docs and code literally cannot drift apart.
+
+## What problem does fsr solve?
+
+- `package.json` scripts have no room for documentation — 40+ cryptic one-liners with no context
+- README docs drift away from the actual scripts within days of being written
+- No one knows what the scripts do without asking the person who wrote them
+
+## How to install
+
+```bash
+npm i -g fscr
+```
+
+## 3-command quick start
+
+```bash
+npm i -g fscr       # install globally
+fsr generate        # auto-import package.json scripts into fscripts.md with doc stubs
+fsr                 # open the interactive picker, pick a script, run it
+```
+
+## Key features
+
+- **Interactive picker** — `fsr` opens an arrow-key picker showing every script with its human-readable description
+- **Full JavaScript blocks** — Write multi-line JavaScript directly inside Markdown fenced code blocks; run with `fsr run [task]`
+- **Auto-generate from package.json** — `fsr generate` imports all existing scripts with documentation stubs
+- **Parallel execution** — `fsr run-p start:web start:api` runs scripts concurrently with no extra tools
+- **Sequential execution** — `fsr run-s clean build:prod deploy:staging` runs scripts in order
+- **Plugin hook system** — Hook into `pre-task` and `post-task` events with custom plugins
+- **File encryption** — `fsr encrypt` / `fsr decrypt` for AES-encrypted `.env` files
+- **System doctor** — `fsr doctor` / `fsr doctor --fix` diagnoses and auto-fixes environment problems
+- **Auto Table of Contents** — `fsr toc`
+- **Version bump** — `fsr bump`
+- **Smart package upgrades** — `fsr upgrade`
+- **Shell tab completions** — `fsr completion`
+- **Cache management** — `fsr cache`
+- **Git branch validation** — `fsr branch`
+
+## Pricing
+
+fsr is completely free and open source (MIT license). There are no paid plans.
+
+## How fsr compares to alternatives
+
+| Feature | package.json | README + npm | Makefile | fsr |
+|---------|:---:|:---:|:---:|:---:|
+| Docs next to scripts | ❌ | ❌ | ⚠️ | ✅ |
+| Interactive picker | ❌ | ❌ | ❌ | ✅ |
+| Full JS script blocks | ❌ | ❌ | ❌ | ✅ |
+| Parallel execution | ❌ | ❌ | ⚠️ | ✅ |
+| Plugin hooks | ❌ | ❌ | ❌ | ✅ |
+| File encryption | ❌ | ❌ | ❌ | ✅ |
+| Zero config setup | ✅ | ✅ | ❌ | ✅ |
+| JS / Node native | ✅ | ✅ | ❌ | ✅ |
+| Docs can drift | ✅ always | ✅ always | ⚠️ | ❌ never |
+
+## Author / Publisher
+
+Built by the Freedcamp team — https://freedcamp.com
+
+## Source
+
+- npm: https://www.npmjs.com/package/fscr
+- GitHub: https://github.com/agrublev/freedcamp-script-runner

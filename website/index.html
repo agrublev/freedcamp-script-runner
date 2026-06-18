@@ -1,13 +1,1266 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>fsr — Freedcamp Script Runner</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📜</text></svg>" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script src="./support.js"></script>
+        <!-- ===== SEO: Core meta ===== -->
+        <title>
+            fsr — Freedcamp Script Runner | Document &amp; Run npm Scripts from One Markdown File
+        </title>
+        <meta
+            name="description"
+            content="fsr is a free, open-source CLI that replaces cryptic package.json scripts with a single documented Markdown file (fscripts.md). Interactive picker, full JavaScript blocks, parallel execution, plugin hooks, and built-in file encryption. Install in seconds: npm i -g fscr."
+        />
+        <meta
+            name="keywords"
+            content="fsr, fscr, npm scripts, script runner, fscripts.md, package.json alternative, CLI tool, task runner, javascript, node.js, developer tools"
+        />
+        <meta
+            name="robots"
+            content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
+        <meta name="author" content="The fsr team — Freedcamp" />
+        <meta name="application-name" content="fsr" />
+
+        <!-- ===== SEO: Open Graph ===== -->
+        <meta property="og:type" content="website" />
+        <meta
+            property="og:title"
+            content="fsr — Document &amp; Run npm Scripts from One Markdown File"
+        />
+        <meta
+            property="og:description"
+            content="Stop maintaining scripts in package.json and docs in a README that drift apart. fsr puts them in one Markdown file that is simultaneously your documentation AND your script runner. Free and open source."
+        />
+        <meta property="og:image" content="/og-image.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:site_name" content="fsr — Freedcamp Script Runner" />
+
+        <!-- ===== SEO: Twitter/X Card ===== -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+            name="twitter:title"
+            content="fsr — Document &amp; Run npm Scripts from One Markdown File"
+        />
+        <meta
+            name="twitter:description"
+            content="Stop maintaining scripts in package.json and docs in a README that drift apart. fsr puts them in one Markdown file. Free and open source."
+        />
+        <meta name="twitter:image" content="/og-image.png" />
+
+        <!-- ===== SEO: Structured data — SoftwareApplication ===== -->
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "SoftwareApplication",
+                "name": "fsr — Freedcamp Script Runner",
+                "alternateName": "fscr",
+                "description": "fsr is a free, open-source CLI tool that replaces package.json scripts with a single documented Markdown file called fscripts.md. It provides an interactive script picker, full JavaScript code blocks inside Markdown, parallel and sequential script execution, a plugin hook system, built-in file encryption, and a system doctor utility.",
+                "applicationCategory": "DeveloperApplication",
+                "operatingSystem": "Windows, macOS, Linux",
+                "isAccessibleForFree": true,
+                "dateModified": "2026-06-18",
+                "offers": {
+                    "@type": "Offer",
+                    "price": "0",
+                    "priceCurrency": "USD"
+                },
+                "installUrl": "https://www.npmjs.com/package/fscr",
+                "downloadUrl": "https://www.npmjs.com/package/fscr",
+                "softwareVersion": "latest",
+                "license": "https://opensource.org/licenses/MIT",
+                "author": {
+                    "@type": "Organization",
+                    "name": "Freedcamp",
+                    "url": "https://freedcamp.com"
+                },
+                "publisher": {
+                    "@type": "Organization",
+                    "name": "Freedcamp",
+                    "url": "https://freedcamp.com"
+                },
+                "featureList": [
+                    "Interactive script picker with arrow-key navigation",
+                    "Full JavaScript code blocks inside Markdown",
+                    "Auto-generate fscripts.md from existing package.json scripts",
+                    "Parallel execution with fsr run-p",
+                    "Sequential execution with fsr run-s",
+                    "Plugin hook system (pre-task, post-task)",
+                    "Built-in AES file encryption and decryption",
+                    "System doctor diagnostics and auto-fix",
+                    "Auto Table of Contents generation",
+                    "Version bump and package beautify",
+                    "Smart package upgrade detection",
+                    "Shell tab completions",
+                    "Git branch validation"
+                ]
+            }
+        </script>
+
+        <!-- ===== SEO: Structured data — HowTo ===== -->
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "HowTo",
+                "name": "How to replace package.json scripts with fsr in 3 steps",
+                "description": "Replace cryptic package.json scripts with a documented, runnable Markdown file in under 2 minutes using fsr.",
+                "totalTime": "PT2M",
+                "dateModified": "2026-06-18",
+                "tool": [{ "@type": "HowToTool", "name": "Node.js (with npm or yarn)" }],
+                "step": [
+                    {
+                        "@type": "HowToStep",
+                        "position": 1,
+                        "name": "Install fsr globally",
+                        "text": "Run 'npm i -g fscr' to install fsr globally. One command. Done.",
+                        "itemListElement": {
+                            "@type": "HowToDirection",
+                            "text": "npm i -g fscr"
+                        }
+                    },
+                    {
+                        "@type": "HowToStep",
+                        "position": 2,
+                        "name": "Auto-generate your fscripts.md",
+                        "text": "Run 'fsr generate' inside any project to auto-import all your package.json scripts into fscripts.md with documentation stubs.",
+                        "itemListElement": {
+                            "@type": "HowToDirection",
+                            "text": "fsr generate"
+                        }
+                    },
+                    {
+                        "@type": "HowToStep",
+                        "position": 3,
+                        "name": "Run scripts with the interactive picker",
+                        "text": "Run 'fsr' to open the interactive picker. Use arrow keys to navigate, press Enter to run the selected script.",
+                        "itemListElement": { "@type": "HowToDirection", "text": "fsr" }
+                    }
+                ]
+            }
+        </script>
+
+        <!-- ===== SEO: Structured data — FAQPage ===== -->
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                "dateModified": "2026-06-18",
+                "mainEntity": [
+                    {
+                        "@type": "Question",
+                        "name": "What is fsr?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "fsr (Freedcamp Script Runner) is a free, open-source CLI tool installed as the npm package 'fscr'. It replaces your package.json scripts with a single Markdown file called fscripts.md that serves simultaneously as documentation and as a script runner. Run 'npm i -g fscr' to install it."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "How do I install fsr?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Install fsr globally with npm: 'npm i -g fscr'. After installation, run 'fsr generate' in any Node.js project to automatically import your existing package.json scripts into fscripts.md with documentation stubs."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "What is fscripts.md?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "fscripts.md is a Markdown file that fsr uses as its source of truth. Each heading becomes a runnable script. You can write bash commands or full JavaScript blocks inside fenced code blocks, add human-readable descriptions in plain Markdown, and organize scripts into sections with a table of contents."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Can fsr run scripts in parallel?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Yes. fsr supports parallel execution with 'fsr run-p script1 script2 script3' and sequential execution with 'fsr run-s script1 script2 script3'. No extra tools or configuration are needed."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Does fsr support plugins?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Yes. fsr has a plugin hook system. Plugins can hook into 'pre-task' and 'post-task' events to run logic before or after any script execution — for example, clearing cache before every script or notifying Slack after a deploy."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "What is the difference between fsr and npm scripts in package.json?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "package.json scripts have no room for documentation — they are one-liners without descriptions. fsr uses a Markdown file (fscripts.md) where each script has a human-readable description, can span multiple lines, supports full JavaScript, and the docs and runner can never drift apart because they live in the same file. fsr also adds an interactive picker, parallel/sequential execution, plugin hooks, file encryption, and system diagnostics."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Is fsr free and open source?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Yes. fsr is completely free and open source, licensed under MIT. You can install it with 'npm i -g fscr' or view the source on GitHub at https://github.com/agrublev/freedcamp-script-runner and the npm package at https://www.npmjs.com/package/fscr."
+                        }
+                    }
+                ]
+            }
+        </script>
+
+        <!-- ===== SEO: Structured data — Organization ===== -->
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                "name": "Freedcamp",
+                "url": "https://freedcamp.com",
+                "sameAs": [
+                    "https://github.com/agrublev/freedcamp-script-runner",
+                    "https://www.npmjs.com/package/fscr"
+                ]
+            }
+        </script>
+
+        <!-- ===== Fonts & Styles ===== -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="./fsr-landing.css" />
+        <link rel="alternate" type="text/markdown" href="/llms.txt" title="LLMs context" />
+        <link rel="alternate" type="text/markdown" href="/pricing.md" title="Pricing" />
+
+    </head>
+    <body>
+        <template id="__bundler_thumbnail" data-bg-color="#0a0c10">
+            <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+                <rect width="1200" height="800" fill="#0a0c10" />
+                <circle cx="430" cy="360" r="70" fill="#27AD60" />
+                <text
+                    x="600"
+                    y="400"
+                    font-family="monospace"
+                    font-size="150"
+                    font-weight="700"
+                    fill="#f5f6f8"
+                    text-anchor="middle"
+                    dominant-baseline="middle"
+                >
+                    fsr
+                </text>
+                <rect x="430" y="470" width="340" height="14" rx="7" fill="#27AD60" />
+            </svg>
+        </template>
+
+        <div class="page">
+            <div class="page__glow"></div>
+
+            <!-- ===== NAV ===== -->
+            <nav class="nav" aria-label="Primary navigation">
+                <div class="nav__inner">
+                    <div class="nav__logo">
+                        <img src="fsrLogoT.png" style="height: 66px" />
+                    </div>
+                    <div class="nav__links">
+                        <a href="#features" class="nav__link">Features</a>
+                        <a href="#compare" class="nav__link">Comparison</a>
+                        <a href="#docs" class="nav__link">Docs</a>
+                        <a
+                            href="https://github.com/agrublev/freedcamp-script-runner"
+                            class="nav__cta"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <span>⭐</span> Star on GitHub
+                        </a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- ===== HERO ===== -->
+            <header class="hero" aria-label="fsr — Freedcamp Script Runner hero">
+                <div class="hero__copy">
+                    <div class="hero__badge">
+                        <span class="hero__badge-cmd">npm i -g fscr</span>
+                        <span class="hero__badge-dot"></span>
+                        <span class="hero__badge-label">free &amp; open source</span>
+                    </div>
+                    <h1 class="hero__title">
+                        Your scripts.
+                        <span class="hero__title-accent">Documented.</span>
+                        <span class="hero__title-accent">Runnable.</span> In one Markdown file.
+                    </h1>
+                    <p class="hero__desc">
+                        <span class="hero__desc-code">package.json</span>
+                        can&rsquo;t hold docs.
+                        <span class="hero__desc-code">README</span>
+                        can&rsquo;t run scripts.
+                    </p>
+                    <p class="hero__desc hero__desc--mb">
+                        <strong class="hero__desc-strong">fsr</strong> puts them in the same file
+                        &mdash; so they can never drift apart again.
+                    </p>
+                    <div class="hero__actions">
+                        <a
+                            href="https://www.npmjs.com/package/fscr"
+                            class="hero__btn-primary"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <span>npm i -g fscr</span>
+                        </a>
+                        <a
+                            href="https://github.com/agrublev/freedcamp-script-runner"
+                            class="hero__btn-secondary"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <span>⭐</span> Star on GitHub
+                        </a>
+                    </div>
+                    <p class="hero__quote">
+                        &ldquo;Our team loves it &mdash; and nobody outside had heard of it yet.
+                        That ends now.&rdquo;
+                    </p>
+                    <!-- AI-extractable definition block: readable by search engines and AI crawlers -->
+                    <p class="visually-hidden" aria-hidden="true">
+                        fsr (Freedcamp Script Runner, installed as the npm package fscr) is a free
+                        open-source CLI that replaces package.json scripts with fscripts.md — a
+                        single Markdown file that is simultaneously documentation and a script
+                        runner. Features include an interactive picker, full JavaScript blocks,
+                        parallel execution, plugin hooks, and built-in file encryption.
+                    </p>
+                </div>
+
+                <!-- terminal: interactive picker -->
+                <div class="terminal-wrap">
+                    <div class="terminal-wrap__glow"></div>
+                    <div class="terminal">
+                        <div class="terminal__chrome">
+                            <span class="terminal__dot terminal__dot--red"></span>
+                            <span class="terminal__dot terminal__dot--yellow"></span>
+                            <span class="terminal__dot terminal__dot--green"></span>
+                            <span class="terminal__title">fsr &mdash; interactive picker</span>
+                        </div>
+                        <div class="terminal__body">
+                            <div class="terminal__prompt-line">
+                                <span class="terminal__prompt-dollar">$</span>
+                                <span class="terminal__prompt-cmd">fsr</span
+                                ><span class="terminal__cursor"></span>
+                            </div>
+                            <div class="terminal__hint">
+                                ? Choose a script to run:
+                                <span class="terminal__hint-key">(Use arrow keys)</span>
+                            </div>
+                            <div class="terminal__picker-list">
+                                <sc-for list="{{ scripts }}" as="item" hint-placeholder-count="5">
+                                    <div
+                                        class="terminal__picker-item"
+                                        onMouseEnter="{{ item.onHover }}"
+                                        style="background:{{ item.bg }}; box-shadow:inset 2px 0 0 {{ item.bar }};"
+                                    >
+                                        <span class="terminal__picker-pointer"
+                                            >{{ item.pointer }}</span
+                                        >
+                                        <span>{{ item.emoji }}</span>
+                                        <span style="font-weight:600; color:{{ item.nameColor }};"
+                                            >{{ item.name }}</span
+                                        >
+                                        <span class="terminal__picker-desc"
+                                            >&mdash; {{ item.desc }}</span
+                                        >
+                                    </div>
+                                </sc-for>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- ===== BEFORE / AFTER ===== -->
+            <section
+                class="before-after"
+                aria-label="Before and after: package.json vs fscripts.md"
+            >
+                <p class="section-eyebrow">Before &amp; After</p>
+                <h2 class="section-heading">Same scripts. One you can actually read. 📖</h2>
+                <p class="section-subheading">
+                    On the left, a cryptic wall of escaped one-liners. On the right, the exact same
+                    scripts &mdash; documented, sectioned, and runnable.
+                </p>
+
+                <div class="compare-grid">
+                    <!-- BEFORE: package.json -->
+                    <div class="compare-col">
+                        <div class="compare-col__header">
+                            <span class="compare-col__badge compare-col__badge--before"
+                                >BEFORE 😵</span
+                            >
+                            <span class="compare-col__filename">package.json</span>
+                        </div>
+                        <div class="compare-card">
+                            <div class="compare-card__chrome">
+                                <span class="terminal__dot terminal__dot--red"></span>
+                                <span class="terminal__dot terminal__dot--yellow"></span>
+                                <span class="terminal__dot terminal__dot--green"></span>
+                            </div>
+                            <pre class="code-block code-block--tall">{
+  <span style="color:#9cdcfe;">"name"</span>: <span style="color:var(--accent,#27AD60);">"fscr"</span>,
+  <span style="color:#9cdcfe;">"version"</span>: <span style="color:var(--accent,#27AD60);">"7.3.4"</span>,
+  <span style="color:#9cdcfe;">"description"</span>: <span style="color:var(--accent,#27AD60);">"Runs the fscripts.md file"</span>,
+  <span style="color:#9cdcfe;">"type"</span>: <span style="color:var(--accent,#27AD60);">"module"</span>,
+  <span style="color:#9cdcfe;">"main"</span>: <span style="color:var(--accent,#27AD60);">"./dist/index.js"</span>,
+  <span style="color:#9cdcfe;">"scripts"</span>: {
+    <span style="color:#9cdcfe;">"build"</span>: <span style="color:#d68a5c;">"rimraf dist &amp;&amp; mkdir -p dist/lib &amp;&amp; cp -r lib/. dist/lib &amp;&amp; cp index.js dist/index.js &amp;&amp; node scripts/build-ui.mjs"</span>,
+    <span style="color:#9cdcfe;">"fsr"</span>: <span style="color:#d68a5c;">"node dist/index.js"</span>,
+    <span style="color:#9cdcfe;">"release"</span>: <span style="color:#d68a5c;">"yarn fsr bump &amp;&amp; yarn build"</span>,
+    <span style="color:#9cdcfe;">"release:publish"</span>: <span style="color:#d68a5c;">"node lib/release/publish.js"</span>,
+    <span style="color:#9cdcfe;">"start"</span>: <span style="color:#d68a5c;">"run-s build start:run"</span>,
+    <span style="color:#9cdcfe;">"start:run"</span>: <span style="color:#d68a5c;">"node dist/index.js"</span>,
+    <span style="color:#9cdcfe;">"watch"</span>: <span style="color:#d68a5c;">"nodemon --watch lib --watch index.js --ext js --exec \"mkdir -p dist/lib &amp;&amp; cp -r lib/. dist/lib &amp;&amp; cp index.js dist/index.js &amp;&amp; node scripts/build-ui.mjs\" --ignore 'node_modules' -I"</span>,
+    <span style="color:#9cdcfe;">"test"</span>: <span style="color:#d68a5c;">"vitest run"</span>,
+    <span style="color:#9cdcfe;">"test:watch"</span>: <span style="color:#d68a5c;">"vitest"</span>,
+    <span style="color:#9cdcfe;">"test:ui"</span>: <span style="color:#d68a5c;">"vitest --ui"</span>,
+    <span style="color:#9cdcfe;">"test:coverage"</span>: <span style="color:#d68a5c;">"vitest run --coverage"</span>,
+    <span style="color:#9cdcfe;">"test:unit"</span>: <span style="color:#d68a5c;">"vitest run tests/unit"</span>,
+    <span style="color:#9cdcfe;">"test:integration"</span>: <span style="color:#d68a5c;">"vitest run tests/integration"</span>,
+    <span style="color:#9cdcfe;">"test:e2e"</span>: <span style="color:#d68a5c;">"vitest run tests/e2e"</span>,
+    <span style="color:#9cdcfe;">"test:performance"</span>: <span style="color:#d68a5c;">"vitest run tests/performance"</span>
+  }
+}</pre>
+                        </div>
+                    </div>
+
+                    <!-- AFTER: fscripts.md -->
+                    <div class="compare-col">
+                        <div class="compare-col__header">
+                            <span class="compare-col__badge compare-col__badge--after"
+                                >AFTER ✨</span
+                            >
+                            <span class="compare-col__filename compare-col__filename--after"
+                                >fscripts.md</span
+                            >
+                        </div>
+                        <div class="compare-card compare-card--after">
+                            <div class="compare-card__chrome">
+                                <span class="terminal__dot terminal__dot--red"></span>
+                                <span class="terminal__dot terminal__dot--yellow"></span>
+                                <span class="terminal__dot terminal__dot--green"></span>
+                            </div>
+                            <pre
+                                class="code-block code-block--tall"
+                            ><span style="color:#6b6c75;">-   </span><span style="color:#60a5fa; text-decoration:underline;">[First category of scripts]</span><span style="color:#d68a5c; font-style:italic;">(#first-category-of-scripts)</span>
+    <span style="color:#6b6c75;">-   </span><span style="color:#60a5fa; text-decoration:underline;">[build]</span><span style="color:#d68a5c; font-style:italic;">(#build)</span>
+    <span style="color:#6b6c75;">-   </span><span style="color:#60a5fa; text-decoration:underline;">[fsr]</span><span style="color:#d68a5c; font-style:italic;">(#fsr)</span>
+    <span style="color:#6b6c75;">-   </span><span style="color:#60a5fa; text-decoration:underline;">[release]</span><span style="color:#d68a5c; font-style:italic;">(#release)</span>
+    <span style="color:#6b6c75;">-   </span><span style="color:#60a5fa; text-decoration:underline;">[release:publish]</span><span style="color:#d68a5c; font-style:italic;">(#releasepublish)</span>
+    <span style="color:#6b6c75;">-   </span><span style="color:#60a5fa; text-decoration:underline;">[start]</span><span style="color:#d68a5c; font-style:italic;">(#start)</span>
+<br/>
+<br/>
+<span style="color:#c792ea; font-weight:600; font-style:italic;"># First category of scripts</span>
+<br/>
+<br/>
+<span style="color:#cfd0d7;">Welcome to your new amazing fscripts.md file. It replaces the headaches of npm scripts! But so much more.</span>
+<br/>
+<br/>
+<span style="color:#c792ea; font-weight:600; font-style:italic;">## build</span>
+<br/>
+<br/>
+<span style="color:#cfd0d7;">Cleans the <span style="color:#8fbf7f;">`dist/`</span> output directory using <span style="color:#8fbf7f;">`rimraf`</span>, copies the entire <span style="color:#8fbf7f;">`lib/`</span> into it, and copies <span style="color:#8fbf7f;">`index.js`</span> to <span style="color:#8fbf7f;">`dist/index.js`</span>.</span>
+<br/>
+<br/>
+<span style="color:#6b6c75; font-style:italic;">```bash</span>
+<span style="display:block; background:rgba(40,200,100,0.10); border-radius:4px; padding:3px 6px; margin:3px 0; color:#cfd0d7;"><span style="color:#d68a5c;">rimraf</span> dist <span style="color:#d68a5c;">&amp;&amp;</span> mkdir -p dist/lib <span style="color:#d68a5c;">&amp;&amp;</span> cp -r lib/. dist/lib <span style="color:#d68a5c;">&amp;&amp;</span> cp index.js dist/index.js</span>
+<span style="color:#6b6c75; font-style:italic;">```</span>
+<br/>
+<br/>
+<span style="color:#c792ea; font-weight:600; font-style:italic;">## fsr</span>
+<br/>
+<br/>
+<span style="color:#cfd0d7;">Runs the built <span style="color:#8fbf7f;">`fsr`</span> CLI directly from <span style="color:#8fbf7f;">`dist/index.js`</span>. Use this after a <span style="color:#8fbf7f;">`build`</span> to smoke-test the compiled output. In normal development you would run <span style="color:#8fbf7f;">`yarn start`</span> (which builds first) rather than this directly.</span>
+<br/>
+<br/>
+<span style="color:#6b6c75; font-style:italic;">```bash</span>
+<span style="display:block; background:rgba(40,200,100,0.10); border-radius:4px; padding:3px 6px; margin:3px 0; color:#cfd0d7;"><span style="color:#d68a5c;">node</span> dist/index.js</span>
+<span style="color:#6b6c75; font-style:italic;">```</span>
+<br/>
+<br/>
+<span style="color:#c792ea; font-weight:600; font-style:italic;">## release</span>
+<br/>
+<br/>
+<span style="color:#cfd0d7;">Prepares a release in two steps: first bumps the version in <span style="color:#8fbf7f;">`package.json`</span> (via <span style="color:#8fbf7f;">`fsr bump`</span>, which also handles git tagging), then rebuilds the <span style="color:#8fbf7f;">`dist/`</span> output so the published package reflects the new version. Run this when you are ready to cut a new version before publishing to npm.</span>
+<br/>
+<br/>
+<span style="color:#6b6c75; font-style:italic;">```bash</span>
+<span style="display:block; background:rgba(40,200,100,0.10); border-radius:4px; padding:3px 6px; margin:3px 0; color:#cfd0d7;"><span style="color:#d68a5c;">yarn</span> fsr bump <span style="color:#d68a5c;">&amp;&amp;</span> yarn build</span>
+<span style="color:#6b6c75; font-style:italic;">```</span>
+<br/>
+<br/>
+<span style="color:#c792ea; font-weight:600; font-style:italic;">## release:publish</span>
+<br/>
+<br/>
+<span style="color:#cfd0d7;">Executes <span style="color:#8fbf7f;">`lib/release/publish.js`</span>, which handles the full npm publish workflow — typically setting the dist-tag, running <span style="color:#8fbf7f;">`npm publish`</span>, and any post-publish steps. Run this after <span style="color:#8fbf7f;">`release`</span> to push the new version to the registry.</span>
+<br/>
+<br/>
+<span style="color:#6b6c75; font-style:italic;">```bash</span>
+<span style="display:block; background:rgba(40,200,100,0.10); border-radius:4px; padding:3px 6px; margin:3px 0; color:#cfd0d7;"><span style="color:#d68a5c;">node</span> lib/release/publish.js</span>
+<span style="color:#6b6c75; font-style:italic;">```</span>
+<br/>
+<br/>
+<span style="color:#c792ea; font-weight:600; font-style:italic;">## start</span>
+<br/>
+<br/>
+<span style="color:#cfd0d7;">Builds the project and then immediately runs the CLI. Equivalent to running <span style="color:#8fbf7f;">`build`</span> followed by <span style="color:#8fbf7f;">`start:run`</span> in sequence using <span style="color:#8fbf7f;">`npm-run-all`</span>'s <span style="color:#8fbf7f;">`run-s`</span>. Use this as the single command to go from source to a running CLI during development when you want a clean build first.</span>
+<br/>
+<br/>
+<span style="color:#6b6c75; font-style:italic;">```bash</span>
+<span style="display:block; background:rgba(40,200,100,0.10); border-radius:4px; padding:3px 6px; margin:3px 0; color:#cfd0d7;"><span style="color:#d68a5c;">run-s</span> build start:run</span>
+<span style="color:#6b6c75; font-style:italic;">```</span>
+<br/>
+<br/>
+<span style="color:#c792ea; font-weight:600; font-style:italic;">## start:run</span>
+<br/>
+<br/>
+<span style="color:#cfd0d7;">Runs the built CLI from <span style="color:#8fbf7f;">`dist/index.js`</span>. This is the second step of <span style="color:#8fbf7f;">`start`</span> and can also be called on its own when you know <span style="color:#8fbf7f;">`dist/`</span> is already up to date and you just want to relaunch the CLI without rebuilding.</span>
+<br/>
+<br/>
+<span style="color:#6b6c75; font-style:italic;">```bash</span>
+<span style="display:block; background:rgba(40,200,100,0.10); border-radius:4px; padding:3px 6px; margin:3px 0; color:#cfd0d7;"><span style="color:#d68a5c;">node</span> dist/index.js</span>
+<span style="color:#6b6c75; font-style:italic;">```</span>
+<br/>
+<br/>
+<span style="color:#c792ea; font-weight:600; font-style:italic;">## watch</span>
+<br/>
+<br/>
+<span style="color:#cfd0d7;">Starts a <span style="color:#8fbf7f;">`nodemon`</span> watcher over <span style="color:#8fbf7f;">`lib/`</span> and <span style="color:#8fbf7f;">`index.js`</span>. Whenever any <span style="color:#8fbf7f;">`.js`</span> file changes, it automatically syncs the changed files to <span style="color:#8fbf7f;">`dist/`</span> (same copy commands as <span style="color:#8fbf7f;">`build`</span>, but without <span style="color:#8fbf7f;">`rimraf`</span> so it is fast). The <span style="color:#8fbf7f;">`-I`</span> flag keeps nodemon from reading stdin. Use this during active development so you can run <span style="color:#8fbf7f;">`yarn fsr`</span> after each save without manually rebuilding.</span>
+<br/>
+<br/>
+<span style="color:#6b6c75; font-style:italic;">```bash</span>
+<span style="display:block; background:rgba(40,200,100,0.10); border-radius:4px; padding:3px 6px; margin:3px 0; color:#cfd0d7;"><span style="color:#d68a5c;">nodemon</span> --watch lib --watch index.js --ext js --exec &quot;mkdir -p dist/lib <span style="color:#d68a5c;">&amp;&amp;</span> cp -r lib/. dist/lib <span style="color:#d68a5c;">&amp;&amp;</span> cp index.js dist/index.js&quot; --ignore 'node_modules' -I</span>
+<span style="color:#6b6c75; font-style:italic;">```</span>
+<br/>
+<br/>
+<span style="color:#c792ea; font-weight:600; font-style:italic;">## test</span>
+<br/>
+<br/>
+<span style="color:#cfd0d7;">Runs the full test suite once with Vitest in non-watch (CI) mode. Exits with a non-zero code if any test fails, making it suitable for CI pipelines. Covers all test types (unit, integration, e2e, performance) in a single pass.</span>
+<br/>
+<br/>
+<span style="color:#6b6c75; font-style:italic;">```bash</span>
+<span style="display:block; background:rgba(40,200,100,0.10); border-radius:4px; padding:3px 6px; margin:3px 0; color:#cfd0d7;"><span style="color:#d68a5c;">vitest</span> run</span>
+<span style="color:#6b6c75; font-style:italic;">```</span>
+<br/>
+<br/>
+<span style="color:#c792ea; font-weight:600; font-style:italic;">## test:watch</span>
+<br/>
+<br/>
+<span style="color:#cfd0d7;">Starts Vitest in interactive watch mode. Re-runs only the affected tests on every file save. Use this during development to get instant feedback as you write code.</span>
+<br/>
+<br/>
+<span style="color:#6b6c75; font-style:italic;">```bash</span>
+<span style="display:block; background:rgba(40,200,100,0.10); border-radius:4px; padding:3px 6px; margin:3px 0; color:#cfd0d7;"><span style="color:#d68a5c;">vitest</span></span>
+<span style="color:#6b6c75; font-style:italic;">```</span>
+<br/>
+<br/>
+<span style="color:#c792ea; font-weight:600; font-style:italic;">## test:ui</span>
+<br/>
+<br/>
+<span style="color:#cfd0d7;">Opens the Vitest browser-based UI at <span style="color:#8fbf7f;">`localhost:51204`</span> (or similar). Provides a visual dashboard to browse test files, inspect individual test results, and re-run tests interactively. Useful for exploring test output without reading terminal logs.</span>
+<br/>
+<br/>
+<span style="color:#6b6c75; font-style:italic;">```bash</span>
+<span style="display:block; background:rgba(40,200,100,0.10); border-radius:4px; padding:3px 6px; margin:3px 0; color:#cfd0d7;"><span style="color:#d68a5c;">vitest</span> --ui</span>
+<span style="color:#6b6c75; font-style:italic;">```</span>
+<br/>
+<br/>
+<span style="color:#c792ea; font-weight:600; font-style:italic;">## test:coverage</span>
+<br/>
+<br/>
+<span style="color:#cfd0d7;">Runs the full test suite once and generates a V8 code coverage report via <span style="color:#8fbf7f;">`@vitest/coverage-v8`</span>. Outputs a summary to the terminal and writes detailed HTML/JSON reports to <span style="color:#8fbf7f;">`coverage/`</span>. Use this to check overall coverage before a release or PR.</span>
+<br/>
+<br/>
+<span style="color:#6b6c75; font-style:italic;">```bash</span>
+<span style="display:block; background:rgba(40,200,100,0.10); border-radius:4px; padding:3px 6px; margin:3px 0; color:#cfd0d7;"><span style="color:#d68a5c;">vitest</span> run --coverage</span>
+<span style="color:#6b6c75; font-style:italic;">```</span>
+<br/>
+<br/>
+<span style="color:#c792ea; font-weight:600; font-style:italic;">## test:unit</span>
+<br/>
+<br/>
+<span style="color:#cfd0d7;">Runs only the files inside <span style="color:#8fbf7f;">`tests/unit/`</span> — fast, isolated unit tests for individual functions and modules with no external dependencies. Use this for a quick sanity check focused on pure logic.</span>
+<br/>
+<br/>
+<span style="color:#6b6c75; font-style:italic;">```bash</span>
+<span style="display:block; background:rgba(40,200,100,0.10); border-radius:4px; padding:3px 6px; margin:3px 0; color:#cfd0d7;"><span style="color:#d68a5c;">vitest</span> run tests/unit</span>
+<span style="color:#6b6c75; font-style:italic;">```</span>
+<br/>
+<br/>
+<span style="color:#c792ea; font-weight:600; font-style:italic;">## test:integration</span>
+<br/>
+<br/>
+<span style="color:#cfd0d7;">Runs only the files inside <span style="color:#8fbf7f;">`tests/integration/`</span> — tests that exercise multiple modules working together (e.g., the parser + runner pipeline, file I/O, or CLI command handlers). Slower than unit tests but still headless.</span>
+<br/>
+<br/>
+<span style="color:#6b6c75; font-style:italic;">```bash</span>
+<span style="display:block; background:rgba(40,200,100,0.10); border-radius:4px; padding:3px 6px; margin:3px 0; color:#cfd0d7;"><span style="color:#d68a5c;">vitest</span> run tests/integration</span>
+<span style="color:#6b6c75; font-style:italic;">```</span>
+<br/>
+<br/>
+<span style="color:#c792ea; font-weight:600; font-style:italic;">## test:e2e</span>
+<br/>
+<br/>
+<span style="color:#cfd0d7;">Runs only the files inside <span style="color:#8fbf7f;">`tests/e2e/`</span> — end-to-end tests that exercise the full CLI from the outside, simulating real user invocations. These are the slowest tests and validate the complete user-facing behavior.</span>
+<br/>
+<br/>
+<span style="color:#6b6c75; font-style:italic;">```bash</span>
+<span style="display:block; background:rgba(40,200,100,0.10); border-radius:4px; padding:3px 6px; margin:3px 0; color:#cfd0d7;"><span style="color:#d68a5c;">vitest</span> run tests/e2e</span>
+<span style="color:#6b6c75; font-style:italic;">```</span>
+<br/>
+<br/>
+<span style="color:#c792ea; font-weight:600; font-style:italic;">## test:performance</span>
+<br/>
+<br/>
+<span style="color:#cfd0d7;">Runs only the files inside <span style="color:#8fbf7f;">`tests/performance/`</span> — benchmark and regression tests that assert timing or throughput constraints. Use these to catch regressions in hot paths such as parsing, task resolution, or plugin loading.</span>
+<br/>
+<br/>
+<span style="color:#6b6c75; font-style:italic;">```bash</span>
+<span style="display:block; background:rgba(40,200,100,0.10); border-radius:4px; padding:3px 6px; margin:3px 0; color:#cfd0d7;"><span style="color:#d68a5c;">vitest</span> run tests/performance</span>
+<span style="color:#6b6c75; font-style:italic;">```</span>
+</pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== PROBLEM ===== -->
+            <section class="problem" aria-label="Problems fsr solves">
+                <h2 class="problem__heading">
+                    Sound familiar? <span style="opacity: 0.85">👀</span>
+                </h2>
+                <div class="problem__grid">
+                    <div class="problem-card">
+                        <div class="problem-card__icon">🕵️</div>
+                        <h3 class="problem-card__title">The Mystery Scripts</h3>
+                        <p class="problem-card__body">
+                            You clone a new repo. There are 40 scripts in
+                            <span class="problem-card__code">package.json</span>. The README
+                            mentions three of them. Nobody knows what the rest do. The one person
+                            who wrote them is on PTO.
+                        </p>
+                    </div>
+                    <div class="problem-card">
+                        <div class="problem-card__icon">💀</div>
+                        <h3 class="problem-card__title">The Wrong Deploy</h3>
+                        <p class="problem-card__body">
+                            You run
+                            <span class="problem-card__code">build:prod</span>
+                            thinking it&rsquo;s the dev build. Staging goes down. It&rsquo;s 9:23am
+                            on your first day. The Slack message appears:
+                            <em style="color: #b6b7be">&ldquo;Hey, why is staging down?&rdquo;</em>
+                        </p>
+                    </div>
+                    <div class="problem-card">
+                        <div class="problem-card__icon">💔</div>
+                        <h3 class="problem-card__title">The Drift</h3>
+                        <p class="problem-card__body">
+                            You update the scripts. You forget to update the README. Three months
+                            later, nobody trusts the docs. They just try scripts and hope. This is
+                            fine. 🔥
+                        </p>
+                    </div>
+                </div>
+                <p class="problem__closing">
+                    <strong class="problem__closing-strong"
+                        >You&rsquo;re not bad at documentation. The tools just make it
+                        impossible.</strong
+                    ><br />
+                    <span class="problem__closing-code">package.json</span>
+                    has no room for docs.
+                    <span class="problem__closing-code">README</span>
+                    can&rsquo;t run anything. You end up maintaining two things that drift apart on
+                    day one &mdash; and stay that way forever.
+                </p>
+            </section>
+
+            <!-- ===== SOLUTION ===== -->
+            <section class="solution" aria-label="How fsr works — 3-step setup">
+                <div class="solution__inner">
+                    <h2 class="solution__heading">
+                        One file. Docs
+                        <span class="solution__heading-accent">AND</span> runner. Problem solved. 🎉
+                    </h2>
+                    <p class="solution__intro">
+                        <strong class="solution__intro-strong">fsr</strong>
+                        introduces
+                        <span class="solution__intro-code">fscripts.md</span>
+                        &mdash; a Markdown file that is simultaneously your documentation
+                        <em>and</em> your script runner.
+                    </p>
+                    <p class="solution__desc">
+                        Write scripts in plain Markdown. Add descriptions. Organize into sections.
+                        Run them directly from the file. The docs and the runner are the same thing
+                        now.
+                        <strong class="solution__desc-strong"
+                            >They literally cannot drift apart.</strong
+                        >
+                    </p>
+
+                    <div class="solution__steps">
+                        <div class="step-card">
+                            <div class="step-card__header">
+                                <span class="step-card__badge">STEP 1</span>
+                                <span class="step-card__emoji">✨</span>
+                            </div>
+                            <div class="step-card__cmd">npm i -g fscr</div>
+                            <p class="step-card__desc">Install fsr globally. One command. Done.</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-card__header">
+                                <span class="step-card__badge">STEP 2</span>
+                                <span class="step-card__emoji">📝</span>
+                            </div>
+                            <div class="step-card__cmd">fsr generate</div>
+                            <p class="step-card__desc">
+                                Auto-imports all your package.json scripts into
+                                <span class="step-card__desc-code">fscripts.md</span>
+                                with docs stubs.
+                            </p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-card__header">
+                                <span class="step-card__badge">STEP 3</span>
+                                <span class="step-card__emoji">🎯</span>
+                            </div>
+                            <div class="step-card__cmd">fsr</div>
+                            <p class="step-card__desc">
+                                Interactive picker appears. Pick a script. Run it. No memorizing. No
+                                digging.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== FEATURES ===== -->
+            <section id="features" class="features">
+                <p class="section-eyebrow">Features</p>
+                <h2 class="section-heading" style="margin-bottom: 56px">
+                    Everything your scripts deserved all along 💅
+                </h2>
+
+                <div class="features__grid">
+                    <!-- F1 picker -->
+                    <div class="feature-card">
+                        <div class="feature-card__header">
+                            <span class="feature-card__icon">🎯</span>
+                            <h3 class="feature-card__title">The Interactive Picker</h3>
+                        </div>
+                        <p class="feature-card__subtitle">
+                            Just run <span class="feature-card__subtitle-code">fsr</span>.
+                            That&rsquo;s it.
+                        </p>
+                        <p class="feature-card__body">
+                            An interactive list of every script &mdash; with its human-readable
+                            description &mdash; appears right in your terminal. Arrow keys to
+                            navigate. Enter to run. No man pages. No README hunting. No more
+                            &ldquo;which script starts the dev server?&rdquo; on Slack.
+                        </p>
+                        <pre
+                            class="code-block"
+                        ><span style="color:var(--accent,#27AD60);">$</span> fsr
+
+<span style="color:#9F9FA5;">? Choose a script to run:</span>
+<span style="color:var(--accent,#27AD60);">❯ 🚀 start:dev</span><span style="color:#6b6c75;">       — Start the dev server, hot reload</span>
+  🏗️  build:prod<span style="color:#6b6c75;">      — Full production build (grab a ☕)</span>
+  🧹 clean<span style="color:#6b6c75;">            — Remove build artifacts</span>
+  🔐 encrypt:secrets<span style="color:#6b6c75;">  — Encrypt .env before committing</span></pre>
+                    </div>
+
+                    <!-- F2 JS blocks -->
+                    <div class="feature-card">
+                        <div class="feature-card__header">
+                            <span class="feature-card__icon">🤯</span>
+                            <h3 class="feature-card__title">Full JavaScript in Markdown</h3>
+                        </div>
+                        <p class="feature-card__subtitle">
+                            Not just one-liners. Real scripts. In your Markdown.
+                        </p>
+                        <p class="feature-card__body">
+                            Write complete, multi-line JavaScript directly inside
+                            <span class="feature-card__body-code">fscripts.md</span>
+                            with standard code blocks. Run with
+                            <span class="feature-card__body-accent">fsr run [task]</span>. The
+                            Markdown <em>is</em> the script.
+                        </p>
+                        <pre class="code-block"><span style="color:#6b6c75;">### check-env</span>
+<span style="color:#9F9FA5;">Validates required env vars before start. 🔍</span>
+
+<span style="color:#c084fc;">const</span> required = [<span style="color:var(--accent,#27AD60);">'DATABASE_URL'</span>, <span style="color:var(--accent,#27AD60);">'API_KEY'</span>];
+<span style="color:#c084fc;">const</span> missing = required.filter(k =&gt; !process.env[k]);
+<span style="color:#c084fc;">if</span> (missing.length) process.exit(<span style="color:#f0883e;">1</span>);
+console.<span style="color:#60a5fa;">log</span>(<span style="color:var(--accent,#27AD60);">'✅ All env vars present!'</span>);</pre>
+                    </div>
+
+                    <!-- F3 generate -->
+                    <div class="feature-card">
+                        <div class="feature-card__header">
+                            <span class="feature-card__icon">✨</span>
+                            <h3 class="feature-card__title">Auto-Generate from package.json</h3>
+                        </div>
+                        <p class="feature-card__subtitle">
+                            Already have scripts? Import them in one command.
+                        </p>
+                        <p class="feature-card__body">
+                            Pulls every script from your
+                            <span class="feature-card__body-code">package.json</span>
+                            into a fresh
+                            <span class="feature-card__body-code">fscripts.md</span>
+                            with documentation stubs. Your workflow doesn&rsquo;t change &mdash; it
+                            just gets superpowers. 💪
+                        </p>
+                        <pre
+                            class="code-block code-block--sm"
+                        ><span style="color:var(--accent,#27AD60);">$</span> fsr generate</pre>
+                    </div>
+
+                    <!-- F4 parallel -->
+                    <div class="feature-card">
+                        <div class="feature-card__header">
+                            <span class="feature-card__icon">⚡</span>
+                            <h3 class="feature-card__title">Parallel &amp; Sequential</h3>
+                        </div>
+                        <p class="feature-card__subtitle feature-card__subtitle--mb">
+                            Built-in. No extra tools. No extra config.
+                        </p>
+                        <pre
+                            class="code-block"
+                            style="line-height: 1.7"
+                        ><span style="color:#6b6c75;"># Start everything at once ⚡</span><br/>
+<span style="color:var(--accent,#27AD60);">$</span> fsr run-p start:web start:api start:worker
+
+<span style="color:#6b6c75;"># Run in order 🔗</span><br/>
+<span style="color:var(--accent,#27AD60);">$</span> fsr run-s clean build:prod deploy:staging</pre>
+                    </div>
+
+                    <!-- F5 plugin -->
+                    <div class="feature-card">
+                        <div class="feature-card__header">
+                            <span class="feature-card__icon">🔌</span>
+                            <h3 class="feature-card__title">Plugin System</h3>
+                        </div>
+                        <p class="feature-card__subtitle">
+                            Hook into before and after any script execution.
+                        </p>
+                        <p class="feature-card__body">
+                            Plugins appear right in the picker. Clear the cache before every script?
+                            Notify Slack after a deploy? Write a plugin, hook it in, done. It fires
+                            automatically, every time.
+                        </p>
+                        <pre
+                            class="code-block"
+                        ><span style="color:#6b6c75;">// 🧹 auto-cache-cleaner plugin</span>
+<span style="color:#c084fc;">export default</span> {
+  name: <span style="color:var(--accent,#27AD60);">'cache-cleaner'</span>,
+  hooks: {
+    <span style="color:var(--accent,#27AD60);">'pre-task'</span>: <span style="color:#c084fc;">async</span> ({ taskName }) =&gt; {
+      <span style="color:#c084fc;">await</span> clearCache();
+    }
+  }
+}</pre>
+                    </div>
+
+                    <!-- F6 encryption -->
+                    <div class="feature-card">
+                        <div class="feature-card__header feature-card__header--top">
+                            <span class="feature-card__icon">🔐</span>
+                            <h3 class="feature-card__title">File Encryption</h3>
+                        </div>
+                        <p class="feature-card__subtitle feature-card__subtitle--mb">
+                            Password-protect your secrets without leaving the terminal.
+                        </p>
+                        <pre
+                            class="code-block code-block--mb"
+                            style="line-height: 1.7"
+                        ><span style="color:var(--accent,#27AD60);">$</span> fsr encrypt    <span style="color:#6b6c75;"># 🔐 encrypt .env files</span><br/>
+<span style="color:var(--accent,#27AD60);">$</span> fsr decrypt    <span style="color:#6b6c75;"># 🔓 decrypt when needed</span><br/>
+<span style="color:var(--accent,#27AD60);">$</span> fsr encryption <span style="color:#6b6c75;"># 🔑 interactive menu</span></pre>
+                        <p class="feature-card__body--encryption-note">
+                            Never accidentally commit secrets again. Never email
+                            <span class="feature-card__body-code-env">.env</span>
+                            files again. 😬
+                        </p>
+                    </div>
+
+                    <!-- F7 doctor -->
+                    <div class="feature-card">
+                        <div class="feature-card__header">
+                            <span class="feature-card__icon">🩺</span>
+                            <h3 class="feature-card__title">System Doctor</h3>
+                        </div>
+                        <p class="feature-card__subtitle feature-card__subtitle--mb">
+                            Diagnose and fix your environment without googling.
+                        </p>
+                        <pre
+                            class="code-block"
+                            style="line-height: 1.7"
+                        ><span style="color:var(--accent,#27AD60);">$</span> fsr doctor          <span style="color:#6b6c75;"># run diagnostics</span><br/>
+<span style="color:var(--accent,#27AD60);">$</span> fsr doctor --fix    <span style="color:#6b6c75;"># auto-fix what it can</span><br/>
+<span style="color:var(--accent,#27AD60);">$</span> fsr doctor --json   <span style="color:#6b6c75;"># CI-friendly output</span></pre>
+                    </div>
+
+                    <!-- F8 and more -->
+                    <div class="feature-card">
+                        <div class="feature-card__header" style="margin-bottom: 18px">
+                            <span class="feature-card__icon">💅</span>
+                            <h3 class="feature-card__title">And more&hellip;</h3>
+                        </div>
+                        <div class="feature-list">
+                            <div class="feature-list__item">
+                                <span class="feature-list__label">📑 Auto Table of Contents</span>
+                                <span class="feature-list__cmd">fsr toc</span>
+                            </div>
+                            <div class="feature-list__item">
+                                <span class="feature-list__label">🏷️ Version bump + beautify</span>
+                                <span class="feature-list__cmd">fsr bump</span>
+                            </div>
+                            <div class="feature-list__item">
+                                <span class="feature-list__label">📈 Smart package upgrades</span>
+                                <span class="feature-list__cmd">fsr upgrade</span>
+                            </div>
+                            <div class="feature-list__item">
+                                <span class="feature-list__label">🐚 Shell tab completions</span>
+                                <span class="feature-list__cmd">fsr completion</span>
+                            </div>
+                            <div class="feature-list__item">
+                                <span class="feature-list__label">🌿 Git branch validation</span>
+                                <span class="feature-list__cmd">fsr branch</span>
+                            </div>
+                            <div class="feature-list__item feature-list__item--last">
+                                <span class="feature-list__label">🗑️ Clear task history</span>
+                                <span class="feature-list__cmd">fsr clear</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== COMPARISON ===== -->
+            <section
+                id="compare"
+                class="compare-section"
+                aria-label="fsr vs package.json vs README vs Makefile comparison"
+            >
+                <div class="compare-section__inner">
+                    <h2 class="section-heading" style="margin-bottom: 50px">
+                        The honest comparison 👀
+                    </h2>
+                    <div class="compare-table-wrap">
+                        <table class="compare-table">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th class="compare-table__th-mono">package.json</th>
+                                    <th>README + npm</th>
+                                    <th>Makefile</th>
+                                    <th class="compare-table__th-fsr">fsr</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <sc-for list="{{ rows }}" as="row" hint-placeholder-count="9">
+                                    <tr>
+                                        <td>{{ row.label }}</td>
+                                        <td>{{ row.a }}</td>
+                                        <td>{{ row.b }}</td>
+                                        <td>{{ row.c }}</td>
+                                        <td class="compare-table__td-fsr">{{ row.d }}</td>
+                                    </tr>
+                                </sc-for>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="compare-section__footnote">
+                        <strong class="compare-section__footnote-strong"
+                            >The others aren&rsquo;t really alternatives. Devs just suffer without
+                            fsr.</strong
+                        >
+                        😅
+                    </p>
+                </div>
+            </section>
+
+            <!-- ===== TESTIMONIAL ===== -->
+            <section
+                class="testimonial"
+                aria-label="About the fsr team"
+                itemscope
+                itemtype="https://schema.org/Review"
+            >
+                <p class="testimonial__eyebrow">Built by a team that got tired of suffering 😤</p>
+                <blockquote class="testimonial__quote">
+                    &ldquo;We built fsr because our own team had the same problem everyone has. The
+                    README is always lying. The
+                    <span class="testimonial__quote-code">package.json</span>
+                    is always cryptic. We decided the answer wasn&rsquo;t better documentation
+                    tooling OR a better script runner &mdash; it was making them the same
+                    file.&rdquo;
+                </blockquote>
+                <div class="testimonial__attribution">
+                    &mdash;
+                    <strong class="testimonial__attribution-name">The fsr team</strong>
+                    🛠️
+                </div>
+                <div class="testimonial__badge">
+                    Our whole team uses fsr on every project. We wouldn&rsquo;t ship it if we
+                    didn&rsquo;t.
+                </div>
+            </section>
+
+            <!-- ===== FINAL CTA ===== -->
+            <section class="cta-section" aria-label="Get started with fsr">
+                <div class="cta-card">
+                    <div class="cta-card__glow"></div>
+                    <div class="cta-card__content">
+                        <h2 class="cta-card__heading">Three commands. That&rsquo;s it. 🎯</h2>
+                        <pre
+                            class="code-block--cta"
+                        ><span style="color:var(--accent,#27AD60);">$</span> npm i -g fscr   <span style="color:#6b6c75;"># install</span><br/>
+<span style="color:var(--accent,#27AD60);">$</span> fsr generate    <span style="color:#6b6c75;"># import your existing scripts</span><br/>
+<span style="color:var(--accent,#27AD60);">$</span> fsr             <span style="color:#6b6c75;"># pick one and run it 🚀</span></pre>
+                        <div class="cta-card__actions">
+                            <a
+                                href="https://www.npmjs.com/package/fscr"
+                                class="cta-card__btn-primary"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                >📦 npm i -g fscr</a
+                            >
+                            <a
+                                href="https://github.com/agrublev/freedcamp-script-runner"
+                                class="cta-card__btn-secondary"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                >⭐ GitHub</a
+                            >
+                            <a href="#docs" class="cta-card__btn-secondary">📄 Docs</a>
+                        </div>
+                        <p class="cta-card__note">
+                            <strong class="cta-card__note-strong"
+                                >No config. No setup. No more &ldquo;ask Mike what the scripts
+                                do.&rdquo;</strong
+                            >
+                            🙌
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== FAQ (AI-extractable, visually hidden) ===== -->
+            <section
+                class="visually-hidden"
+                aria-label="Frequently asked questions about fsr"
+                itemscope
+                itemtype="https://schema.org/FAQPage"
+            >
+                <h2>Frequently Asked Questions</h2>
+
+                <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                    <h3 itemprop="name">What is fsr?</h3>
+                    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                        <p itemprop="text">
+                            fsr (Freedcamp Script Runner) is a free, open-source CLI tool installed
+                            as the npm package <code>fscr</code>. It replaces your
+                            <code>package.json</code> scripts with a single Markdown file called
+                            <code>fscripts.md</code> that serves simultaneously as documentation and
+                            as a script runner. Run <code>npm i -g fscr</code> to install it.
+                        </p>
+                    </div>
+                </div>
+
+                <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                    <h3 itemprop="name">How do I install fsr?</h3>
+                    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                        <p itemprop="text">
+                            Install fsr globally with npm: <code>npm i -g fscr</code>. After
+                            installation, run <code>fsr generate</code> in any Node.js project to
+                            automatically import your existing package.json scripts into fscripts.md
+                            with documentation stubs. Then run <code>fsr</code> to open the
+                            interactive script picker.
+                        </p>
+                    </div>
+                </div>
+
+                <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                    <h3 itemprop="name">What is fscripts.md?</h3>
+                    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                        <p itemprop="text">
+                            fscripts.md is a Markdown file that fsr uses as its source of truth.
+                            Each heading becomes a runnable script. You can write bash commands or
+                            full JavaScript blocks inside fenced code blocks, add human-readable
+                            descriptions in plain Markdown, and organize scripts into sections with
+                            a table of contents. Because docs and code live in the same file, they
+                            can never drift apart.
+                        </p>
+                    </div>
+                </div>
+
+                <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                    <h3 itemprop="name">Can fsr run scripts in parallel?</h3>
+                    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                        <p itemprop="text">
+                            Yes. fsr supports parallel execution with
+                            <code>fsr run-p script1 script2 script3</code> and sequential execution
+                            with <code>fsr run-s script1 script2 script3</code>. No extra tools or
+                            configuration are needed — it is built into fsr.
+                        </p>
+                    </div>
+                </div>
+
+                <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                    <h3 itemprop="name">
+                        What is the difference between fsr and npm scripts in package.json?
+                    </h3>
+                    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                        <p itemprop="text">
+                            package.json scripts have no room for documentation — they are
+                            one-liners without descriptions, and docs in a README drift away almost
+                            immediately. fsr uses a Markdown file (fscripts.md) where each script
+                            has a human-readable description, can span multiple lines, supports full
+                            JavaScript, and documentation and runner code live in the same file so
+                            they literally cannot drift apart. fsr also adds an interactive picker,
+                            parallel and sequential execution, a plugin hook system, file
+                            encryption, and system diagnostics — none of which package.json
+                            supports.
+                        </p>
+                    </div>
+                </div>
+
+                <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                    <h3 itemprop="name">Is fsr free?</h3>
+                    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                        <p itemprop="text">
+                            Yes. fsr is completely free and open source, licensed under MIT. There
+                            are no paid plans, no usage limits, and no enterprise tiers. Install it
+                            with <code>npm i -g fscr</code>.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== FOOTER ===== -->
+            <footer id="docs" class="footer" aria-label="fsr site footer">
+                <div class="footer__inner">
+                    <div>
+                        <div class="footer__brand">
+                            <span class="footer__brand-dot"></span>
+                            <span class="footer__brand-name">fsr</span>
+                            <span class="footer__brand-tagline"
+                                >&mdash; Freedcamp Script Runner</span
+                            >
+                        </div>
+                        <p class="footer__tagline">Your scripts. In plain English. ✨</p>
+                    </div>
+                    <div class="footer__right">
+                        <div class="footer__links">
+                            <span class="footer__install-cmd">npm i -g fscr</span>
+                            <a
+                                href="https://github.com/agrublev/freedcamp-script-runner"
+                                class="footer__link"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                >GitHub</a
+                            >
+                            <a
+                                href="https://www.npmjs.com/package/fscr"
+                                class="footer__link"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                >npm</a
+                            >
+                            <a
+                                href="https://github.com/agrublev/freedcamp-script-runner#readme"
+                                class="footer__link"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                >Docs</a
+                            >
+                        </div>
+                        <p class="footer__copy">
+                            Made with ☕ and mild frustration at package.json
+                        </p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <script
+            type="text/x-dc"
+            data-dc-script
+            data-props='{"$preview":{"width":1180,"height":900},"accentColor":{"editor":"color","default":"#27AD60","options":["#27AD60","#2A6FDB","#A855F7","#F0883E"],"tsType":"string"},"pickerAutoplay":{"editor":"boolean","default":true,"tsType":"boolean"}}'
+        >
+            class Component extends DCLogic {
+              state = { selected: 0 };
+
+              componentDidMount() {
+                this.applyAccent();
+                this.startTimer();
+              }
+              componentDidUpdate() { this.applyAccent(); }
+              componentWillUnmount() { clearInterval(this.timer); }
+
+              applyAccent() {
+                const a = this.props.accentColor;
+                if (a) document.documentElement.style.setProperty('--accent', a);
+              }
+              startTimer() {
+                clearInterval(this.timer);
+                if (this.props.pickerAutoplay === false) return;
+                this.timer = setInterval(() => {
+                  this.setState(s => ({ selected: (s.selected + 1) % 5 }));
+                }, 1700);
+              }
+              select(i) { clearInterval(this.timer); this.setState({ selected: i }); }
+
+              base() {
+                return [
+                  { emoji: '🚀', name: 'start:dev', desc: 'Start the development server with hot reload' },
+                  { emoji: '🏗️', name: 'build:prod', desc: 'Full production build (grab a ☕)' },
+                  { emoji: '🧹', name: 'clean', desc: 'Remove build artifacts' },
+                  { emoji: '🔐', name: 'encrypt:secrets', desc: 'Encrypt .env files before committing' },
+                  { emoji: '📦', name: 'deploy:staging', desc: 'Deploy to staging environment' },
+                ];
+              }
+
+              renderVals() {
+                const sel = this.state.selected;
+                const tint = 'color-mix(in srgb, var(--accent,#27AD60) 14%, transparent)';
+                const scripts = this.base().map((s, i) => ({
+                  ...s,
+                  pointer: i === sel ? '❯' : ' ',
+                  bg: i === sel ? tint : 'transparent',
+                  bar: i === sel ? 'var(--accent,#27AD60)' : 'transparent',
+                  nameColor: i === sel ? 'var(--accent,#27AD60)' : '#f5f6f8',
+                  onHover: () => this.select(i),
+                }));
+
+                const C = '#27AD60', X = '#ef5f5f', W = '#e0a93b';
+                const ck = (v) => v;
+                const rows = [
+                  { label: 'Docs next to scripts', a: '❌', b: '❌', c: '⚠️', d: '✅' },
+                  { label: 'Interactive picker', a: '❌', b: '❌', c: '❌', d: '✅' },
+                  { label: 'Full JS script blocks', a: '❌', b: '❌', c: '❌', d: '✅' },
+                  { label: 'Parallel execution', a: '❌', b: '❌', c: '⚠️', d: '✅' },
+                  { label: 'Plugin hooks', a: '❌', b: '❌', c: '❌', d: '✅' },
+                  { label: 'File encryption', a: '❌', b: '❌', c: '❌', d: '✅' },
+                  { label: 'Zero config setup', a: '✅', b: '✅', c: '❌', d: '✅' },
+                  { label: 'JS / Node native', a: '✅', b: '✅', c: '❌', d: '✅' },
+                  { label: 'Docs can drift', a: '✅ always', b: '✅ always', c: '⚠️', d: '❌ never' },
+                ];
+
+                return { scripts, rows };
+              }
+            }
+        </script>
+    </body>
 </html>
