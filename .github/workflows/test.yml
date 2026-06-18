@@ -32,7 +32,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Build dist
-        run: yarn fsr build
+        run: bun scripts/bun.build.mjs
 
       - name: Run tests with coverage
         run: yarn fsr test:coverage
