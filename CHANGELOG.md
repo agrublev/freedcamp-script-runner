@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added cache system with CRUD operations for reading, writing, editing, and deleting cache entries.
+
 ### Fixed
 
 - Fixed plugin loader to search multiple candidate directories and validate plugin structure before selecting the plugins directory.
