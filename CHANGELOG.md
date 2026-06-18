@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added cache system with CRUD operations for reading, writing, editing, and deleting cache entries.
 - Added `test:coverage:open` script that generates the V8 coverage report and opens the HTML dashboard (`coverage/index.html`) cross-platform.
-- Added unit tests covering previously-untested modules (utils hash/clear/helpers/prompt, package-scripts parser, completion generator, deployment & task-notifier plugins, release bump/publish, git branch guard, package upgrader, startScripts, taskList, encryption flow, and the index.js CLI dispatch via mock-executed command handlers), raising line coverage from ~46% to ~75%.
+- Expanded the test suite to ~99.8% statement / 100% function / 99.7% branch coverage across every module (utils, parsers, generators, running, cache, completions, doctor, plugins, release, git, encryption, startScripts, and the index.js CLI), and raised coverage thresholds to 99/100/99/99.
 
 ### Fixed
 
@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed landing page SEO markup so metadata and schema are rendered in `<head>` instead of `<body>`, and added AI-crawler allow rules via `website/public/robots.txt`.
 - Added freshness markers (`Last updated`) to machine-readable `llms.txt` and `pricing.md` files used by AI systems.
 - Enabled `reportOnFailure` for coverage so the HTML report is written even when tests fail or thresholds are not met.
+- Removed dead code surfaced by full coverage: an unused `logInfo` helper in `upgradePackages.js` and an unreachable `fs.writeFile` after `return` in the doctor cache check.
 ### Fixed
 
 - Fixed completion scripts not being found when running from bundled distribution.
