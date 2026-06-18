@@ -5,16 +5,9 @@
     "type": "module",
     "main": "./dist/index.js",
     "scripts": {
-        "build": "node scripts/build.mjs",
-        "build:ui": "node scripts/build-ui.mjs",
-        "fsr": "node dist/index.js",
-        "release": "yarn fsr bump && yarn build",
-        "release:publish": "node lib/release/publish.js",
-        "start": "run-s build start:run",
-        "start:run": "node dist/index.js",
-        "watch": "nodemon --watch lib --watch index.js --ext js --exec \"node scripts/build.mjs\" --ignore 'node_modules' -I",
-        "test": "vitest run",
-        "test:coverage": "vitest run --coverage"
+        "fsr": "node ./dist/index.js",
+        "start": "yarn fsr",
+        "list": "yarn fsr start"
     },
     "fscripts": {
         "encryptedFiles": [
@@ -39,6 +32,7 @@
         "fsr": "./bin"
     },
     "dependencies": {
+        "@anthropic-ai/sdk": "^0.104.2",
         "boxen": "^8.0.1",
         "chalk": "^5.6.2",
         "conf": "^15.1.0",
