@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed shell completions to handle missing fscripts.md file gracefully
+
 ### Added
 
 - Added cache system with CRUD operations for reading, writing, editing, and deleting cache entries.
