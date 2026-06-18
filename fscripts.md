@@ -43,10 +43,10 @@ node scripts/build-ui.mjs
 
 ## watch
 
-Starts a nodemon watcher over `lib/` and `index.js`. On any `.js` change it runs the full `build.mjs` so `dist/` stays in sync automatically. Use during active development alongside a separate terminal running `fsr`.
+Starts a nodemon watcher over `lib/` and `index.js`. On any `.js` change it runs the full `bun.build.mjs` so `dist/` stays in sync automatically. Use during active development alongside a separate terminal running `fsr`.
 
 ```bash
-nodemon --watch lib --watch index.js --ext js --exec "node scripts/build.mjs" --ignore 'node_modules' -I
+nodemon --watch lib --watch index.js --ext js --exec "bun scripts/bun.build.mjs" --ignore 'node_modules' -I
 ```
 
 # Development
@@ -66,7 +66,7 @@ node dist/index.js
 Builds the project from source, then immediately launches the interactive CLI. The safe all-in-one command for starting a fresh development session when you want a clean build first.
 
 ```bash
-node scripts/build.mjs && node dist/index.js
+bun scripts/bun.build.mjs && node dist/index.js
 ```
 
 ## start:run
