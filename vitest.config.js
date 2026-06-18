@@ -1,6 +1,15 @@
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { defineConfig } from 'vitest/config';
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 export default defineConfig({
+    resolve: {
+        alias: {
+            '@utils': resolve(__dirname, 'lib/utils'),
+        },
+    },
     test: {
         globals: true,
         environment: 'node',
@@ -9,15 +18,9 @@ export default defineConfig({
         coverage: {
             provider: 'v8',
             reporter: ['text', 'json', 'html', 'lcov'],
-            include: [
-                'lib/parsers/parseScriptsMd.js',
-                'lib/running/*.js',
-                'lib/cache/cli.js',
-                'lib/completions/completion.js',
-                'lib/generators/generateFScripts.js',
-                'lib/generators/generateToc.js',
-                'lib/utils/encryption.js'
-            ],
+            reportsDirectory: 'coverage',
+            reportOnFailure: true,
+            include: ['lib/**/*.js', 'index.js'],
             exclude: [
                 'node_modules/**',
                 'dist/**',

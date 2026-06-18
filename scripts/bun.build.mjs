@@ -20,6 +20,9 @@ const result = await Bun.build({
     external: ["*.node"],
     metafile: true,
     optimizeImports: ["ink", "inquirer", "conf"],
+    alias: {
+        "@utils": resolve(root, "lib/utils"),
+    },
     plugins: [
         {
             // react-devtools-core is only loaded by ink when DEV=true — stub it
