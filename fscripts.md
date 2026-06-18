@@ -86,7 +86,23 @@ Scripts for cutting and publishing new versions of the package.
 Bumps the version in `package.json` via `fsr bump` (which handles the git tag as well), then rebuilds `dist/` so the published package reflects the new version. Run when you are ready to cut a new release before publishing to npm.
 
 ```bash
-yarn fsr bump && node scripts/build.mjs
+yarn fsr run-s release:bump build commit release:publish
+```
+
+## release:bump
+
+Bump version
+
+```bash
+yarn fsr bump
+```
+
+## release:commit
+
+Commit latest changes
+
+```bash
+yarn fsr commit
 ```
 
 ## release:publish

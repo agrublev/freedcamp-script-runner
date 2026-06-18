@@ -18,7 +18,7 @@ import { fireHook } from "./lib/plugins/hooks.js";
 import { spawn } from "child_process";
 import yargs from "yargs";
 import fsrLog from "./lib/utils/console.js";
-
+import commit from "./lib/git/commit.js";
 
 const taskName = chalk.rgb(39, 173, 96).bold.underline;
 const textDescription = chalk.rgb(159, 161, 181);
@@ -63,6 +63,20 @@ const runCmd = async (app, argsList = []) => {
             }
         )
         .example(`${taskName("$0")}`, `${textDescription("Validates branch and creates new")}`)
+
+        /**
+         *  fsr
+         * branch --
+         */
+        .command(
+            "commit",
+            "Commit latest changes with AI automatically naming them for you!",
+            (yargs) => {},
+            async function () {
+                await commit();
+            }
+        )
+        .example(`${taskName("$0")}`, `${textDescription("Commit latest changes and stage any unstaged files! With automatic AI naming.")}`)
 
         /**
          * fsr
@@ -443,10 +457,26 @@ const runCmd = async (app, argsList = []) => {
     registerPluginCommands(yargsInstance, pluginCommands);
 
     const BUILTIN_COMMANDS = new Set([
-        'branch', 'start', 'scripts', 'list', 'run', 'upgrade', 'bump',
-        'run-s', 'run-p', 'encryption', 'encrypt', 'decrypt', 'clear',
-        'generate', 'toc', 'doctor', 'cache', 'completion', 'help',
-        ...pluginCommands.map((c) => c.name),
+        "branch",
+        "start",
+        "scripts",
+        "list",
+        "run",
+        "upgrade",
+        "bump",
+        "run-s",
+        "run-p",
+        "encryption",
+        "encrypt",
+        "decrypt",
+        "clear",
+        "generate",
+        "toc",
+        "doctor",
+        "cache",
+        "completion",
+        "help",
+        ...pluginCommands.map((c) => c.name)
     ]);
 
     const argv = yargsInstance.argv;
