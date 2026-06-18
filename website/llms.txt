@@ -1,4 +1,6 @@
 # fsr — Freedcamp Script Runner
+Last updated: 2026-06-18
+
 
 fsr (installed as the npm package `fscr`) is a free, open-source CLI tool that replaces your `package.json` scripts with a single documented Markdown file called `fscripts.md`. The file is simultaneously your documentation AND your script runner — docs and code literally cannot drift apart.
 

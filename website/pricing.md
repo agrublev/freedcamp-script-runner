@@ -1,4 +1,6 @@
 # Pricing — fsr (Freedcamp Script Runner)
+Last updated: 2026-06-18
+
 
 ## Free — Forever
 
