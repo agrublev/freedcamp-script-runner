@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed completions generator to work with updated module structure
+
+### Fixed
+
 - Improved diagnostics in the doctor command for better performance insights.
 
 ### Added
