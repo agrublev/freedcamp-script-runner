@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed table of contents generation failing when bundled with esbuild due to lazy-cache dependency.
+
 ### Added
 
 - Added a hello-world example plugin demonstrating basic plugin features.
