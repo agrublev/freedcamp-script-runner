@@ -358,6 +358,51 @@ else
     download_and_install
 fi
 
+# Detect where npm (or the user's package manager) puts global binaries.
+# This is the standard location used by `npm install -g`.
+get_npm_global_bin() {
+    if command -v npm >/dev/null 2>&1; then
+        local prefix
+        prefix=$(npm config get prefix 2>/dev/null || true)
+        if [ -n "$prefix" ] && [ "$prefix" != "undefined" ]; then
+            echo "$prefix/bin"
+            return 0
+        fi
+    fi
+    return 1
+}
+
+# Register fsr in the user's bin folder, preferring the exact same location
+# that `npm install -g` would use on this machine.
+register_user_bin() {
+    local target_bin=""
+    local source_desc=""
+
+    if target_bin=$(get_npm_global_bin); then
+        source_desc="npm global bin (from 'npm config get prefix')"
+    else
+        target_bin="$HOME/.local/bin"
+        source_desc="~/.local/bin (standard user bin fallback)"
+    fi
+
+    mkdir -p "$target_bin" 2>/dev/null || true
+
+    if [ -w "$target_bin" ]; then
+        ln -sf "${INSTALL_DIR}/fsr" "$target_bin/fsr"
+        print_message info "${MUTED}Registered fsr → ${NC}$target_bin/fsr"
+        print_message info "${MUTED}  (using $source_desc)${NC}"
+    else
+        print_message warning "Could not write symlink into $target_bin"
+        print_message info "Binary lives at: ${INSTALL_DIR}/fsr"
+        print_message info "Manual link:"
+        print_message info "  ln -sf ${INSTALL_DIR}/fsr $target_bin/fsr"
+    fi
+}
+
+# Always attempt registration (symlink only).
+# This happens even with --no-modify-path.
+register_user_bin
+
 
 add_to_path() {
     local config_file=$1
@@ -441,6 +486,18 @@ fi
 if [ -n "${GITHUB_ACTIONS-}" ] && [ "${GITHUB_ACTIONS}" == "true" ]; then
     echo "$INSTALL_DIR" >> $GITHUB_PATH
     print_message info "Added $INSTALL_DIR to \$GITHUB_PATH"
+fi
+
+# Final check — show the user where fsr ended up
+echo ""
+if command -v fsr >/dev/null 2>&1; then
+    fsr_path=$(command -v fsr)
+    print_message info "${MUTED}✓ fsr is now available${NC}"
+    print_message info "  ${fsr_path}"
+else
+    print_message warning "fsr installed to ${INSTALL_DIR}/fsr but not yet in this shell's PATH."
+    print_message info "Start a new terminal session, or run:"
+    print_message info "  source ~/.zshrc   # (or equivalent for your shell)"
 fi
 
 echo -e ""
