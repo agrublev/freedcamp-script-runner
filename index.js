@@ -260,11 +260,14 @@ const COMMANDS = [
     // guarantee the assignment happens before yi.argv triggers handlers.
     // Handles both "--env staging" / "-e staging" and "--env=staging" forms.
     // ------------------------------------------------------------------
-    const { env: _envProfile, args: _cleanArgs } = getEnvArg(process.argv.slice(2));
+    const { env: _envProfile } = getEnvArg(process.argv.slice(2));
     const _profile = _envProfile || "development";
     process.env.NODE_ENV = _profile;
     process.env.FSR_ENV = _profile;
-    process.argv = [process.argv[0], process.argv[1], ..._cleanArgs];
+    // NOTE: We intentionally do NOT overwrite process.argv here.
+    // --env / -e is registered as a global yargs option, so yargs will parse
+    // it correctly from the original argv.  Stripping it was preventing
+    // argv.env from being set inside command handlers (run-p, run-s, etc.).
 
     // clear();
     const { commands: pluginCommands, runnablePlugins } = await loadPlugins();
