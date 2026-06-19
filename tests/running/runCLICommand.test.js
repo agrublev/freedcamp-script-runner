@@ -54,15 +54,17 @@ describe("runCLICommand – javascript lang", () => {
         );
     });
 
-    it("fires post-task hook after javascript execution", async () => {
+    it("fires pre-task before post-task for javascript execution", async () => {
+        const order = [];
+        fireHook.mockImplementation(async (name) => { order.push(name); });
         await runCLICommand({
             task: { name: "my-task" },
             script: { lang: "javascript", full: "// noop", env: {}, type: "node", rest: [] }
         });
-        expect(fireHook).toHaveBeenCalledWith(
-            "post-task",
-            expect.objectContaining({ taskName: "my-task", success: true })
-        );
+        expect(order[0]).toBe("pre-task");
+        expect(order[1]).toBe("post-task");
+        expect(fireHook).toHaveBeenCalledWith("pre-task", expect.objectContaining({ taskName: "my-task" }));
+        expect(fireHook).toHaveBeenCalledWith("post-task", expect.objectContaining({ taskName: "my-task", success: true }));
     });
 
     it("fires task-error hook when a javascript task throws", async () => {
@@ -94,16 +96,18 @@ describe("runCLICommand – bash lang", () => {
         expect(spawnNS.default).toHaveBeenCalled();
     });
 
-    it("fires post-task hook on successful exit", async () => {
+    it("fires pre-task before post-task for bash execution", async () => {
+        const order = [];
+        fireHook.mockImplementation(async (name) => { order.push(name); });
         spawnNS.default.mockReturnValue(makeProcess(0));
         await runCLICommand({
             task: { name: "build" },
             script: { lang: "bash", type: "node", full: "dist/index.js", env: {}, rest: [] }
         });
-        expect(fireHook).toHaveBeenCalledWith(
-            "post-task",
-            expect.objectContaining({ taskName: "build", success: true })
-        );
+        expect(order[0]).toBe("pre-task");
+        expect(order[1]).toBe("post-task");
+        expect(fireHook).toHaveBeenCalledWith("pre-task", expect.objectContaining({ taskName: "build" }));
+        expect(fireHook).toHaveBeenCalledWith("post-task", expect.objectContaining({ taskName: "build", success: true }));
     });
 
     it("fires task-error hook on non-zero exit code", async () => {
@@ -142,6 +146,8 @@ describe("runCLICommand – bash lang", () => {
             script: { lang: "bash", type: "node", full: "boom.js", env: {}, rest: [] }
         });
 
+        // Allow the pre-task fireHook await to settle before handlers are populated.
+        await Promise.resolve();
         await handlers.error(new Error("spawn ENOENT"));
         await p;
 

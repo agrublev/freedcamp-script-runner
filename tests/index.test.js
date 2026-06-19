@@ -34,6 +34,7 @@ const h = vi.hoisted(() => ({
     completion: vi.fn(),
     loadPlugins: vi.fn(),
     registerPluginCommands: vi.fn((y) => y),
+    findExternalPluginDirs: vi.fn(() => []),
     fireHook: vi.fn(),
     spawn: vi.fn(),
     fsrLog: { log: vi.fn(), error: vi.fn(), warn: vi.fn() },
@@ -66,7 +67,8 @@ vi.mock("../lib/doctor/doctor.js", () => ({ default: h.doctor }));
 vi.mock("../lib/completions/completion.js", () => ({ default: h.completion }));
 vi.mock("../lib/plugins/loader.js", () => ({
     loadPlugins: h.loadPlugins,
-    registerPluginCommands: h.registerPluginCommands
+    registerPluginCommands: h.registerPluginCommands,
+    findExternalPluginDirs: h.findExternalPluginDirs,
 }));
 vi.mock("../lib/plugins/hooks.js", () => ({ fireHook: h.fireHook }));
 vi.mock("../lib/utils/console.js", () => ({ default: h.fsrLog }));
@@ -185,14 +187,19 @@ describe("interactive picker (no args)", () => {
         expect(h.fsrLog.log).toHaveBeenCalled();
     });
 
-    it("selecting a plugin runs it and fires post-task hook", async () => {
-        const run = vi.fn().mockResolvedValue(undefined);
+    it("selecting a plugin fires pre-task, runs it, then fires post-task", async () => {
+        const order = [];
+        const run = vi.fn().mockImplementation(async () => { order.push("run"); });
+        h.fireHook.mockImplementation(async (name) => { order.push(name); });
         h.selectPlugin.mockResolvedValue("plugin:deploy");
         await runCli([], {
             plugins: { commands: [], runnablePlugins: [{ name: "deploy", description: "d", run }] }
         });
         expect(run).toHaveBeenCalledTimes(1);
+        expect(h.fireHook).toHaveBeenCalledWith("pre-task", expect.objectContaining({ taskName: "deploy" }));
         expect(h.fireHook).toHaveBeenCalledWith("post-task", expect.objectContaining({ taskName: "deploy", success: true }));
+        expect(order[0]).toBe("pre-task");
+        expect(order[1]).toBe("run");
     });
 });
 
@@ -329,5 +336,82 @@ describe("bare task shorthand — missing fscripts", () => {
         await runCli(["some-unknown-task"]);
         expect(h.fsrLog.error).toHaveBeenCalled();
         expect(h.runCLICommand).not.toHaveBeenCalled();
+    });
+});
+
+describe("`plugins` command", () => {
+    it("lists runnable plugins with their source badge", async () => {
+        const pluginList = {
+            commands: [],
+            runnablePlugins: [
+                { name: "deploy", description: "Deploy app", source: "builtin" },
+                { name: "fscr-plugin-cloud", description: "Cloud deploy", source: "npm" },
+            ],
+        };
+        // The plugins command calls loadPlugins() a second time internally.
+        h.loadPlugins
+            .mockResolvedValueOnce({ commands: [], runnablePlugins: [] }) // initial boot
+            .mockResolvedValueOnce(pluginList); // plugins command re-call
+        h.findExternalPluginDirs.mockReturnValue([{ dir: "fscr-plugin-cloud" }]);
+
+        await runCli(["plugins"]);
+
+        // Should log the plugin names
+        const logCalls = h.fsrLog.log.mock.calls.map((c) => String(c[0]));
+        expect(logCalls.some((s) => s.includes("deploy"))).toBe(true);
+        expect(logCalls.some((s) => s.includes("fscr-plugin-cloud"))).toBe(true);
+    });
+
+    it("includes command-only plugins (no run()) in the list, deduped against runnablePlugins", async () => {
+        // 'notify' is in pluginCmds but not in runnablePlugins → hits filter+map on lines 183-185
+        // 'deploy' is in BOTH → filter removes duplicate from pluginCmds
+        const pluginList = {
+            commands: [
+                { name: "deploy", description: "Deploy", source: "builtin" },
+                { name: "notify" }, // no description — exercises the `|| ""` fallback
+            ],
+            runnablePlugins: [{ name: "deploy", description: "Deploy", source: "builtin" }],
+        };
+        h.loadPlugins
+            .mockResolvedValueOnce({ commands: [], runnablePlugins: [] })
+            .mockResolvedValueOnce(pluginList);
+        h.findExternalPluginDirs.mockReturnValue([]);
+
+        await runCli(["plugins"]);
+
+        const logCalls = h.fsrLog.log.mock.calls.map((c) => String(c[0]));
+        // notify should appear (command-only plugin)
+        expect(logCalls.some((s) => s.includes("notify"))).toBe(true);
+        // deploy should appear once (runnablePlugin wins; duplicate filtered out)
+        const deployLines = logCalls.filter((s) => s.includes("deploy"));
+        expect(deployLines).toHaveLength(1);
+    });
+
+    it("shows [local] badge for project-local plugins", async () => {
+        const pluginList = {
+            commands: [],
+            runnablePlugins: [{ name: "cache-cleaner", description: "Clears cache", source: "local" }],
+        };
+        h.loadPlugins
+            .mockResolvedValueOnce({ commands: [], runnablePlugins: [] })
+            .mockResolvedValueOnce(pluginList);
+        h.findExternalPluginDirs.mockReturnValue([]);
+
+        await runCli(["plugins"]);
+
+        const logCalls = h.fsrLog.log.mock.calls.map((c) => String(c[0]));
+        expect(logCalls.some((s) => s.includes("cache-cleaner"))).toBe(true);
+    });
+
+    it("reports 'No plugins found' when nothing is loaded", async () => {
+        h.loadPlugins
+            .mockResolvedValueOnce({ commands: [], runnablePlugins: [] }) // initial boot
+            .mockResolvedValueOnce({ commands: [], runnablePlugins: [] }); // plugins command re-call
+        h.findExternalPluginDirs.mockReturnValue([]);
+
+        await runCli(["plugins"]);
+
+        const logCalls = h.fsrLog.log.mock.calls.map((c) => String(c[0]));
+        expect(logCalls.some((s) => s.toLowerCase().includes("no plugins"))).toBe(true);
     });
 });
