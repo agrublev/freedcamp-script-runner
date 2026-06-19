@@ -62,7 +62,10 @@ vi.mock("../lib/running/parseTask.js", () => ({ default: h.parseTask }));
 vi.mock("../lib/taskList.js", () => ({ selectPlugin: h.selectPlugin }));
 vi.mock("../lib/git/validateNotDev.js", () => ({ default: h.validateNotInDev }));
 vi.mock("../lib/encryption/encryption.js", () => ({ default: h.encrypt }));
-vi.mock("../lib/utils/index.js", () => ({ clear: h.clear }));
+vi.mock("../lib/utils/index.js", async (importOriginal) => {
+    const actual = await importOriginal();
+    return { ...actual, clear: h.clear };
+});
 vi.mock("../lib/doctor/doctor.js", () => ({ default: h.doctor }));
 vi.mock("../lib/completions/completion.js", () => ({ default: h.completion }));
 vi.mock("../lib/plugins/loader.js", () => ({
