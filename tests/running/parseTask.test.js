@@ -32,3 +32,38 @@ describe("parseTask", () => {
         expect(out.script.rest).toEqual([""]);
     });
 });
+
+describe("parseTask — env profile injection (taskData.env)", () => {
+    it("injects NODE_ENV and FSR_ENV when taskData.env is set (bash task)", () => {
+        const out = parseTask({ name: "serve", script: "node server.js", lang: "bash", env: "staging" });
+        expect(out.script.env).toMatchObject({ NODE_ENV: "staging", FSR_ENV: "staging" });
+    });
+
+    it("injects NODE_ENV and FSR_ENV when taskData.env is set (javascript task)", () => {
+        const out = parseTask({ name: "build", script: "await run();", lang: "javascript", env: "production" });
+        expect(out.script.env).toEqual({ NODE_ENV: "production", FSR_ENV: "production" });
+    });
+
+    it("does not inject profile env vars when taskData.env is absent (bash task)", () => {
+        const out = parseTask({ name: "serve", script: "node server.js", lang: "bash" });
+        expect(out.script.env).toEqual({});
+    });
+
+    it("does not inject profile env vars when taskData.env is absent (javascript task)", () => {
+        const out = parseTask({ name: "build", script: "await run();", lang: "javascript" });
+        expect(out.script.env).toEqual({});
+    });
+
+    it("inline KEY=value assignments in the script override the profile NODE_ENV", () => {
+        // The developer explicitly set NODE_ENV=test in the script; that wins over the profile.
+        const out = parseTask({
+            name: "test",
+            script: "NODE_ENV=test jest",
+            lang: "bash",
+            env: "staging"
+        });
+        expect(out.script.env.NODE_ENV).toBe("test");
+        // FSR_ENV still comes from the profile since the script did not override it
+        expect(out.script.env.FSR_ENV).toBe("staging");
+    });
+});

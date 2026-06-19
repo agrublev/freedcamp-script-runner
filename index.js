@@ -251,6 +251,31 @@ const COMMANDS = [
 ];
 
 (async () => {
+    // ------------------------------------------------------------------
+    // Inject NODE_ENV and FSR_ENV as early as possible — before yargs
+    // invokes any command handler and before any child process spawns —
+    // so that all subsequent code and spawned children inherit the value.
+    //
+    // We scan process.argv directly (rather than waiting for yargs) to
+    // guarantee the assignment happens before yi.argv triggers handlers.
+    // Handles both "--env staging" / "-e staging" and "--env=staging" forms.
+    // ------------------------------------------------------------------
+    {
+        const _eqArg = process.argv.find((a) => a.startsWith("--env=") || a.startsWith("-e="));
+        const _spaceIdx = process.argv.findIndex((a) => a === "--env" || a === "-e");
+        const _raw =
+            _eqArg != null
+                ? _eqArg.split("=").slice(1).join("=")
+                : _spaceIdx !== -1 &&
+                  process.argv[_spaceIdx + 1] &&
+                  !process.argv[_spaceIdx + 1].startsWith("-")
+                ? process.argv[_spaceIdx + 1]
+                : null;
+        const _profile = _raw || "development";
+        process.env.NODE_ENV = _profile;
+        process.env.FSR_ENV = _profile;
+    }
+
     clear();
     const { commands: pluginCommands, runnablePlugins } = await loadPlugins();
 

@@ -91,4 +91,34 @@ describe("runParallel", () => {
     it("handles empty task list without error", async () => {
         await expect(runParallel([], makeFcScripts([]))).resolves.toBeUndefined();
     });
+
+    it("forwards NODE_ENV and FSR_ENV from env profile to script.env (bash task)", async () => {
+        const fcScripts = makeFcScripts([
+            { name: "serve", script: "node server.js", lang: "bash", env: "staging", order: 0 }
+        ]);
+
+        await runParallel(["serve"], fcScripts);
+        expect(runCLICommand).toHaveBeenCalledWith(
+            expect.objectContaining({
+                script: expect.objectContaining({
+                    env: expect.objectContaining({ NODE_ENV: "staging", FSR_ENV: "staging" })
+                })
+            })
+        );
+    });
+
+    it("forwards NODE_ENV and FSR_ENV from env profile to script.env (javascript task)", async () => {
+        const fcScripts = makeFcScripts([
+            { name: "js-task", script: "console.log('hi')", lang: "javascript", env: "production", order: 0 }
+        ]);
+
+        await runParallel(["js-task"], fcScripts);
+        expect(runCLICommand).toHaveBeenCalledWith(
+            expect.objectContaining({
+                script: expect.objectContaining({
+                    env: expect.objectContaining({ NODE_ENV: "production", FSR_ENV: "production" })
+                })
+            })
+        );
+    });
 });

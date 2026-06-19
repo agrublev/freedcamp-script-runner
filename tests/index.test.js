@@ -174,10 +174,14 @@ describe("bare task shorthand", () => {
 });
 
 describe("interactive picker (no args)", () => {
-    it("selecting a command spawns `yarn fsr <choice>`", async () => {
+    it("selecting a built-in command runs its handler in-process (no spawn)", async () => {
+        // The picker now calls command.handler() directly instead of spawning
+        // a second `yarn fsr <choice>` process — fixes the raw-mode double-render bug.
         h.selectPlugin.mockResolvedValue("start");
         await runCli([]);
-        expect(h.spawn).toHaveBeenCalledWith("yarn", ["fsr", "start"], expect.any(Object));
+        expect(h.startScripts).toHaveBeenCalledTimes(1);
+        expect(h.startScripts).toHaveBeenCalledWith(true, null);
+        expect(h.spawn).not.toHaveBeenCalled();
     });
 
     it("declining the picker prints a goodbye and spawns nothing", async () => {
@@ -209,10 +213,10 @@ describe("command dispatch — remaining handlers", () => {
         expect(h.commit).toHaveBeenCalledTimes(1);
     });
 
-    it("`start` invokes startScripts() with no args (category flow)", async () => {
+    it("`start` invokes startScripts(true, null) (category flow, no env profile)", async () => {
         await runCli(["start"]);
         expect(h.startScripts).toHaveBeenCalledTimes(1);
-        expect(h.startScripts.mock.calls[0]).toEqual([]);
+        expect(h.startScripts.mock.calls[0]).toEqual([true, null]);
     });
 
     it("`scripts` invokes startPackageScripts()", async () => {
@@ -220,9 +224,9 @@ describe("command dispatch — remaining handlers", () => {
         expect(h.startPackageScripts).toHaveBeenCalledTimes(1);
     });
 
-    it("`list` invokes startScripts(false)", async () => {
+    it("`list` invokes startScripts(false, null) (no env profile)", async () => {
         await runCli(["list"]);
-        expect(h.startScripts).toHaveBeenCalledWith(false);
+        expect(h.startScripts).toHaveBeenCalledWith(false, null);
     });
 
     it("`bump` forwards the version type and a coerced skipGit boolean", async () => {
@@ -297,17 +301,11 @@ describe("command dispatch — remaining handlers", () => {
 });
 
 describe("interactive picker — error and plugin branches", () => {
-    it("logs an error when the spawned command emits 'error'", async () => {
+    it("selecting a built-in command via picker passes env=null when --env is omitted", async () => {
+        // The in-process handler receives { env: null } so argv.env || null works correctly.
         h.selectPlugin.mockResolvedValue("start");
-        h.spawn.mockReturnValue({
-            on(ev, cb) {
-                if (ev === "error") queueMicrotask(() => cb(new Error("boom")));
-                return this;
-            }
-        });
         await runCli([]);
-        expect(h.spawn).toHaveBeenCalledWith("yarn", ["fsr", "start"], expect.any(Object));
-        expect(h.fsrLog.error).toHaveBeenCalled();
+        expect(h.startScripts).toHaveBeenCalledWith(true, null);
     });
 
     it("ignores a plugin choice that matches no runnable plugin", async () => {
@@ -336,6 +334,84 @@ describe("bare task shorthand — missing fscripts", () => {
         await runCli(["some-unknown-task"]);
         expect(h.fsrLog.error).toHaveBeenCalled();
         expect(h.runCLICommand).not.toHaveBeenCalled();
+    });
+});
+
+describe("--env flag → process.env injection", () => {
+    // Save and restore so individual tests don't bleed into each other.
+    let savedNodeEnv;
+    let savedFsrEnv;
+
+    beforeEach(() => {
+        savedNodeEnv = process.env.NODE_ENV;
+        savedFsrEnv = process.env.FSR_ENV;
+    });
+
+    afterEach(() => {
+        process.env.NODE_ENV = savedNodeEnv;
+        process.env.FSR_ENV = savedFsrEnv;
+    });
+
+    it("`fsr --env staging run build` sets NODE_ENV and FSR_ENV to 'staging'", async () => {
+        h.parseScriptFile.mockResolvedValue({ allTasks: [{ name: "build", script: "echo hi" }] });
+        await runCli(["--env", "staging", "run", "build"]);
+        expect(process.env.NODE_ENV).toBe("staging");
+        expect(process.env.FSR_ENV).toBe("staging");
+    });
+
+    it("`fsr run build` (--env omitted) defaults NODE_ENV and FSR_ENV to 'development'", async () => {
+        h.parseScriptFile.mockResolvedValue({ allTasks: [{ name: "build", script: "echo hi" }] });
+        await runCli(["run", "build"]);
+        expect(process.env.NODE_ENV).toBe("development");
+        expect(process.env.FSR_ENV).toBe("development");
+    });
+
+    it("`fsr --env=production run build` (equals form) sets NODE_ENV and FSR_ENV", async () => {
+        h.parseScriptFile.mockResolvedValue({ allTasks: [{ name: "build", script: "echo hi" }] });
+        await runCli(["--env=production", "run", "build"]);
+        expect(process.env.NODE_ENV).toBe("production");
+        expect(process.env.FSR_ENV).toBe("production");
+    });
+
+    it("`fsr -e staging run build` (short alias) sets NODE_ENV and FSR_ENV", async () => {
+        h.parseScriptFile.mockResolvedValue({ allTasks: [{ name: "build", script: "echo hi" }] });
+        await runCli(["-e", "staging", "run", "build"]);
+        expect(process.env.NODE_ENV).toBe("staging");
+        expect(process.env.FSR_ENV).toBe("staging");
+    });
+
+    it("env injection fires before any handler (NODE_ENV visible inside parseTask)", async () => {
+        h.parseScriptFile.mockResolvedValue({ allTasks: [{ name: "check" }] });
+        let seenNodeEnv;
+        h.parseTask.mockImplementation((td) => {
+            seenNodeEnv = process.env.NODE_ENV;
+            return td;
+        });
+        await runCli(["--env", "test", "run", "check"]);
+        expect(seenNodeEnv).toBe("test");
+    });
+
+    it("bare-task shorthand also inherits the --env injection", async () => {
+        h.parseScriptFile.mockResolvedValue({ allTasks: [{ name: "release:publish" }] });
+        await runCli(["--env", "staging", "release:publish"]);
+        expect(process.env.NODE_ENV).toBe("staging");
+        expect(process.env.FSR_ENV).toBe("staging");
+    });
+
+    it("`run-p --env staging a b` passes { env: 'staging' } to parseScriptFile", async () => {
+        h.parseScriptFile.mockResolvedValue({ allTasks: [] });
+        await runCli(["run-p", "--env", "staging", "a", "b"]);
+        expect(h.parseScriptFile).toHaveBeenCalledWith({ env: "staging" });
+        expect(h.runParallel).toHaveBeenCalledTimes(1);
+        expect(h.runParallel.mock.calls[0][0]).toEqual(["a", "b"]);
+    });
+
+    it("`run-s --env staging a b` passes { env: 'staging' } to parseScriptFile", async () => {
+        h.parseScriptFile.mockResolvedValue({ allTasks: [] });
+        await runCli(["run-s", "--env", "staging", "a", "b"]);
+        expect(h.parseScriptFile).toHaveBeenCalledWith({ env: "staging" });
+        expect(h.runSequence).toHaveBeenCalledTimes(1);
+        expect(h.runSequence.mock.calls[0][0]).toEqual(["a", "b"]);
     });
 });
 
