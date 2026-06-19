@@ -9,7 +9,8 @@
         "fsr": "bun ./dist/index.js",
         "start": "yarn fsr",
         "list": "yarn fsr start",
-        "test:coverage": "vitest run --coverage"
+        "test:coverage": "vitest run --coverage",
+        "claw": "node scripts/claw.js"
     },
     "fscripts": {
         "encryptedFiles": [
