@@ -50,7 +50,7 @@ const COMMANDS = [
     {
         cmd: "start",
         desc: "Choose a category then a task to run interactively",
-        handler: async () => startScripts(),
+        handler: async (argv) => startScripts(true, argv.env || null),
         menu: true
     },
     {
@@ -62,7 +62,7 @@ const COMMANDS = [
     {
         cmd: "list",
         desc: "Select any task with text autocompletion",
-        handler: async () => startScripts(false),
+        handler: async (argv) => startScripts(false, argv.env || null),
         menu: true
     },
     {
@@ -71,7 +71,7 @@ const COMMANDS = [
         builder: (y) => y.positional("task", { describe: "task name", default: "" }),
         handler: async (argv) => {
             const { task } = argv;
-            const parsed = await parseScriptFile();
+            const parsed = await parseScriptFile(argv.env ? { env: argv.env } : {});
             if (!parsed) {
                 fsrLog.error(chalk.bold.underline.red("No fscripts.md file found"));
                 return;
@@ -101,14 +101,16 @@ const COMMANDS = [
     {
         cmd: "run-s [tasks..]",
         desc: "Run a set of tasks sequentially",
-        handler: async (argv) => runSequence(argv.tasks || [], await parseScriptFile()),
+        handler: async (argv) =>
+            runSequence(argv.tasks || [], await parseScriptFile(argv.env ? { env: argv.env } : {})),
         examples: [["$0 run-s start:web start:desktop", "Run start:web then start:desktop"]],
         menu: true
     },
     {
         cmd: "run-p [tasks..]",
         desc: "Run tasks in parallel",
-        handler: async (argv) => runParallel(argv.tasks || [], await parseScriptFile()),
+        handler: async (argv) =>
+            runParallel(argv.tasks || [], await parseScriptFile(argv.env ? { env: argv.env } : {})),
         examples: [
             ["$0 run-p start:web start:desktop", "Run start:web and start:desktop simultaneously"]
         ],
@@ -266,7 +268,15 @@ const COMMANDS = [
         }
     }
 
-    yi = yi.help();
+    yi = yi
+        .option("env", {
+            alias: "e",
+            type: "string",
+            description:
+                "Filter scripts to the named environment profile (defined via `## [env:name]` sections in fscripts.md)",
+            global: true
+        })
+        .help();
     registerPluginCommands(yi, pluginCommands);
 
     // Derived from COMMANDS — no manual maintenance required.
@@ -326,13 +336,13 @@ const COMMANDS = [
             // "press Enter twice to load a script" bug).
             const command = COMMANDS.find((c) => c.cmd.split(" ")[0] === choice);
             if (command) {
-                await command.handler({ _: [choice], $0: "fsr" });
+                await command.handler({ _: [choice], $0: "fsr", env: argv.env || null });
             }
         }
     } else if (argv._ && argv._.length > 0 && !BUILTIN_COMMANDS.has(argv._[0])) {
         // Bare task shorthand: `fsr release:publish` → same as `fsr run release:publish`
         const taskArg = argv._[0];
-        const parsed = await parseScriptFile();
+        const parsed = await parseScriptFile(argv.env ? { env: argv.env } : {});
         if (!parsed) {
             fsrLog.error(chalk.bold.underline.red("No fscripts.md file found"));
             return;

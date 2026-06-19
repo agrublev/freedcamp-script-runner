@@ -19,9 +19,9 @@ const result = await Bun.build({
     // Native .node binary add-ons cannot be inlined.
     external: ["*.node"],
     metafile: true,
-    optimizeImports: ["ink", "inquirer", "conf"],
+    optimizeImports: ["ink", "inquirer"],
     alias: {
-        "@utils": resolve(root, "lib/utils"),
+        "@utils": resolve(root, "lib/utils")
     },
     plugins: [
         {

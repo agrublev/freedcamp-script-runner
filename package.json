@@ -38,7 +38,6 @@
         "@anthropic-ai/sdk": "^0.104.2",
         "boxen": "^8.0.1",
         "chalk": "^5.6.2",
-        "conf": "^15.1.0",
         "cross-spawn": "^7.0.6",
         "fc-filepick": "^2.0.0",
         "fs-extra": "^11.3.5",

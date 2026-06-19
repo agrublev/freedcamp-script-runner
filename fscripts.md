@@ -1,3 +1,5 @@
+-   [Fun](#fun)
+    -   [awesome](#awesome)
 -   [Build](#build)
     -   [build](#build)
     -   [build:ui](#buildui)
@@ -7,23 +9,24 @@
     -   [start](#start)
     -   [start:run](#startrun)
 -   [Release](#release)
-    -   [release](#release-1)
+    -   [release](#release)
+    -   [release:bump](#releasebump)
+    -   [release:commit](#releasecommit)
     -   [release:publish](#releasepublish)
 -   [Testing](#testing)
-    -   [test](#test)
-    -   [test:watch](#testwatch)
-    -   [test:coverage](#testcoverage)
-    -   [test:coverage:open](#testcoverageopen)
-
+_ [test](#test)
+_ [test:watch](#testwatch)
+_ [test:coverage](#testcoverage)
+_ [test:coverage:open](#testcoverageopen)
 <!-- end toc -->
 
 # Fun
 
-## fun:console
+## awesome
 
-```javascript
-import chalk from "chalk";
-console.log(chalk.hex("#799f0e").bold(`[Notification]`));
+```bash
+sleep 2
+echo "----"
 ```
 
 # Build
