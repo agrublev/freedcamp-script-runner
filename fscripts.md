@@ -17,6 +17,15 @@
 
 <!-- end toc -->
 
+# Fun
+
+## fun:console
+
+```javascript
+import chalk from "chalk";
+console.log(chalk.hex("#799f0e").bold(`[Notification]`));
+```
+
 # Build
 
 Everything needed to compile source into `dist/` — from a full clean rebuild to incremental UI-only transpilation and file watching.
@@ -159,8 +168,8 @@ const opener =
     process.platform === "darwin"
         ? { cmd: "open", args: [report] }
         : process.platform === "win32"
-          ? { cmd: "start", args: ["", report] }
-          : { cmd: "xdg-open", args: [report] };
+        ? { cmd: "start", args: ["", report] }
+        : { cmd: "xdg-open", args: [report] };
 
 spawnSync(opener.cmd, opener.args, { stdio: "inherit", shell: true });
 console.log(`\nCoverage report: ${report}`);
