@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added a hello-world example plugin demonstrating basic plugin features.
+- Added plugin lifecycle hooks and improved plugin loader functionality.
+- Added --plugin flag support for running CLI commands with specific plugins.
+
 ### Fixed
 
 - Fixed shell completions to handle missing fscripts.md file gracefully
