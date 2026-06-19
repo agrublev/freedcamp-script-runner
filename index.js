@@ -261,10 +261,13 @@ const COMMANDS = [
     // Handles both "--env staging" / "-e staging" and "--env=staging" forms.
     // ------------------------------------------------------------------
     {
+        const _hasProd = process.argv.includes("--prod");
         const _eqArg = process.argv.find((a) => a.startsWith("--env=") || a.startsWith("-e="));
         const _spaceIdx = process.argv.findIndex((a) => a === "--env" || a === "-e");
         const _raw =
-            _eqArg != null
+            _hasProd
+                ? "production"
+                : _eqArg != null
                 ? _eqArg.split("=").slice(1).join("=")
                 : _spaceIdx !== -1 &&
                   process.argv[_spaceIdx + 1] &&
@@ -299,6 +302,11 @@ const COMMANDS = [
             type: "string",
             description:
                 "Filter scripts to the named environment profile (defined via `## [env:name]` sections in fscripts.md)",
+            global: true
+        })
+        .option("prod", {
+            type: "boolean",
+            description: "Shorthand for --env=production",
             global: true
         })
         .help();

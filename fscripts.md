@@ -29,6 +29,13 @@ sleep 2
 echo "----"
 ```
 
+## env:test
+
+```javascript
+import "dotenv";
+console.log(process.env.NODE_ENV);
+```
+
 # Build
 
 Everything needed to compile source into `dist/` — from a full clean rebuild to incremental UI-only transpilation and file watching.
