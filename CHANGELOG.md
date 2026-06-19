@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue where the first keypress was intermittently swallowed when selecting commands from the interactive menu.
+- Fixed malformed task notification log messages.
+- Added wrap-around navigation when scrolling past the first or last item in pickers.
+
+### Fixed
+
 - Fixed table of contents generation failing when bundled with esbuild due to lazy-cache dependency.
 
 ### Added
