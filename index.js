@@ -9,7 +9,7 @@ import parseTask from "./lib/running/parseTask.js";
 import { selectPlugin } from "./lib/taskList.js";
 import validateNotInDev from "./lib/git/validateNotDev.js";
 import encrypt from "./lib/encryption/encryption.js";
-import { clear } from "./lib/utils/index.js";
+import { clear, getEnvArg } from "./lib/utils/index.js";
 import doctor from "./lib/doctor/doctor.js";
 import completion from "./lib/completions/completion.js";
 import {
@@ -260,26 +260,13 @@ const COMMANDS = [
     // guarantee the assignment happens before yi.argv triggers handlers.
     // Handles both "--env staging" / "-e staging" and "--env=staging" forms.
     // ------------------------------------------------------------------
-    {
-        const _hasProd = process.argv.includes("--prod");
-        const _eqArg = process.argv.find((a) => a.startsWith("--env=") || a.startsWith("-e="));
-        const _spaceIdx = process.argv.findIndex((a) => a === "--env" || a === "-e");
-        const _raw =
-            _hasProd
-                ? "production"
-                : _eqArg != null
-                ? _eqArg.split("=").slice(1).join("=")
-                : _spaceIdx !== -1 &&
-                  process.argv[_spaceIdx + 1] &&
-                  !process.argv[_spaceIdx + 1].startsWith("-")
-                ? process.argv[_spaceIdx + 1]
-                : null;
-        const _profile = _raw || "development";
-        process.env.NODE_ENV = _profile;
-        process.env.FSR_ENV = _profile;
-    }
+    const { env: _envProfile, args: _cleanArgs } = getEnvArg(process.argv.slice(2));
+    const _profile = _envProfile || "development";
+    process.env.NODE_ENV = _profile;
+    process.env.FSR_ENV = _profile;
+    process.argv = [process.argv[0], process.argv[1], ..._cleanArgs];
 
-    clear();
+    // clear();
     const { commands: pluginCommands, runnablePlugins } = await loadPlugins();
 
     // Build yargs from COMMANDS — single source of truth for registration,
@@ -302,11 +289,6 @@ const COMMANDS = [
             type: "string",
             description:
                 "Filter scripts to the named environment profile (defined via `## [env:name]` sections in fscripts.md)",
-            global: true
-        })
-        .option("prod", {
-            type: "boolean",
-            description: "Shorthand for --env=production",
             global: true
         })
         .help();
