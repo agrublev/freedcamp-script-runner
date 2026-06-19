@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support for -e as a short alias for the --env flag.
+
+### Fixed
+
+- Fixed argv.env not being set in command handlers by preserving original process.argv.
+
+### Added
+
 - **Environment profiles**: group tasks by deployment target directly in `fscripts.md` using `## [env:name]` section headers (e.g. `## [env:staging]`, `## [env:production]`). Every `##` task that follows such a header—until the next env header or a new `#` group—is tagged with that environment. Pass `--env <name>` (alias `-e`) to any command (`fsr`, `fsr start`, `fsr list`, `fsr run`, `fsr run-s`, `fsr run-p`) to restrict the visible and runnable tasks to the named profile. Tasks defined before any env header are unaffected when no `--env` is supplied, preserving full backward compatibility.
 
 ### Fixed
