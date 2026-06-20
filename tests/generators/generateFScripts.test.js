@@ -21,13 +21,16 @@ vi.mock("../../lib/utils/helpers.js", () => ({
 
 describe("generateFScripts", () => {
     let generateFScripts;
+    let readJson;
     let writeFile;
 
     beforeEach(async () => {
+        vi.clearAllMocks();
         vi.resetModules();
         const mod = await import("../../lib/generators/generateFScripts.js");
         generateFScripts = mod.default;
         const helpers = await import("../../lib/utils/helpers.js");
+        readJson = helpers.readJson;
         writeFile = helpers.writeFile;
     });
 
@@ -55,5 +58,16 @@ describe("generateFScripts", () => {
         await generateFScripts();
         const [, content] = writeFile.mock.calls[0];
         expect(content).toContain("# First category of scripts");
+    });
+
+    it("writes a helpful note when package.json has no scripts", async () => {
+        readJson.mockResolvedValueOnce({ name: "my-lib", version: "1.0.0" });
+
+        await generateFScripts();
+
+        const [, content] = writeFile.mock.calls[0];
+        expect(content).toContain("# First category of scripts");
+        expect(content).toContain("No npm scripts found in package.json.");
+        expect(content).not.toContain("## undefined");
     });
 });
