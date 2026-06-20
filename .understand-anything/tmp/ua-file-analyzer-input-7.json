@@ -1,9 +1,0 @@
-{
-  "projectRoot": "/Users/agrublev/DEVELOPMENT/freedcamp-script-runner",
-  "batchFiles": [
-    {"path": "lib/encryption/decryptConfig.js", "language": "javascript", "sizeLines": 5, "fileCategory": "code"},
-    {"path": "lib/encryption/encryption.js", "language": "javascript", "sizeLines": 176, "fileCategory": "code"},
-    {"path": "lib/utils/encryption.js", "language": "javascript", "sizeLines": 59, "fileCategory": "code"}
-  ],
-  "batchImportData": {"lib/encryption/decryptConfig.js": ["lib/encryption/encryption.js"], "lib/encryption/encryption.js": [], "lib/utils/encryption.js": ["lib/encryption/encryption.js"]}
-}

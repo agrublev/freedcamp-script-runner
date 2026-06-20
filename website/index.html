@@ -61,7 +61,7 @@
                 "applicationCategory": "DeveloperApplication",
                 "operatingSystem": "Windows, macOS, Linux",
                 "isAccessibleForFree": true,
-                "dateModified": "2026-06-18",
+                "dateModified": "2026-06-20",
                 "offers": {
                     "@type": "Offer",
                     "price": "0",
@@ -82,19 +82,27 @@
                     "url": "https://freedcamp.com"
                 },
                 "featureList": [
-                    "Interactive script picker with arrow-key navigation",
+                    "Interactive script picker with arrow-key navigation (fsr)",
+                    "Browse scripts by category (fsr start)",
+                    "Interactive picker for package.json scripts (fsr scripts)",
+                    "Fuzzy search across all tasks (fsr list)",
                     "Full JavaScript code blocks inside Markdown",
                     "Auto-generate fscripts.md from existing package.json scripts",
                     "Parallel execution with fsr run-p",
                     "Sequential execution with fsr run-s",
                     "Plugin hook system (pre-task, post-task)",
-                    "Built-in AES file encryption and decryption",
-                    "System doctor diagnostics and auto-fix",
-                    "Auto Table of Contents generation",
-                    "Version bump and package beautify",
-                    "Smart package upgrade detection",
-                    "Shell tab completions",
-                    "Git branch validation"
+                    "Plugin discovery — list all installed plugins (fsr plugins)",
+                    "Built-in AES file encryption and decryption (fsr encrypt / fsr decrypt)",
+                    "Interactive encrypt/decrypt menu (fsr encryption)",
+                    "System doctor diagnostics, auto-fix, and verbose output (fsr doctor)",
+                    "AI-powered conventional commit messages (fsr commit)",
+                    "Auto Table of Contents generation (fsr toc)",
+                    "Version bump and package beautify (fsr bump)",
+                    "Smart package upgrade detection (fsr upgrade)",
+                    "Shell tab completions (fsr completion)",
+                    "Git branch validation (fsr branch)",
+                    "Clear task history (fsr clear)",
+                    "Environment profiles — filter tasks by deployment target (fsr --env)"
                 ]
             }
         </script>
@@ -107,7 +115,7 @@
                 "name": "How to replace package.json scripts with fsr in 3 steps",
                 "description": "Replace cryptic package.json scripts with a documented, runnable Markdown file in under 2 minutes using fsr.",
                 "totalTime": "PT2M",
-                "dateModified": "2026-06-18",
+                "dateModified": "2026-06-20",
                 "tool": [{ "@type": "HowToTool", "name": "Node.js (with npm or yarn)" }],
                 "step": [
                     {
@@ -146,7 +154,7 @@
             {
                 "@context": "https://schema.org",
                 "@type": "FAQPage",
-                "dateModified": "2026-06-18",
+                "dateModified": "2026-06-20",
                 "mainEntity": [
                     {
                         "@type": "Question",
@@ -330,8 +338,11 @@
                         fsr (Freedcamp Script Runner, installed as the npm package fscr) is a free
                         open-source CLI that replaces package.json scripts with fscripts.md — a
                         single Markdown file that is simultaneously documentation and a script
-                        runner. Features include an interactive picker, full JavaScript blocks,
-                        parallel execution, plugin hooks, and built-in file encryption.
+                        runner. Features include an interactive picker (fsr / fsr start / fsr scripts / fsr list),
+                        full JavaScript blocks, parallel execution (fsr run-p), sequential execution (fsr run-s),
+                        plugin hooks (fsr plugins), built-in file encryption (fsr encrypt / fsr decrypt / fsr encryption),
+                        AI-powered commits (fsr commit), environment profiles (fsr --env &lt;name&gt;),
+                        and system diagnostics (fsr doctor).
                     </p>
                 </div>
 
@@ -906,9 +917,10 @@ console.<span style="color:#60a5fa;">log</span>(<span style="color:var(--accent,
                         <pre
                             class="code-block"
                             style="line-height: 1.7"
-                        ><span style="color:var(--accent,#27AD60);">$</span> fsr doctor          <span style="color:#6b6c75;"># run diagnostics</span><br/>
-<span style="color:var(--accent,#27AD60);">$</span> fsr doctor --fix    <span style="color:#6b6c75;"># auto-fix what it can</span><br/>
-<span style="color:var(--accent,#27AD60);">$</span> fsr doctor --json   <span style="color:#6b6c75;"># CI-friendly output</span></pre>
+                        ><span style="color:var(--accent,#27AD60);">$</span> fsr doctor           <span style="color:#6b6c75;"># run diagnostics</span><br/>
+<span style="color:var(--accent,#27AD60);">$</span> fsr doctor --fix     <span style="color:#6b6c75;"># auto-fix what it can</span><br/>
+<span style="color:var(--accent,#27AD60);">$</span> fsr doctor --json    <span style="color:#6b6c75;"># CI-friendly output</span><br/>
+<span style="color:var(--accent,#27AD60);">$</span> fsr doctor --verbose <span style="color:#6b6c75;"># verbose diagnostic output</span></pre>
                     </div>
 
                     <!-- F8 and more -->
@@ -918,6 +930,22 @@ console.<span style="color:#60a5fa;">log</span>(<span style="color:var(--accent,
                             <h3 class="feature-card__title">And more&hellip;</h3>
                         </div>
                         <div class="feature-list">
+                            <div class="feature-list__item">
+                                <span class="feature-list__label">🗂️ Browse by category / fuzzy search</span>
+                                <span class="feature-list__cmd">fsr start · fsr scripts · fsr list</span>
+                            </div>
+                            <div class="feature-list__item">
+                                <span class="feature-list__label">💬 AI-powered commits</span>
+                                <span class="feature-list__cmd">fsr commit</span>
+                            </div>
+                            <div class="feature-list__item">
+                                <span class="feature-list__label">🔌 Plugin discovery</span>
+                                <span class="feature-list__cmd">fsr plugins</span>
+                            </div>
+                            <div class="feature-list__item">
+                                <span class="feature-list__label">🌍 Environment profiles</span>
+                                <span class="feature-list__cmd">fsr --env &lt;name&gt;</span>
+                            </div>
                             <div class="feature-list__item">
                                 <span class="feature-list__label">📑 Auto Table of Contents</span>
                                 <span class="feature-list__cmd">fsr toc</span>

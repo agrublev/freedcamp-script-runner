@@ -1,5 +1,5 @@
 # fsr — Freedcamp Script Runner
-Last updated: 2026-06-18
+Last updated: 2026-06-20
 
 
 fsr (installed as the npm package `fscr`) is a free, open-source CLI tool that replaces your `package.json` scripts with a single documented Markdown file called `fscripts.md`. The file is simultaneously your documentation AND your script runner — docs and code literally cannot drift apart.
@@ -27,19 +27,24 @@ fsr                 # open the interactive picker, pick a script, run it
 ## Key features
 
 - **Interactive picker** — `fsr` opens an arrow-key picker showing every script with its human-readable description
+- **Interactive navigation modes** — `fsr start` (browse by category) · `fsr scripts` (package.json scripts only) · `fsr list` (fuzzy search all tasks)
 - **Full JavaScript blocks** — Write multi-line JavaScript directly inside Markdown fenced code blocks; run with `fsr run [task]`
 - **Auto-generate from package.json** — `fsr generate` imports all existing scripts with documentation stubs
 - **Parallel execution** — `fsr run-p start:web start:api` runs scripts concurrently with no extra tools
 - **Sequential execution** — `fsr run-s clean build:prod deploy:staging` runs scripts in order
 - **Plugin hook system** — Hook into `pre-task` and `post-task` events with custom plugins
+- **Plugin discovery** — `fsr plugins` lists all installed plugins (built-in and npm `fscr-plugin-*`)
 - **File encryption** — `fsr encrypt` / `fsr decrypt` for AES-encrypted `.env` files
-- **System doctor** — `fsr doctor` / `fsr doctor --fix` diagnoses and auto-fixes environment problems
+- **Interactive encrypt/decrypt menu** — `fsr encryption` for guided interactive mode
+- **System doctor** — `fsr doctor` / `fsr doctor --fix` / `fsr doctor --verbose` diagnoses and auto-fixes environment problems
+- **AI-powered commits** — `fsr commit` stages and commits changes with AI-generated conventional commit messages
 - **Auto Table of Contents** — `fsr toc`
 - **Version bump** — `fsr bump`
 - **Smart package upgrades** — `fsr upgrade`
-- **Shell tab completions** — `fsr completion`
-- **Cache management** — `fsr cache`
+- **Shell tab completions** — `fsr completion install` / `fsr completion uninstall` / `fsr completion status` / `fsr completion generate`; use `--shell` / `-s` to target a specific shell (bash, zsh, fish, powershell)
 - **Git branch validation** — `fsr branch`
+- **History clearing** — `fsr clear`
+- **Environment profiles** — `fsr --env <name>` / `fsr -e <name>` filters visible and runnable tasks by deployment target (e.g., `fsr --env staging`, `fsr --env production`)
 
 ## Pricing
 
