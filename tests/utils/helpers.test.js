@@ -83,6 +83,12 @@ describe("writeFile / readFile round-trip", () => {
         const contents = await readFile(file);
         expect(contents).toBe("line one\nline two");
     });
+
+    it("readFile returns an empty string when the file is missing", async () => {
+        const contents = await readFile(path.join(tmpDir, "missing.txt"));
+        expect(contents).toBe("");
+        expect(contents.split("\n")).toEqual([""]);
+    });
 });
 
 describe("appendToFile", () => {
