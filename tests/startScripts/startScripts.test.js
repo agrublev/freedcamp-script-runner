@@ -23,9 +23,15 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
 const SEP = "   ~   ";
 
-// Shared registry of mocked Conf instances + a seed so tests can pre-populate
-// the persisted store (e.g. existing recentTasks).
-const confMock = vi.hoisted(() => ({ instances: [], seed: {} }));
+// Mock for lib/cache/cache.js — replaces the old conf-based persistence.
+const cacheMock = vi.hoisted(() => ({
+    readCacheEntry: vi.fn(),
+    writeCacheEntry: vi.fn(),
+}));
+// Mock for the fs built-in — prevents real statSync calls on fscripts.md.
+const fsMock = vi.hoisted(() => ({
+    statSync: vi.fn(() => ({ size: 100 })),
+}));
 // Drives what the mocked ink render does with the AutoComplete props.
 //   mode "select" -> onSelect({ value }); "cancel" -> onCancel(); "none" -> nothing.
 const inkCtl = vi.hoisted(() => ({ mode: "select", value: "build" }));
@@ -35,18 +41,13 @@ vi.mock("../../lib/parsers/parseScriptsMd.js", () => ({ default: vi.fn() }));
 vi.mock("../../lib/parsers/parseScriptsPackage.js", () => ({ default: vi.fn() }));
 vi.mock("../../lib/running/runCLICommand.js", () => ({ default: vi.fn() }));
 vi.mock("../../lib/running/parseTask.js", () => ({ default: vi.fn((x) => x) }));
-vi.mock("conf", () => ({
-    default: class Conf {
-        constructor() {
-            this.store = { ...confMock.seed };
-            this.get = vi.fn((k, d) => (this.store[k] !== undefined ? this.store[k] : d));
-            this.set = vi.fn((k, v) => {
-                this.store[k] = v;
-            });
-            confMock.instances.push(this);
-        }
-    },
+// startScripts.js now uses lib/cache/cache.js (not conf) for persistence.
+vi.mock("../../lib/cache/cache.js", () => ({
+    readCacheEntry: cacheMock.readCacheEntry,
+    writeCacheEntry: cacheMock.writeCacheEntry,
 }));
+// Prevent real fs.statSync calls when checking fscripts.md file size.
+vi.mock("fs", () => ({ default: fsMock }));
 // The ink render mock drives the AutoComplete callbacks instead of rendering.
 vi.mock("ink", () => ({
     render: vi.fn((element) => {
@@ -76,8 +77,9 @@ describe("startScripts / taskListAutoComplete / startPackageScripts / clearRecen
 
     beforeEach(async () => {
         vi.resetModules();
-        confMock.instances.length = 0;
-        confMock.seed = {};
+        // Default: cache has no entries; writes are no-ops.
+        cacheMock.readCacheEntry.mockResolvedValue(null);
+        cacheMock.writeCacheEntry.mockResolvedValue(undefined);
         inkCtl.mode = "select";
         inkCtl.value = "build";
 
@@ -126,24 +128,32 @@ describe("startScripts / taskListAutoComplete / startPackageScripts / clearRecen
         expect(parseTask).toHaveBeenCalledWith(buildTask);
         expect(runCLICommand).toHaveBeenCalledWith(buildTask);
 
-        const conf = confMock.instances.at(-1);
-        expect(conf).toBeDefined();
-        const setCall = conf.set.mock.calls.find((c) => c[0] === "recentTasks");
-        expect(setCall[1]).toHaveProperty("build");
-        expect(typeof setCall[1].build.lastExecuted).toBe("number");
+        // The last writeCacheEntry call for "recentTasks" contains the executed task.
+        const recentCalls = cacheMock.writeCacheEntry.mock.calls.filter(
+            (c) => c[0] === "recentTasks",
+        );
+        const lastCall = recentCalls.at(-1);
+        expect(lastCall).toBeDefined();
+        expect(lastCall[1]).toHaveProperty("build");
+        expect(typeof lastCall[1].build.lastExecuted).toBe("number");
     });
 
     it("sorts existing recent tasks and updates lastExecuted for an already-recorded pick", async () => {
         // Four entries with timestamps 300/100/200/200 exercise every branch of the
         // sort comparator (>, <, ===) plus the .map / calendar formatting.
-        confMock.seed = {
-            recentTasks: {
-                build: { lastExecuted: 300 },
-                lint: { lastExecuted: 100 },
-                test: { lastExecuted: 200 },
-                docs: { lastExecuted: 200 },
-            },
+        const existingRecentTasks = {
+            build: { lastExecuted: 300 },
+            lint: { lastExecuted: 100 },
+            test: { lastExecuted: 200 },
+            docs: { lastExecuted: 200 },
         };
+        cacheMock.readCacheEntry.mockImplementation(async (key) => {
+            // Return matching size so the cache-reset branch is NOT triggered.
+            if (key === "fscriptsSize") return { value: 100 };
+            if (key === "recentTasks") return { value: existingRecentTasks };
+            return null;
+        });
+
         const buildTask = { name: "build", description: "compile" };
         parseScriptFile.mockResolvedValue({
             allTasks: [buildTask, { name: "lint", description: "l" }, { name: "test", description: "t" }],
@@ -154,11 +164,13 @@ describe("startScripts / taskListAutoComplete / startPackageScripts / clearRecen
         await startScripts();
 
         expect(runCLICommand).toHaveBeenCalledWith(buildTask);
-        const conf = confMock.instances.at(-1);
-        const setCall = conf.set.mock.calls.find((c) => c[0] === "recentTasks");
+        const recentCalls = cacheMock.writeCacheEntry.mock.calls.filter(
+            (c) => c[0] === "recentTasks",
+        );
+        const lastCall = recentCalls.at(-1);
         // Existing entry updated, not replaced wholesale.
-        expect(setCall[1].build.lastExecuted).not.toBe(300);
-        expect(typeof setCall[1].build.lastExecuted).toBe("number");
+        expect(lastCall[1].build.lastExecuted).not.toBe(300);
+        expect(typeof lastCall[1].build.lastExecuted).toBe("number");
         // Recent options (passed to the picker) only keep the 3 most recent.
         const optionsArg = taskList.mock.calls[0][1];
         expect(optionsArg).toHaveLength(3);
@@ -260,17 +272,23 @@ describe("startScripts / taskListAutoComplete / startPackageScripts / clearRecen
     it("clearRecent resets recentTasks to an empty object", async () => {
         await clearRecent();
 
-        const conf = confMock.instances.at(-1);
-        expect(conf).toBeDefined();
-        expect(conf.set).toHaveBeenCalledWith("recentTasks", {});
-        expect(conf.store.recentTasks).toEqual({});
+        // clearRecent() now delegates to writeCacheEntry from lib/cache/cache.js.
+        expect(cacheMock.writeCacheEntry).toHaveBeenCalledWith("recentTasks", {}, true);
     });
 
-    it("reuses the cached config across calls (getConfig memoization)", async () => {
+    it("each clearRecent() call writes to the cache (no stale memoization)", async () => {
+        // The old Conf-based implementation memoised a singleton, producing only one
+        // Conf instance across multiple clearRecent() calls. The cache.js-based
+        // implementation has no such singleton — each clearRecent() triggers a fresh
+        // writeCacheEntry. Verify that two calls produce two writes.
         await clearRecent();
         await clearRecent();
 
-        // Two getConfig calls, but the cached `_config` means only one Conf built.
-        expect(confMock.instances).toHaveLength(1);
+        const recentCalls = cacheMock.writeCacheEntry.mock.calls.filter(
+            (c) => c[0] === "recentTasks",
+        );
+        expect(recentCalls).toHaveLength(2);
+        expect(recentCalls[0][1]).toEqual({});
+        expect(recentCalls[1][1]).toEqual({});
     });
 });

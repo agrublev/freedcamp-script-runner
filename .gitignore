@@ -37,3 +37,7 @@ temp/
 config.json
 
 website/.firebase/*.cache
+
+# AI tool analysis caches — ephemeral, not for VCS
+.understand-anything/intermediate/
+.understand-anything/tmp/

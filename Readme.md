@@ -373,6 +373,23 @@ fsr run-p deploy:api deploy:web --env staging  # ⚡ parallel, staging only
 
 The `--env` flag is **global**: it works on every command that reads `fscripts.md`.
 
+#### shorthand aliases
+
+`--prod` and `--dev` are convenience shortcuts that are resolved before yargs parses the command. They map to `--env production` and `--env development` respectively:
+
+```bash
+fsr --prod                          # equivalent to: fsr --env production
+fsr --dev                           # equivalent to: fsr --env development
+fsr run deploy:api --prod           # runs deploy:api with env=production
+```
+
+These shortcuts also normalise the `prod` / `dev` shortnames when used with `--env`:
+
+```bash
+fsr --env prod    # resolved to: fsr --env production
+fsr --env dev     # resolved to: fsr --env development
+```
+
 ### behaviour at a glance
 
 | scenario | result |

@@ -164,4 +164,30 @@ describe("generateToc", () => {
             warnSpy.mockRestore();
         }
     });
+
+    it("handles link-style headings ([Text](url)) in markdown via custom slugify/getTitle", async () => {
+        // The custom getTitle function handles headings that are markdown links
+        // (e.g. "## [My Link](#url)"). This exercises the regex branch in
+        // getTitle and the options.num branch in slugify when headings repeat.
+        fsState.content = `# Scripts
+
+## [Build](#build)
+
+\`\`\`bash
+npm run build
+\`\`\`
+
+## [Build](#build)
+
+\`\`\`bash
+npm run build:watch
+\`\`\`
+`;
+        const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+        await generateToc();
+        expect(writeFile).toHaveBeenCalled();
+        const [, content] = writeFile.mock.calls[0];
+        expect(content).toContain("<!-- end toc -->");
+        consoleSpy.mockRestore();
+    });
 });

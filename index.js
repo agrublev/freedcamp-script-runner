@@ -9,7 +9,7 @@ import parseTask from "./lib/running/parseTask.js";
 import { selectPlugin } from "./lib/taskList.js";
 import validateNotInDev from "./lib/git/validateNotDev.js";
 import encrypt from "./lib/encryption/encryption.js";
-import { clear } from "./lib/utils/index.js";
+import { clear, getEnvArg } from "./lib/utils/index.js";
 import doctor from "./lib/doctor/doctor.js";
 import completion from "./lib/completions/completion.js";
 import {
@@ -21,6 +21,7 @@ import { fireHook } from "./lib/plugins/hooks.js";
 import yargs from "yargs";
 import fsrLog from "./lib/utils/console.js";
 import commit from "./lib/git/commit.js";
+import greet from "./lib/shell/greet.js";
 
 const taskName = chalk.rgb(39, 173, 96).bold.underline;
 const textDescription = chalk.rgb(159, 161, 181);
@@ -247,6 +248,36 @@ const COMMANDS = [
             ["$0 completion --shell zsh", "Install completions for zsh"]
         ],
         menu: true
+    },
+    {
+        cmd: "greet [action]",
+        desc: "Install a shell greeting that reminds you to use yarn fsr when fscripts.md is present",
+        builder: (y) =>
+            y
+                .positional("action", {
+                    describe: "Action to perform",
+                    type: "string",
+                    choices: ["install", "uninstall", "status"]
+                })
+                .option("shell", {
+                    alias: "s",
+                    type: "string",
+                    description: "Target shell (bash or zsh)",
+                    choices: ["bash", "zsh"]
+                })
+                .option("force", {
+                    alias: "f",
+                    type: "boolean",
+                    description: "Force reinstall",
+                    default: false
+                }),
+        handler: async (argv) => greet(argv),
+        examples: [
+            ["$0 greet install", "Install the greeting hook for your shell"],
+            ["$0 greet uninstall", "Remove the greeting hook"],
+            ["$0 greet status", "Check if the greeting hook is installed"]
+        ],
+        menu: true
     }
 ];
 
@@ -260,26 +291,16 @@ const COMMANDS = [
     // guarantee the assignment happens before yi.argv triggers handlers.
     // Handles both "--env staging" / "-e staging" and "--env=staging" forms.
     // ------------------------------------------------------------------
-    {
-        const _hasProd = process.argv.includes("--prod");
-        const _eqArg = process.argv.find((a) => a.startsWith("--env=") || a.startsWith("-e="));
-        const _spaceIdx = process.argv.findIndex((a) => a === "--env" || a === "-e");
-        const _raw =
-            _hasProd
-                ? "production"
-                : _eqArg != null
-                ? _eqArg.split("=").slice(1).join("=")
-                : _spaceIdx !== -1 &&
-                  process.argv[_spaceIdx + 1] &&
-                  !process.argv[_spaceIdx + 1].startsWith("-")
-                ? process.argv[_spaceIdx + 1]
-                : null;
-        const _profile = _raw || "development";
-        process.env.NODE_ENV = _profile;
-        process.env.FSR_ENV = _profile;
-    }
+    const { env: _envProfile } = getEnvArg(process.argv.slice(2));
+    const _profile = _envProfile || "development";
+    process.env.NODE_ENV = _profile;
+    process.env.FSR_ENV = _profile;
+    // NOTE: We intentionally do NOT overwrite process.argv here.
+    // --env / -e is registered as a global yargs option, so yargs will parse
+    // it correctly from the original argv.  Stripping it was preventing
+    // argv.env from being set inside command handlers (run-p, run-s, etc.).
 
-    clear();
+    // clear();
     const { commands: pluginCommands, runnablePlugins } = await loadPlugins();
 
     // Build yargs from COMMANDS — single source of truth for registration,
@@ -302,11 +323,6 @@ const COMMANDS = [
             type: "string",
             description:
                 "Filter scripts to the named environment profile (defined via `## [env:name]` sections in fscripts.md)",
-            global: true
-        })
-        .option("prod", {
-            type: "boolean",
-            description: "Shorthand for --env=production",
             global: true
         })
         .help();
