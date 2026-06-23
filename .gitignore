@@ -36,3 +36,5 @@ temp/
 
 config.json
 
+website/.firebase/*
+.understand-anything

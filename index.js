@@ -121,13 +121,25 @@ const runCmd = async (app, argsList = []) => {
             "run [task]",
             "Run a specific task",
             (yargs) => {
-                yargs.positional("task", {
-                    describe: "name of task to start",
-                    default: ""
-                });
+                yargs
+                    .positional("task", {
+                        describe: "name of task to start",
+                        default: ""
+                    })
+                    .option("retry", {
+                        alias: "r",
+                        type: "number",
+                        description: "Number of times to retry on failure",
+                        default: 0
+                    })
+                    .option("retry-delay", {
+                        type: "string",
+                        description: "Delay between retries in ms, or 'exponential'",
+                        default: "0"
+                    });
             },
             async function (argv) {
-                let { task } = argv;
+                let { task, retry, retryDelay } = argv;
                 const parsed = await parseScriptFile();
                 if (!parsed) {
                     console.error(`${chalk.bold.underline.red("No fscripts.md file found")}`);
@@ -140,49 +152,34 @@ const runCmd = async (app, argsList = []) => {
                     return;
                 }
                 let { script, lang } = taskData;
+                const parsedDelay = retryDelay === "exponential" ? "exponential" : Number(retryDelay) || 0;
 
                 if (lang === "javascript") {
-                    // For JavaScript, use the script as-is without parsing
-                    await runCLICommand({
-                        task: { name: task },
-                        script: {
-                            lang: lang,
-                            env: {},
-                            type: "node",
-                            full: script,
-                            rest: []
-                        }
-                    });
+                    await runCLICommand(
+                        { task: { name: task }, script: { lang, env: {}, type: "node", full: script, rest: [] } },
+                        { restartTries: retry, restartDelay: parsedDelay }
+                    );
                 } else {
-                    // For bash scripts, parse command and environment variables
-                    let pars = script.split(" ");
-                    let type = pars[0];
-                    let env = {};
-                    if (pars[0].includes("=")) {
-                        let envs = type.split("=");
-                        env[envs[0]] = envs[1];
-                        type = pars[1];
-                        pars.shift();
-                        pars.shift();
-                        script = pars.join(" ");
-                    } else {
-                        pars.shift();
-                        script = pars.join(" ");
+                    const pars = script.trim().split(/\s+/);
+                    const env = {};
+                    let startIdx = 0;
+                    while (startIdx < pars.length && pars[startIdx].includes("=") && !pars[startIdx].startsWith("-")) {
+                        const [key, ...vals] = pars[startIdx].split("=");
+                        env[key] = vals.join("=");
+                        startIdx++;
                     }
-                    await runCLICommand({
-                        task: { name: task },
-                        script: {
-                            lang: lang,
-                            env: env,
-                            type: type,
-                            full: script,
-                            rest: script.split(" ")
-                        }
-                    });
+                    const type = pars[startIdx];
+                    const rest = pars.slice(startIdx + 1).join(" ");
+                    await runCLICommand(
+                        { task: { name: task }, script: { lang, env, type, full: rest, rest: rest.split(" ") } },
+                        { restartTries: retry, restartDelay: parsedDelay }
+                    );
                 }
             }
         )
         .example(`${taskName("$0 run start:web")}`, `${textDescription("Run task 'start:web'")}`)
+        .example(`${taskName("$0 run build --retry 3")}`, `${textDescription("Retry build up to 3 times on failure")}`)
+        .example(`${taskName("$0 run build --retry 3 --retry-delay exponential")}`, `${textDescription("Retry with exponential backoff")}`)
 
         /**
          * fsr
@@ -222,17 +219,50 @@ const runCmd = async (app, argsList = []) => {
         .command(
             "run-s",
             "Run a set of tasks one after another",
-            () => {},
+            (yargs) => {
+                yargs
+                    .option("no-stop-on-error", {
+                        type: "boolean",
+                        description: "Continue sequence even when a task fails",
+                        default: false
+                    })
+                    .option("retry", {
+                        alias: "r",
+                        type: "number",
+                        description: "Retry each failed task N times before stopping",
+                        default: 0
+                    })
+                    .option("retry-delay", {
+                        type: "string",
+                        description: "Delay between retries in ms, or 'exponential'",
+                        default: "0"
+                    });
+            },
             async function (argv) {
                 let tasks = argv._.slice();
                 tasks.shift();
+                const stopOnError = !argv["no-stop-on-error"];
+                const parsedDelay = argv.retryDelay === "exponential" ? "exponential" : Number(argv.retryDelay) || 0;
                 const FcScripts = await parseScriptFile();
-                await runSequence(tasks, FcScripts);
+                const result = await runSequence(tasks, FcScripts, {
+                    stopOnError,
+                    restartTries: argv.retry || 0,
+                    restartDelay: parsedDelay
+                });
+                if (!result.success) process.exit(1);
             }
         )
         .example(
             `${taskName("$0 run-s start:web start:desktop")}`,
             `${textDescription("Run task 'start:web' and afterwards 'start:desktop'")}`
+        )
+        .example(
+            `${taskName("$0 run-s build test --retry 2")}`,
+            `${textDescription("Run build then test, retry each up to 2 times")}`
+        )
+        .example(
+            `${taskName("$0 run-s build test --no-stop-on-error")}`,
+            `${textDescription("Run all tasks even if one fails")}`
         )
 
         /**
@@ -241,19 +271,81 @@ const runCmd = async (app, argsList = []) => {
          */
         .command(
             "run-p",
-            "Run tasks in parallel",
-            () => {},
+            "Run tasks in parallel with process lifecycle management",
+            (yargs) => {
+                yargs
+                    .option("kill-others", {
+                        alias: "k",
+                        type: "boolean",
+                        description: "Kill all processes when one fails",
+                        default: true
+                    })
+                    .option("kill-others-on-success", {
+                        type: "boolean",
+                        description: "Kill all processes when one succeeds",
+                        default: false
+                    })
+                    .option("retry", {
+                        alias: "r",
+                        type: "number",
+                        description: "Restart failed processes N times",
+                        default: 0
+                    })
+                    .option("retry-delay", {
+                        type: "string",
+                        description: "Delay between restarts in ms, or 'exponential'",
+                        default: "0"
+                    })
+                    .option("max-processes", {
+                        alias: "m",
+                        type: "number",
+                        description: "Max concurrent processes (sliding window)",
+                        default: 0
+                    })
+                    .option("timings", {
+                        alias: "t",
+                        type: "boolean",
+                        description: "Show per-process timing table on finish",
+                        default: false
+                    });
+            },
             async function (argv) {
                 let tasks = argv._.slice();
                 tasks.shift();
 
+                const killOthers = [];
+                if (argv.killOthers) killOthers.push("failure");
+                if (argv.killOthersOnSuccess) killOthers.push("success");
+
+                const parsedDelay = argv.retryDelay === "exponential" ? "exponential" : Number(argv.retryDelay) || 0;
+                const maxProcs = argv.maxProcesses > 0 ? argv.maxProcesses : Infinity;
+
                 const FcScripts = await parseScriptFile();
-                await runParallel(tasks, FcScripts);
+                const result = await runParallel(tasks, FcScripts, {
+                    killOthers,
+                    restartTries: argv.retry || 0,
+                    restartDelay: parsedDelay,
+                    maxProcesses: maxProcs,
+                    timings: argv.timings
+                });
+                if (result && !result.success) process.exit(1);
             }
         )
         .example(
             `${taskName("$0 run-p start:web start:desktop")}`,
-            `${textDescription("Run task 'start:web' and at the same time 'start:desktop'")}`
+            `${textDescription("Run tasks in parallel, kill all if one fails")}`
+        )
+        .example(
+            `${taskName("$0 run-p build watch --no-kill-others")}`,
+            `${textDescription("Run in parallel, let all finish regardless")}`
+        )
+        .example(
+            `${taskName("$0 run-p build watch --retry 3 --retry-delay exponential")}`,
+            `${textDescription("Restart failed processes up to 3 times with exponential backoff")}`
+        )
+        .example(
+            `${taskName("$0 run-p t1 t2 t3 t4 --max-processes 2")}`,
+            `${textDescription("Run at most 2 tasks concurrently (sliding window)")}`
         )
         /**
          * fsr
