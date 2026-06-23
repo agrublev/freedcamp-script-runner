@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added `greet` command to install a shell greeting that reminds users to run `yarn fsr` when fscripts.md is present in a directory.
+
+### Added
+
 - Added support for -e as a short alias for the --env flag.
 
 ### Fixed
