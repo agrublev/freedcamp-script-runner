@@ -217,10 +217,12 @@ const runCmd = async (app, argsList = []) => {
          * run-s --
          */
         .command(
-            "run-s",
+            "run-s [tasks..]",
             "Run a set of tasks one after another",
             (yargs) => {
                 yargs
+                    .positional("tasks", { describe: "task names to run in sequence", type: "string" })
+
                     .option("no-stop-on-error", {
                         type: "boolean",
                         description: "Continue sequence even when a task fails",
@@ -239,8 +241,7 @@ const runCmd = async (app, argsList = []) => {
                     });
             },
             async function (argv) {
-                let tasks = argv._.slice();
-                tasks.shift();
+                const tasks = [].concat(argv.tasks || []);
                 const stopOnError = !argv["no-stop-on-error"];
                 const parsedDelay = argv.retryDelay === "exponential" ? "exponential" : Number(argv.retryDelay) || 0;
                 const FcScripts = await parseScriptFile();
@@ -270,10 +271,12 @@ const runCmd = async (app, argsList = []) => {
          * run-p --
          */
         .command(
-            "run-p",
+            "run-p [tasks..]",
             "Run tasks in parallel with process lifecycle management",
             (yargs) => {
                 yargs
+                    .positional("tasks", { describe: "task names to run in parallel", type: "string" })
+
                     .option("kill-others", {
                         alias: "k",
                         type: "boolean",
@@ -307,11 +310,15 @@ const runCmd = async (app, argsList = []) => {
                         type: "boolean",
                         description: "Show per-process timing table on finish",
                         default: false
+                    })
+                    .option("prefix-colors", {
+                        alias: "c",
+                        type: "string",
+                        description: "Comma-separated colors per task: cyan,magenta,green (overrides fscripts.md color tags)"
                     });
             },
             async function (argv) {
-                let tasks = argv._.slice();
-                tasks.shift();
+                const tasks = [].concat(argv.tasks || []);
 
                 const killOthers = [];
                 if (argv.killOthers) killOthers.push("failure");
@@ -319,6 +326,7 @@ const runCmd = async (app, argsList = []) => {
 
                 const parsedDelay = argv.retryDelay === "exponential" ? "exponential" : Number(argv.retryDelay) || 0;
                 const maxProcs = argv.maxProcesses > 0 ? argv.maxProcesses : Infinity;
+                const prefixColors = argv.prefixColors ? argv.prefixColors.split(",").map(c => c.trim()) : undefined;
 
                 const FcScripts = await parseScriptFile();
                 const result = await runParallel(tasks, FcScripts, {
@@ -326,7 +334,8 @@ const runCmd = async (app, argsList = []) => {
                     restartTries: argv.retry || 0,
                     restartDelay: parsedDelay,
                     maxProcesses: maxProcs,
-                    timings: argv.timings
+                    timings: argv.timings,
+                    prefixColors
                 });
                 if (result && !result.success) process.exit(1);
             }
@@ -346,6 +355,10 @@ const runCmd = async (app, argsList = []) => {
         .example(
             `${taskName("$0 run-p t1 t2 t3 t4 --max-processes 2")}`,
             `${textDescription("Run at most 2 tasks concurrently (sliding window)")}`
+        )
+        .example(
+            `${taskName("$0 run-p web desktop api --prefix-colors cyan,magenta,green")}`,
+            `${textDescription("Assign specific colors to each parallel task's output prefix")}`
         )
         /**
          * fsr
@@ -579,11 +592,48 @@ const runCmd = async (app, argsList = []) => {
         .help();
 
     registerPluginCommands(yargsInstance, pluginCommands);
-    yargsInstance.strict();
+
+    // No strict() — unknown bare-word args (e.g. `fsr commit`) are handled
+    // below as task shortcuts so users can type `fsr <taskname>` directly.
 
     const argv = yargsInstance.argv;
 
-    if (argv && argv._ && argv._.length === 0) {
+    // Task shortcut: `fsr <taskname>` → runs the named task directly
+    if (argv && argv._ && argv._.length === 1 && !argv._[0].match(/^(branch|start|scripts|list|run|upgrade|bump|run-s|run-p|encryption|encrypt|decrypt|clear|generate|toc|doctor|cache|completion|notify|deploy|deploy-history)$/)) {
+        const shortcutTask = argv._[0];
+        const parsed = await parseScriptFile();
+        if (parsed) {
+            const taskData = parsed.allTasks.find(t => t.name === shortcutTask);
+            if (taskData) {
+                let { script, lang } = taskData;
+                if (lang === "javascript" || lang === "js") {
+                    await runCLICommand(
+                        { task: { name: shortcutTask }, script: { lang, env: {}, type: "node", full: script, rest: [] } },
+                        {}
+                    );
+                } else {
+                    const pars = script.trim().split(/\s+/);
+                    const env = {};
+                    let startIdx = 0;
+                    while (startIdx < pars.length && pars[startIdx].includes("=") && !pars[startIdx].startsWith("-")) {
+                        const [key, ...vals] = pars[startIdx].split("=");
+                        env[key] = vals.join("=");
+                        startIdx++;
+                    }
+                    const type = pars[startIdx];
+                    const rest = pars.slice(startIdx + 1).join(" ");
+                    await runCLICommand(
+                        { task: { name: shortcutTask }, script: { lang, env, type, full: rest, rest: rest.split(" ") } },
+                        {}
+                    );
+                }
+                return;
+            }
+        }
+        // Not a known task — show error and exit
+        console.error(chalk.bold.underline.red(`Unknown command or task: "${shortcutTask}". Run 'fsr list' to see all tasks.`));
+        process.exit(1);
+    } else if (argv && argv._ && argv._.length === 0) {
         // Combine commands and plugins into a single menu
         const commandItems = [
             { name: "start", message: "Choose category then task to run" },

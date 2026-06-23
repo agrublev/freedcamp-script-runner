@@ -16,6 +16,38 @@
     -   [test:performance](#testperformance)
     <!-- end toc -->
 
+## sample:one
+
+First sample
+
+```javascript
+(async () => {
+    console.log("STARTING SAMPLE:ONE");
+    await new Promise((r) => {
+        setTimeout(() => {
+            console.log("DONE");
+            r();
+        }, 3000);
+    });
+})();
+```
+
+## sample:two
+
+Second sample
+
+```javascript
+(async () => {
+    console.log("STARTING SAMPLE:TWO");
+    await new Promise((r) => {
+        setTimeout(() => {
+            console.log("DONE TWO");
+            r();
+        }, 4000);
+    });
+})();
+```
+
 # First category of scripts
 
 Welcome to your new amazing fscripts.md file. It replaces the headaches of npm scripts! But so much more.
