@@ -101,4 +101,16 @@ describe("publish", () => {
 
         exitSpy.mockRestore();
     });
+
+    it("throws when a run() command (npm publish) exits non-zero", async () => {
+        spawnSync
+            .mockReturnValueOnce({ status: 0, stdout: "user" }) // whoami: logged in
+            .mockReturnValueOnce({ status: 1 }); // npm publish: fails
+        prompt
+            .mockResolvedValueOnce("latest") // dist-tag
+            .mockResolvedValueOnce(true); // confirm publish
+
+        await expect(publish()).rejects.toThrow("npm exited with code 1");
+        expect(ranNpm("publish")).toBe(true);
+    });
 });

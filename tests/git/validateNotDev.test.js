@@ -89,4 +89,23 @@ describe("validateNotInDev", () => {
         expect(promptMock).toHaveBeenCalledTimes(1);
         expect(checkoutLocalBranchMock).not.toHaveBeenCalled();
     });
+
+    it("swallows the error and still resolves when checkoutLocalBranch rejects", async () => {
+        statusMock.mockResolvedValue({ current: "Development" });
+        promptMock.mockResolvedValue({ branchname: "feature-y" });
+        checkoutLocalBranchMock.mockRejectedValue(new Error("git checkout boom"));
+
+        // The mocked fsrLog is created fresh by its vi.mock factory; grab the
+        // same instance the source module uses to assert the catch logged it.
+        const fsrLog = (await import("../../lib/utils/console.js")).default;
+
+        const p = validateNotInDev();
+        await vi.runAllTimersAsync();
+        // newBranch catches the rejection, so the whole flow resolves cleanly.
+        await expect(p).resolves.toBeUndefined();
+
+        expect(checkoutLocalBranchMock).toHaveBeenCalledWith("feature-y");
+        expect(fsrLog.error).toHaveBeenCalledTimes(1);
+        expect(fsrLog.error.mock.calls[0][0]).toBeInstanceOf(Error);
+    });
 });

@@ -1,14 +1,13 @@
-<!-- toc -->
-
--   [Build](#build)
-    -   [v:publish-](#vpublish-)
-    -   [script:js](#scriptjs)
--   [Groups2](#groups2)
-    -   [console:js](#consolejs)
-    -   [input:js-](#inputjs-)
-    -   [log:much:js](#logmuchjs)
-
-<!-- tocstop -->
+- [Build](#build)
+    * [fun:console](#funconsole)
+    * [v:publish-](#vpublish-)
+    * [add:command](#addcommand)
+    * [script:js](#scriptjs)
+- [Groups2](#groups2)
+    * [console:js](#consolejs)
+    * [input:js-](#inputjs-)
+    * [log:much:js](#logmuchjs)
+<!-- end toc -->
 
 # Build
 

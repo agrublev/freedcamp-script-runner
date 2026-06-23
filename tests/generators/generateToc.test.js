@@ -1,4 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { mkdtempSync, writeFileSync, rmSync } from "fs";
+import { join } from "path";
+import { tmpdir } from "os";
 
 const SAMPLE_MD = `# Scripts
 
@@ -121,5 +124,44 @@ describe("generateToc", () => {
         const [filename] = writeFile.mock.calls[0];
         expect(filename).toBe("fscripts.md");
         consoleSpy.mockRestore();
+    });
+
+    it("warns and exits without writing when fscripts.md is missing", async () => {
+        // generateToc uses the real `import fs from "fs"` default, so control
+        // cwd to an empty temp dir instead of toggling the namespace mock.
+        const dir = mkdtempSync(join(tmpdir(), "fscr-toc-"));
+        const origCwd = process.cwd;
+        process.cwd = () => dir;
+        const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+        const exitSpy = vi.spyOn(process, "exit").mockImplementation(() => {});
+        try {
+            const result = await generateToc("fscripts.md");
+            expect(exitSpy).toHaveBeenCalledWith(0);
+            expect(result).toBeNull();
+            expect(writeFile).not.toHaveBeenCalled();
+        } finally {
+            process.cwd = origCwd;
+            rmSync(dir, { recursive: true, force: true });
+            warnSpy.mockRestore();
+            exitSpy.mockRestore();
+        }
+    });
+
+    it("writes only the TOC marker for an empty file (no toc content)", async () => {
+        const dir = mkdtempSync(join(tmpdir(), "fscr-toc-"));
+        writeFileSync(join(dir, "fscripts.md"), "", "utf-8");
+        const origCwd = process.cwd;
+        process.cwd = () => dir;
+        const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+        try {
+            await generateToc("fscripts.md");
+            expect(writeFile).toHaveBeenCalled();
+            const [, content] = writeFile.mock.calls[0];
+            expect(content).toContain("<!-- end toc -->");
+        } finally {
+            process.cwd = origCwd;
+            rmSync(dir, { recursive: true, force: true });
+            warnSpy.mockRestore();
+        }
     });
 });

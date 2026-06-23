@@ -102,4 +102,42 @@ describe("upgradePackages", () => {
         expect(readFileSyncMock).not.toHaveBeenCalled();
         expect(execSyncMock).not.toHaveBeenCalled();
     });
+
+    it("upgrades nothing-ignored when fscripts is absent", async () => {
+        // branch: packageJson["fscripts"] falsy -> ignorePkgs stays []
+        existsSyncMock.mockReturnValue(true);
+        readFileSyncMock.mockReturnValue(JSON.stringify({ dependencies: { pkgB: "^2.0.0" } }));
+
+        await upgradePackages();
+
+        const commands = execSyncMock.mock.calls.map((c) => c[0]);
+        expect(commands).toContain("yarn add pkgB@latest");
+    });
+
+    it("handles fscripts present without an ignore-upgrade list", async () => {
+        // branch: fscripts truthy but fscripts["ignore-upgrade"] falsy
+        existsSyncMock.mockReturnValue(true);
+        readFileSyncMock.mockReturnValue(
+            JSON.stringify({ dependencies: { pkgB: "^2.0.0" }, fscripts: {} })
+        );
+
+        await upgradePackages();
+
+        expect(execSyncMock.mock.calls.map((c) => c[0])).toContain("yarn add pkgB@latest");
+    });
+
+    it("logs an error when the install command fails", async () => {
+        // catch path: execSync throws -> logError
+        existsSyncMock.mockReturnValue(true);
+        readFileSyncMock.mockReturnValue(JSON.stringify({ dependencies: { pkgB: "^2.0.0" } }));
+        execSyncMock.mockImplementation(() => {
+            throw new Error("network down");
+        });
+
+        await expect(upgradePackages()).resolves.toBeUndefined();
+
+        const logged = logMock.mock.calls.map((c) => c[0]).join("\n");
+        expect(logged).toContain("[Error]:");
+        expect(logged).toContain("network down");
+    });
 });

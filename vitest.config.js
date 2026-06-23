@@ -26,14 +26,15 @@ export default defineConfig({
                 'dist/**',
                 'tests/**',
                 'lib/test-files/**',
+                'lib/ui/**',
                 '**/*.test.js',
                 '**/*.spec.js'
             ],
             thresholds: {
-                lines: 75,
-                functions: 75,
-                branches: 65,
-                statements: 75
+                lines: 99,
+                functions: 100,
+                branches: 99,
+                statements: 99
             }
         }
     },

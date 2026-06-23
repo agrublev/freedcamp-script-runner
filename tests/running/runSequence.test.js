@@ -91,4 +91,34 @@ describe("runSequence", () => {
     it("handles empty task list without error", async () => {
         await expect(runSequence([], makeFcScripts([]))).resolves.toBeUndefined();
     });
+
+    it("forwards NODE_ENV and FSR_ENV from env profile to script.env (bash task)", async () => {
+        const fcScripts = makeFcScripts([
+            { name: "build", script: "node build.js", lang: "bash", env: "staging", order: 0 }
+        ]);
+
+        await runSequence(["build"], fcScripts);
+        expect(runCLICommand).toHaveBeenCalledWith(
+            expect.objectContaining({
+                script: expect.objectContaining({
+                    env: expect.objectContaining({ NODE_ENV: "staging", FSR_ENV: "staging" })
+                })
+            })
+        );
+    });
+
+    it("forwards NODE_ENV and FSR_ENV from env profile to script.env (javascript task)", async () => {
+        const fcScripts = makeFcScripts([
+            { name: "deploy", script: "console.log('deploy')", lang: "javascript", env: "production", order: 0 }
+        ]);
+
+        await runSequence(["deploy"], fcScripts);
+        expect(runCLICommand).toHaveBeenCalledWith(
+            expect.objectContaining({
+                script: expect.objectContaining({
+                    env: expect.objectContaining({ NODE_ENV: "production", FSR_ENV: "production" })
+                })
+            })
+        );
+    });
 });

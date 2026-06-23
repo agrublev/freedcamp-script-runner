@@ -6,19 +6,20 @@
  * pathExists are pure existsSync checks — they create NOTHING — so the tests
  * assert that actual behaviour rather than the names' implication.
  */
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { mkdtemp, rm } from "fs/promises";
 import os from "os";
 import path from "path";
 
 let helpers;
-let ensureDir, ensureFile, pathExists, readJson, writeJson, readFile, writeFile, removeFile, appendToFile, chainAsync, rainbowGradient, timestamp;
+let emptyDir, ensureDir, ensureFile, pathExists, readJson, writeJson, readFile, writeFile, removeFile, appendToFile, chainAsync, boxInform, rainbowGradient, timestamp;
 
 let tmpDir;
 
 beforeEach(async () => {
     helpers = await import("../../lib/utils/helpers.js");
     ({
+        emptyDir,
         ensureDir,
         ensureFile,
         pathExists,
@@ -29,6 +30,7 @@ beforeEach(async () => {
         removeFile,
         appendToFile,
         chainAsync,
+        boxInform,
         rainbowGradient,
         timestamp
     } = helpers);
@@ -163,5 +165,117 @@ describe("timestamp", () => {
         // NOTE: the doc comment claims "m-d-yy_hh:MM:ss" but the implementation
         // only joins hours/minutes/seconds with ':'. We assert real behaviour.
         expect(timestamp()).toMatch(/^\d{2}:\d{2}:\d{2}$/);
+    });
+});
+
+describe("emptyDir", () => {
+    it("empties an existing directory's contents", async () => {
+        await writeFile(path.join(tmpDir, "a.txt"), "a");
+        await writeFile(path.join(tmpDir, "b.txt"), "b");
+        await emptyDir(tmpDir);
+        expect(await pathExists(tmpDir)).toBe(true);
+        expect(await pathExists(path.join(tmpDir, "a.txt"))).toBe(false);
+        expect(await pathExists(path.join(tmpDir, "b.txt"))).toBe(false);
+    });
+
+    it("logs an error and resolves when the target cannot be emptied", async () => {
+        const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+        // A path whose parent is a regular file -> ENOTDIR while ensuring the dir.
+        const aFile = path.join(tmpDir, "afile");
+        await writeFile(aFile, "x");
+        await expect(emptyDir(path.join(aFile, "sub"))).resolves.toBeUndefined();
+        expect(errSpy).toHaveBeenCalled();
+    });
+});
+
+describe("file-helper error paths (logged, never thrown)", () => {
+    let errSpy;
+    beforeEach(() => {
+        errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    });
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
+    it("readFile returns {} and logs when the file is missing", async () => {
+        const result = await readFile(path.join(tmpDir, "does-not-exist.txt"));
+        expect(result).toEqual({});
+        expect(errSpy).toHaveBeenCalled();
+    });
+
+    it("removeFile returns false and logs on an invalid argument", async () => {
+        const result = await removeFile(null);
+        expect(result).toBe(false);
+        expect(errSpy).toHaveBeenCalled();
+    });
+
+    it("writeFile swallows the error when the parent directory is missing", async () => {
+        await expect(
+            writeFile(path.join(tmpDir, "missing", "f.txt"), "x")
+        ).resolves.toBeUndefined();
+        expect(errSpy).toHaveBeenCalled();
+    });
+
+    it("writeJson swallows the error when the parent directory is missing", async () => {
+        await expect(
+            writeJson(path.join(tmpDir, "missing", "f.json"), { a: 1 })
+        ).resolves.toBeUndefined();
+        expect(errSpy).toHaveBeenCalled();
+    });
+
+    it("appendToFile swallows the error when the parent directory is missing", async () => {
+        await expect(
+            appendToFile(path.join(tmpDir, "missing", "f.txt"), "x")
+        ).resolves.toBeUndefined();
+        expect(errSpy).toHaveBeenCalled();
+    });
+});
+
+describe("boxInform", () => {
+    let logSpy;
+    beforeEach(() => {
+        logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+    });
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
+    it("renders a box using the default secondary/padding/margin args", async () => {
+        await boxInform("only-primary");
+        expect(logSpy).toHaveBeenCalledTimes(1);
+        // fsrLog.log prepends a timestamp prefix; the rendered box is the 2nd arg.
+        expect(logSpy.mock.calls[0][1]).toContain("only-primary");
+    });
+
+    it("renders a box with explicit secondary/padding/margin args", async () => {
+        await boxInform("primary", "secondary", 1, { left: 1, top: 1, bottom: 1, right: 1 });
+        expect(logSpy).toHaveBeenCalledTimes(1);
+        const rendered = logSpy.mock.calls[0][1];
+        expect(rendered).toContain("primary");
+        expect(rendered).toContain("secondary");
+    });
+});
+
+describe("rainbowGradient colour branches", () => {
+    it("returns greyscale triples (r==g==b) when saturation is 0", () => {
+        const grad = rainbowGradient(3, 0, 0.5);
+        expect(grad).toHaveLength(3);
+        for (const [r, g, b] of grad) {
+            expect(r).toBe(g);
+            expect(g).toBe(b);
+        }
+    });
+
+    it("handles lightness below 0.5 (the l<0.5 chroma branch)", () => {
+        const grad = rainbowGradient(4, 1, 0.3);
+        expect(grad).toHaveLength(4);
+        for (const rgb of grad) {
+            expect(rgb).toHaveLength(3);
+            for (const channel of rgb) {
+                expect(Number.isInteger(channel)).toBe(true);
+                expect(channel).toBeGreaterThanOrEqual(0);
+                expect(channel).toBeLessThanOrEqual(255);
+            }
+        }
     });
 });

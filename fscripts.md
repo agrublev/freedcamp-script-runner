@@ -1,3 +1,5 @@
+-   [Fun](#fun)
+    -   [awesome](#awesome)
 -   [Build](#build)
     -   [build](#build)
     -   [build:ui](#buildui)
@@ -7,15 +9,32 @@
     -   [start](#start)
     -   [start:run](#startrun)
 -   [Release](#release)
-    -   [release](#release-1)
+    -   [release](#release)
+    -   [release:bump](#releasebump)
+    -   [release:commit](#releasecommit)
     -   [release:publish](#releasepublish)
 -   [Testing](#testing)
-    -   [test](#test)
-    -   [test:watch](#testwatch)
-    -   [test:coverage](#testcoverage)
-    -   [test:coverage:open](#testcoverageopen)
-
+_ [test](#test)
+_ [test:watch](#testwatch)
+_ [test:coverage](#testcoverage)
+_ [test:coverage:open](#testcoverageopen)
 <!-- end toc -->
+
+# Fun
+
+## awesome
+
+```bash
+sleep 2
+echo "----"
+```
+
+## env:test
+
+```javascript
+import "dotenv";
+console.log(process.env.NODE_ENV);
+```
 
 # Build
 
@@ -159,8 +178,8 @@ const opener =
     process.platform === "darwin"
         ? { cmd: "open", args: [report] }
         : process.platform === "win32"
-          ? { cmd: "start", args: ["", report] }
-          : { cmd: "xdg-open", args: [report] };
+        ? { cmd: "start", args: ["", report] }
+        : { cmd: "xdg-open", args: [report] };
 
 spawnSync(opener.cmd, opener.args, { stdio: "inherit", shell: true });
 console.log(`\nCoverage report: ${report}`);

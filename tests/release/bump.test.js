@@ -125,4 +125,10 @@ describe("bump", () => {
 
         exitSpy.mockRestore();
     });
+
+    it("throws when a spawned command exits non-zero", async () => {
+        spawnSync.mockReturnValue({ status: 1 });
+
+        await expect(bump("minor", true)).rejects.toThrow("yarn exited with code 1");
+    });
 });

@@ -12,30 +12,18 @@ import encrypt from "./lib/encryption/encryption.js";
 import { clear } from "./lib/utils/index.js";
 import doctor from "./lib/doctor/doctor.js";
 import completion from "./lib/completions/completion.js";
-import { loadPlugins, registerPluginCommands } from "./lib/plugins/loader.js";
+import {
+    loadPlugins,
+    registerPluginCommands,
+    findExternalPluginDirs
+} from "./lib/plugins/loader.js";
 import { fireHook } from "./lib/plugins/hooks.js";
-import spawn from "cross-spawn";
 import yargs from "yargs";
 import fsrLog from "./lib/utils/console.js";
 import commit from "./lib/git/commit.js";
 
 const taskName = chalk.rgb(39, 173, 96).bold.underline;
 const textDescription = chalk.rgb(159, 161, 181);
-
-const runCmd = async (app, argsList = []) => {
-    const shell = spawn(app, argsList, {
-        stdio: "inherit",
-        cwd: process.cwd(),
-        env: { ...process.env, FORCE_COLOR: "1" }
-    });
-    return new Promise((resolve) => {
-        shell.on("error", (err) => {
-            fsrLog.error(`${chalk.red("ERROR")} ${err.message}`);
-            resolve();
-        });
-        shell.on("close", () => resolve());
-    });
-};
 
 /**
  * Single source of truth for all built-in fsr commands.
@@ -52,30 +40,30 @@ const COMMANDS = [
     {
         cmd: "branch",
         desc: "Create a new branch — prevents commits directly on master or development",
-        handler: async () => validateNotInDev(),
+        handler: async () => validateNotInDev()
     },
     {
         cmd: "commit",
         desc: "Stage and commit changes with AI-generated conventional commit messages",
-        handler: async () => commit(),
+        handler: async () => commit()
     },
     {
         cmd: "start",
         desc: "Choose a category then a task to run interactively",
-        handler: async () => startScripts(),
-        menu: true,
+        handler: async (argv) => startScripts(true, argv.env || null),
+        menu: true
     },
     {
         cmd: "scripts",
         desc: "Choose a script from package.json",
         handler: async () => startPackageScripts(),
-        menu: true,
+        menu: true
     },
     {
         cmd: "list",
         desc: "Select any task with text autocompletion",
-        handler: async () => startScripts(false),
-        menu: true,
+        handler: async (argv) => startScripts(false, argv.env || null),
+        menu: true
     },
     {
         cmd: "run [task]",
@@ -83,7 +71,7 @@ const COMMANDS = [
         builder: (y) => y.positional("task", { describe: "task name", default: "" }),
         handler: async (argv) => {
             const { task } = argv;
-            const parsed = await parseScriptFile();
+            const parsed = await parseScriptFile(argv.env ? { env: argv.env } : {});
             if (!parsed) {
                 fsrLog.error(chalk.bold.underline.red("No fscripts.md file found"));
                 return;
@@ -96,108 +84,207 @@ const COMMANDS = [
             await runCLICommand(parseTask(taskData));
         },
         examples: [["$0 run start:web", "Run task 'start:web'"]],
-        menu: true,
+        menu: true
     },
     {
         cmd: "upgrade",
         desc: "Upgrade all packages except those listed in 'ignore-upgrade'",
         handler: async () => upgradePackages(),
-        menu: true,
+        menu: true
     },
     {
         cmd: "bump",
         desc: "Bump the version in package.json and beautify it",
         handler: async (argv) => bump(argv.type, argv.skipGit === "true"),
-        menu: true,
+        menu: true
     },
     {
         cmd: "run-s [tasks..]",
         desc: "Run a set of tasks sequentially",
-        handler: async (argv) => runSequence(argv.tasks || [], await parseScriptFile()),
+        handler: async (argv) =>
+            runSequence(argv.tasks || [], await parseScriptFile(argv.env ? { env: argv.env } : {})),
         examples: [["$0 run-s start:web start:desktop", "Run start:web then start:desktop"]],
-        menu: true,
+        menu: true
     },
     {
         cmd: "run-p [tasks..]",
         desc: "Run tasks in parallel",
-        handler: async (argv) => runParallel(argv.tasks || [], await parseScriptFile()),
-        examples: [["$0 run-p start:web start:desktop", "Run start:web and start:desktop simultaneously"]],
-        menu: true,
+        handler: async (argv) =>
+            runParallel(argv.tasks || [], await parseScriptFile(argv.env ? { env: argv.env } : {})),
+        examples: [
+            ["$0 run-p start:web start:desktop", "Run start:web and start:desktop simultaneously"]
+        ],
+        menu: true
     },
     {
         cmd: "encryption",
         desc: "Encrypt or decrypt secret files interactively",
         handler: async () => encrypt.init(),
-        menu: true,
+        menu: true
     },
     {
         cmd: "encrypt",
         desc: "Encrypt secret files",
-        handler: async () => encrypt.encrypt(),
+        handler: async () => encrypt.encrypt()
     },
     {
         cmd: "decrypt",
         desc: "Decrypt secret files",
-        handler: async () => encrypt.decrypt(),
+        handler: async () => encrypt.decrypt()
     },
     {
         cmd: "clear",
         desc: "Clear recent task history",
-        handler: async () => clearRecent(),
+        handler: async () => clearRecent()
     },
     {
         cmd: "generate",
         desc: "Generate a sample fscripts.md from package.json",
         handler: async () => generateFScripts(),
-        menu: true,
+        menu: true
     },
     {
         cmd: "toc",
         desc: "Regenerate the Table of Contents in fscripts.md",
         handler: async (argv) => generateToc(argv._[1]),
-        menu: true,
+        menu: true
     },
     {
         cmd: "doctor",
         desc: "Run diagnostics and check system health",
         builder: (y) =>
             y
-                .option("fix", { alias: "f", type: "boolean", description: "Auto-fix issues when possible", default: false })
-                .option("json", { type: "boolean", description: "Output results as JSON", default: false })
-                .option("verbose", { alias: "v", type: "boolean", description: "Show verbose output", default: false }),
+                .option("fix", {
+                    alias: "f",
+                    type: "boolean",
+                    description: "Auto-fix issues when possible",
+                    default: false
+                })
+                .option("json", {
+                    type: "boolean",
+                    description: "Output results as JSON",
+                    default: false
+                })
+                .option("verbose", {
+                    alias: "v",
+                    type: "boolean",
+                    description: "Show verbose output",
+                    default: false
+                }),
         handler: async (argv) => doctor(argv),
         examples: [
             ["$0 doctor --fix", "Run diagnostics and auto-fix issues"],
-            ["$0 doctor --json", "Output results as JSON"],
+            ["$0 doctor --json", "Output results as JSON"]
         ],
-        menu: true,
+        menu: true
+    },
+    {
+        cmd: "plugins",
+        desc: "List all installed plugins (built-in and npm fscr-plugin-*)",
+        handler: async () => {
+            const { runnablePlugins, commands: pluginCmds } = await loadPlugins();
+            const external = findExternalPluginDirs();
+            const allPlugins = [
+                ...runnablePlugins,
+                ...pluginCmds
+                    .filter((c) => !runnablePlugins.some((p) => p.name === c.name))
+                    .map((c) => ({
+                        name: c.name,
+                        description: c.description || "",
+                        source: "builtin"
+                    }))
+            ];
+            if (allPlugins.length === 0) {
+                fsrLog.log(chalk.yellow("No plugins found."));
+                return;
+            }
+            fsrLog.log(chalk.bold(`\nInstalled plugins (${allPlugins.length}):`));
+            fsrLog.log(chalk.dim("─".repeat(60)));
+            for (const p of allPlugins) {
+                const badge =
+                    p.source === "npm"
+                        ? chalk.blue("[npm]")
+                        : p.source === "local"
+                        ? chalk.green("[local]")
+                        : chalk.dim("[builtin]");
+                fsrLog.log(`  ${badge} ${chalk.bold(p.name)}  ${chalk.dim(p.description)}`);
+            }
+            if (external.length > 0) {
+                fsrLog.log(
+                    chalk.dim(`\n${external.length} npm plugin(s) discovered in node_modules.`)
+                );
+            }
+            fsrLog.log("");
+        },
+        menu: true
     },
     {
         cmd: "completion [action]",
         desc: "Manage shell tab completions",
         builder: (y) =>
             y
-                .positional("action", { describe: "Action to perform", type: "string", choices: ["install", "uninstall", "status", "generate"] })
-                .option("shell", { alias: "s", type: "string", description: "Target shell", choices: ["bash", "zsh", "fish", "powershell"] })
-                .option("force", { alias: "f", type: "boolean", description: "Force reinstall", default: false }),
+                .positional("action", {
+                    describe: "Action to perform",
+                    type: "string",
+                    choices: ["install", "uninstall", "status", "generate"]
+                })
+                .option("shell", {
+                    alias: "s",
+                    type: "string",
+                    description: "Target shell",
+                    choices: ["bash", "zsh", "fish", "powershell"]
+                })
+                .option("force", {
+                    alias: "f",
+                    type: "boolean",
+                    description: "Force reinstall",
+                    default: false
+                }),
         handler: async (argv) => completion(argv),
         examples: [
-            ["$0 completion install",    "Install completions for your shell"],
-            ["$0 completion status",     "Check completion installation status"],
-            ["$0 completion --shell zsh","Install completions for zsh"],
+            ["$0 completion install", "Install completions for your shell"],
+            ["$0 completion status", "Check completion installation status"],
+            ["$0 completion --shell zsh", "Install completions for zsh"]
         ],
-        menu: true,
-    },
+        menu: true
+    }
 ];
 
 (async () => {
+    // ------------------------------------------------------------------
+    // Inject NODE_ENV and FSR_ENV as early as possible — before yargs
+    // invokes any command handler and before any child process spawns —
+    // so that all subsequent code and spawned children inherit the value.
+    //
+    // We scan process.argv directly (rather than waiting for yargs) to
+    // guarantee the assignment happens before yi.argv triggers handlers.
+    // Handles both "--env staging" / "-e staging" and "--env=staging" forms.
+    // ------------------------------------------------------------------
+    {
+        const _hasProd = process.argv.includes("--prod");
+        const _eqArg = process.argv.find((a) => a.startsWith("--env=") || a.startsWith("-e="));
+        const _spaceIdx = process.argv.findIndex((a) => a === "--env" || a === "-e");
+        const _raw =
+            _hasProd
+                ? "production"
+                : _eqArg != null
+                ? _eqArg.split("=").slice(1).join("=")
+                : _spaceIdx !== -1 &&
+                  process.argv[_spaceIdx + 1] &&
+                  !process.argv[_spaceIdx + 1].startsWith("-")
+                ? process.argv[_spaceIdx + 1]
+                : null;
+        const _profile = _raw || "development";
+        process.env.NODE_ENV = _profile;
+        process.env.FSR_ENV = _profile;
+    }
+
     clear();
     const { commands: pluginCommands, runnablePlugins } = await loadPlugins();
 
     // Build yargs from COMMANDS — single source of truth for registration,
     // examples, BUILTIN_COMMANDS, and the interactive picker menu.
-    let yi = yargs(process.argv.slice(2))
-        .usage("Usage: $0 <command> [options]");
+    let yi = yargs(process.argv.slice(2)).usage("Usage: $0 <command> [options]");
 
     for (const { cmd, desc, builder, handler, examples } of COMMANDS) {
         yi = yi.command(cmd, desc, builder || (() => {}), handler);
@@ -209,23 +296,37 @@ const COMMANDS = [
         }
     }
 
-    yi = yi.help();
+    yi = yi
+        .option("env", {
+            alias: "e",
+            type: "string",
+            description:
+                "Filter scripts to the named environment profile (defined via `## [env:name]` sections in fscripts.md)",
+            global: true
+        })
+        .option("prod", {
+            type: "boolean",
+            description: "Shorthand for --env=production",
+            global: true
+        })
+        .help();
     registerPluginCommands(yi, pluginCommands);
 
     // Derived from COMMANDS — no manual maintenance required.
     const BUILTIN_COMMANDS = new Set([
         ...COMMANDS.map((c) => c.cmd.split(" ")[0]),
         "help",
-        ...pluginCommands.map((c) => c.name),
+        ...pluginCommands.map((c) => c.name)
     ]);
 
     const argv = yi.argv;
 
     if (argv && argv._ && argv._.length === 0) {
         // Interactive picker: menu-flagged commands + plugins.
-        const commandItems = COMMANDS
-            .filter((c) => c.menu)
-            .map((c) => ({ name: c.cmd.split(" ")[0], message: c.desc }));
+        const commandItems = COMMANDS.filter((c) => c.menu).map((c) => ({
+            name: c.cmd.split(" ")[0],
+            message: c.desc
+        }));
 
         const pluginItems = runnablePlugins.map((p) => ({
             name: `plugin:${p.name}`,
@@ -244,20 +345,37 @@ const COMMANDS = [
             const pluginMatch = runnablePlugins.find((p) => p.name === pluginName);
             if (pluginMatch) {
                 const start = Date.now();
+                await fireHook("pre-task", { taskName: pluginMatch.name });
                 try {
                     await pluginMatch.run();
-                    await fireHook("post-task", { taskName: pluginMatch.name, duration: Date.now() - start, success: true });
+                    await fireHook("post-task", {
+                        taskName: pluginMatch.name,
+                        duration: Date.now() - start,
+                        success: true
+                    });
                 } catch (err) {
-                    await fireHook("task-error", { taskName: pluginMatch.name, duration: Date.now() - start, error: err });
+                    await fireHook("task-error", {
+                        taskName: pluginMatch.name,
+                        duration: Date.now() - start,
+                        error: err
+                    });
                 }
             }
         } else {
-            await runCmd("yarn", ["fsr", choice]);
+            // Run the built-in command in-process instead of spawning a second
+            // `yarn fsr <choice>`. Spawning a child renders a second Ink app on
+            // the same inherited TTY, and the raw-mode handoff between the two
+            // Ink runtimes intermittently swallows the first keypress (the
+            // "press Enter twice to load a script" bug).
+            const command = COMMANDS.find((c) => c.cmd.split(" ")[0] === choice);
+            if (command) {
+                await command.handler({ _: [choice], $0: "fsr", env: argv.env || null });
+            }
         }
     } else if (argv._ && argv._.length > 0 && !BUILTIN_COMMANDS.has(argv._[0])) {
         // Bare task shorthand: `fsr release:publish` → same as `fsr run release:publish`
         const taskArg = argv._[0];
-        const parsed = await parseScriptFile();
+        const parsed = await parseScriptFile(argv.env ? { env: argv.env } : {});
         if (!parsed) {
             fsrLog.error(chalk.bold.underline.red("No fscripts.md file found"));
             return;
