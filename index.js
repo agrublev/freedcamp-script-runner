@@ -21,6 +21,7 @@ import { fireHook } from "./lib/plugins/hooks.js";
 import yargs from "yargs";
 import fsrLog from "./lib/utils/console.js";
 import commit from "./lib/git/commit.js";
+import greet from "./lib/shell/greet.js";
 
 const taskName = chalk.rgb(39, 173, 96).bold.underline;
 const textDescription = chalk.rgb(159, 161, 181);
@@ -245,6 +246,36 @@ const COMMANDS = [
             ["$0 completion install", "Install completions for your shell"],
             ["$0 completion status", "Check completion installation status"],
             ["$0 completion --shell zsh", "Install completions for zsh"]
+        ],
+        menu: true
+    },
+    {
+        cmd: "greet [action]",
+        desc: "Install a shell greeting that reminds you to use yarn fsr when fscripts.md is present",
+        builder: (y) =>
+            y
+                .positional("action", {
+                    describe: "Action to perform",
+                    type: "string",
+                    choices: ["install", "uninstall", "status"]
+                })
+                .option("shell", {
+                    alias: "s",
+                    type: "string",
+                    description: "Target shell (bash or zsh)",
+                    choices: ["bash", "zsh"]
+                })
+                .option("force", {
+                    alias: "f",
+                    type: "boolean",
+                    description: "Force reinstall",
+                    default: false
+                }),
+        handler: async (argv) => greet(argv),
+        examples: [
+            ["$0 greet install", "Install the greeting hook for your shell"],
+            ["$0 greet uninstall", "Remove the greeting hook"],
+            ["$0 greet status", "Check if the greeting hook is installed"]
         ],
         menu: true
     }
