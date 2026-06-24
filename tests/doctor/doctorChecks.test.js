@@ -362,6 +362,13 @@ describe("checkPackageManager (detection branches)", () => {
 
     beforeEach(async () => {
         vi.resetModules();
+        // Stub execSync so detection branches never shell out to a real
+        // package manager. On machines/CI without pnpm on PATH, corepack
+        // intercepts `pnpm --version` and tries to download it, which blocks
+        // and times out. Echo a fixed version regardless of the manager.
+        vi.doMock("child_process", () => ({
+            execSync: () => "1.0.0\n"
+        }));
         tmp = await fs.mkdtemp(path.join(os.tmpdir(), "fsr-pm-det-"));
         process.chdir(tmp);
     });
@@ -369,6 +376,8 @@ describe("checkPackageManager (detection branches)", () => {
     afterEach(async () => {
         process.chdir(origCwd);
         await fs.remove(tmp);
+        vi.doUnmock("child_process");
+        vi.resetModules();
     });
 
     it("detects pnpm via pnpm-lock.yaml (branch 27 false, branch 29 true)", async () => {
