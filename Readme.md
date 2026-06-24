@@ -479,3 +479,8 @@ MIT 🎉
 ---
 
 _⚡ Built by the [Freedcamp](https://freedcamp.com) team. Battle-tested on our own repos before unleashing it on yours. We eat our own cooking. 🍳_
+
+
+### Similar
+- https://github.com/egoist/maid
+- https://github.com/joerdav/xc
