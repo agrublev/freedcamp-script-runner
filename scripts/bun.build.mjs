@@ -21,7 +21,21 @@ const result = await Bun.build({
     metafile: true,
     optimizeImports: ["ink", "inquirer"],
     alias: {
-        "@utils": resolve(root, "lib/utils")
+        "@utils": resolve(root, "lib/utils"),
+        "@fsr/core": resolve(root, "packages/core"),
+        "@fsr/cmd-branch": resolve(root, "packages/cmd-branch"),
+        "@fsr/cmd-commit": resolve(root, "packages/cmd-commit"),
+        "@fsr/cmd-upgrade": resolve(root, "packages/cmd-upgrade"),
+        "@fsr/cmd-bump": resolve(root, "packages/cmd-bump"),
+        "@fsr/cmd-encryption": resolve(root, "packages/cmd-encryption"),
+        "@fsr/cmd-generate": resolve(root, "packages/cmd-generate"),
+        "@fsr/cmd-doctor": resolve(root, "packages/cmd-doctor"),
+        "@fsr/cmd-completion": resolve(root, "packages/cmd-completion"),
+        "@fsr/cmd-greet": resolve(root, "packages/cmd-greet"),
+        "@fsr/cmd-start": resolve(root, "packages/cmd-start"),
+        "@fsr/cmd-run": resolve(root, "packages/cmd-run"),
+        "@fsr/cmd-clear": resolve(root, "packages/cmd-clear"),
+        "@fsr/cmd-plugins": resolve(root, "packages/cmd-plugins")
     },
     plugins: [
         {
@@ -123,7 +137,7 @@ if (!result.success) {
 const [output] = result.outputs;
 console.log(`Bundle: ${(output.size / 1024).toFixed(1)} KB`);
 
-const completionScriptsSource = resolve(root, "lib/completions/scripts");
+const completionScriptsSource = resolve(root, "packages/cmd-completion/scripts");
 const completionScriptsTarget = resolve(dist, "scripts");
 await cp(completionScriptsSource, completionScriptsTarget, { recursive: true, force: true });
 console.log("Copied completion scripts to dist/scripts");

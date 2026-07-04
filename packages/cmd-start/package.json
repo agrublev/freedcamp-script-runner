@@ -1,0 +1,11 @@
+{
+    "name": "@fsr/cmd-start",
+    "version": "7.4.3",
+    "description": "fsr start/list/scripts commands — interactive task picker",
+    "type": "module",
+    "main": "./index.js",
+    "license": "MIT",
+    "dependencies": {
+        "@fsr/core": "*"
+    }
+}

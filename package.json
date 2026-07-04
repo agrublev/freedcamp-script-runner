@@ -1,9 +1,12 @@
 {
-    "name": "fscr",
+    "name": "freedcamp-script-runner",
     "version": "7.4.3",
-    "description": "Runs the fscripts.md file",
+    "description": "Monorepo root for freedcamp-script-runner (fsr)",
     "type": "module",
-    "main": "./dist/index.js",
+    "private": true,
+    "workspaces": [
+        "packages/*"
+    ],
     "scripts": {
         "find-scripts-in-fscripts": "you can find all scripts in fscripts.md",
         "fsr": "bun ./dist/index.js",
@@ -19,16 +22,8 @@
         "config": "test.json"
     },
     "repository": "https://github.com/agrublev/freedcamp-script-runner.git",
-    "private": false,
     "license": "MIT",
     "author": "Angel Grablev <agrublev@gmail.com>",
-    "files": [
-        "dist",
-        "bin"
-    ],
-    "bin": {
-        "fsr": "./bin"
-    },
     "dependencies": {
         "@anthropic-ai/sdk": "^0.104.2",
         "boxen": "^8.0.1",

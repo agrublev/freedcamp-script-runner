@@ -1,0 +1,14 @@
+{
+    "name": "@fsr/cmd-encryption",
+    "version": "7.4.3",
+    "description": "fsr encryption/encrypt/decrypt commands",
+    "type": "module",
+    "main": "./index.js",
+    "license": "MIT",
+    "dependencies": {
+        "@fsr/core": "*",
+        "chalk": "^5.6.2",
+        "fc-filepick": "^2.0.0",
+        "inquirer": "^14.0.2"
+    }
+}
