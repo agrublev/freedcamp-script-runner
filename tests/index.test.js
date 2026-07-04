@@ -77,9 +77,9 @@ vi.mock("@fsr/core", () => {
         registerPluginCommands: h.registerPluginCommands,
         findExternalPluginDirs: h.findExternalPluginDirs,
         fireHook: h.fireHook,
+        fsrLog: h.fsrLog,
     };
 });
-vi.mock("@fsr/core/utils/console.js", () => ({ default: h.fsrLog }));
 
 // Command package implementation mocks
 vi.mock("@fsr/cmd-branch/validateNotDev.js", () => ({ default: h.validateNotInDev }));

@@ -1,9 +1,8 @@
 import chalk from "chalk";
-import { getEnvArg, selectPlugin } from "@fsr/core";
+import { getEnvArg, selectPlugin, fsrLog } from "@fsr/core";
 import { runCLICommand, parseTask, parseScriptFile } from "@fsr/core";
 import { loadPlugins, registerPluginCommands } from "@fsr/core";
 import { fireHook } from "@fsr/core";
-import fsrLog from "@fsr/core/utils/console.js";
 import yargs from "yargs";
 
 // Command packages

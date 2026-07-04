@@ -1,6 +1,5 @@
 import chalk from "chalk";
-import { runCLICommand, runParallel, runSequence, parseTask, parseScriptFile } from "@fsr/core";
-import fsrLog from "@fsr/core/utils/console.js";
+import { runCLICommand, runParallel, runSequence, parseTask, parseScriptFile, fsrLog } from "@fsr/core";
 
 /** @type {import("@fsr/cli").CommandDefinition[]} */
 const commands = [

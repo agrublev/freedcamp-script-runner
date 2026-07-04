@@ -1,6 +1,5 @@
 import chalk from "chalk";
-import { loadPlugins, findExternalPluginDirs } from "@fsr/core";
-import fsrLog from "@fsr/core/utils/console.js";
+import { loadPlugins, findExternalPluginDirs, fsrLog } from "@fsr/core";
 
 /** @type {import("@fsr/cli").CommandDefinition} */
 export default {
