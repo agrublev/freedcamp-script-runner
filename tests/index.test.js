@@ -41,41 +41,56 @@ const h = vi.hoisted(() => ({
     commit: vi.fn()
 }));
 
-vi.mock("../lib/release/bump.js", () => ({ default: h.bump }));
-vi.mock("../lib/generators/index.js", () => ({
-    generateFScripts: h.generateFScripts,
-    generateToc: h.generateToc
-}));
-vi.mock("../lib/parsers/parseScriptsMd.js", () => ({ default: h.parseScriptFile }));
-vi.mock("../lib/upgradePackages.js", () => ({ default: h.upgradePackages }));
-vi.mock("../lib/running/index.js", () => ({
-    runCLICommand: h.runCLICommand,
-    runParallel: h.runParallel,
-    runSequence: h.runSequence
-}));
-vi.mock("../lib/startScripts.js", () => ({
-    clearRecent: h.clearRecent,
-    startPackageScripts: h.startPackageScripts,
-    startScripts: h.startScripts
-}));
-vi.mock("../lib/running/parseTask.js", () => ({ default: h.parseTask }));
-vi.mock("../lib/taskList.js", () => ({ selectPlugin: h.selectPlugin }));
-vi.mock("../lib/git/validateNotDev.js", () => ({ default: h.validateNotInDev }));
-vi.mock("../lib/encryption/encryption.js", () => ({ default: h.encrypt }));
-vi.mock("../lib/utils/index.js", async (importOriginal) => {
-    const actual = await importOriginal();
-    return { ...actual, clear: h.clear };
+vi.mock("@fsr/core", () => {
+    // Inline getEnvArg to avoid loading the real module (which pulls in JSX UI files).
+    const normalizeEnv = (v) => {
+        if (v === "prod") return "production";
+        if (v === "dev") return "development";
+        return v;
+    };
+    const getEnvArgImpl = (args) => {
+        let env = null;
+        let i = 0;
+        while (i < args.length) {
+            const arg = args[i];
+            if (arg === "--prod") { env = "production"; }
+            else if (arg === "--dev") { env = "development"; }
+            else if (arg.startsWith("--env=")) { env = normalizeEnv(arg.slice("--env=".length)) || null; }
+            else if (arg === "--env") { const next = args[i + 1]; if (next && !next.startsWith("-")) { env = normalizeEnv(next); i++; } }
+            else if (arg === "-e") { const next = args[i + 1]; if (next && !next.startsWith("-")) { env = normalizeEnv(next); i++; } }
+            i++;
+        }
+        return { env };
+    };
+    return {
+        getEnvArg: getEnvArgImpl,
+        selectPlugin: h.selectPlugin,
+        runCLICommand: h.runCLICommand,
+        parseTask: h.parseTask,
+        parseScriptFile: h.parseScriptFile,
+        runParallel: h.runParallel,
+        runSequence: h.runSequence,
+        clearRecent: h.clearRecent,
+        startPackageScripts: h.startPackageScripts,
+        startScripts: h.startScripts,
+        loadPlugins: h.loadPlugins,
+        registerPluginCommands: h.registerPluginCommands,
+        findExternalPluginDirs: h.findExternalPluginDirs,
+        fireHook: h.fireHook,
+        fsrLog: h.fsrLog,
+    };
 });
-vi.mock("../lib/doctor/doctor.js", () => ({ default: h.doctor }));
-vi.mock("../lib/completions/completion.js", () => ({ default: h.completion }));
-vi.mock("../lib/plugins/loader.js", () => ({
-    loadPlugins: h.loadPlugins,
-    registerPluginCommands: h.registerPluginCommands,
-    findExternalPluginDirs: h.findExternalPluginDirs,
-}));
-vi.mock("../lib/plugins/hooks.js", () => ({ fireHook: h.fireHook }));
-vi.mock("../lib/utils/console.js", () => ({ default: h.fsrLog }));
-vi.mock("../lib/git/commit.js", () => ({ default: h.commit }));
+
+// Command package implementation mocks
+vi.mock("@fsr/cmd-branch/validateNotDev.js", () => ({ default: h.validateNotInDev }));
+vi.mock("@fsr/cmd-commit/commit.js", () => ({ default: h.commit }));
+vi.mock("@fsr/cmd-upgrade/upgradePackages.js", () => ({ default: h.upgradePackages }));
+vi.mock("@fsr/cmd-bump/bump.js", () => ({ default: h.bump }));
+vi.mock("@fsr/cmd-encryption/encryption.js", () => ({ default: h.encrypt }));
+vi.mock("@fsr/cmd-generate/generateFScripts.js", () => ({ default: h.generateFScripts }));
+vi.mock("@fsr/cmd-generate/generateToc.js", () => ({ default: h.generateToc }));
+vi.mock("@fsr/cmd-doctor/doctor.js", () => ({ default: h.doctor }));
+vi.mock("@fsr/cmd-completion/completion.js", () => ({ default: h.completion }));
 vi.mock("cross-spawn", () => ({
     default: (...args) => h.spawn(...args)
 }));

@@ -1,0 +1,13 @@
+{
+    "name": "@fsr/cmd-bump",
+    "version": "7.4.3",
+    "description": "fsr bump command — bump version in package.json",
+    "type": "module",
+    "main": "./index.js",
+    "license": "MIT",
+    "dependencies": {
+        "@fsr/core": "*",
+        "chalk": "^5.6.2",
+        "cross-spawn": "^7.0.6"
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "name": "fscr",
+    "version": "7.4.3",
+    "description": "Runs the fscripts.md file",
+    "type": "module",
+    "main": "./dist/index.js",
+    "repository": "https://github.com/agrublev/freedcamp-script-runner.git",
+    "private": false,
+    "license": "MIT",
+    "author": "Angel Grablev <agrublev@gmail.com>",
+    "files": [
+        "dist",
+        "bin"
+    ],
+    "bin": {
+        "fsr": "./bin"
+    },
+    "dependencies": {
+        "@anthropic-ai/sdk": "^0.104.2",
+        "@fsr/cmd-branch": "*",
+        "@fsr/cmd-bump": "*",
+        "@fsr/cmd-clear": "*",
+        "@fsr/cmd-commit": "*",
+        "@fsr/cmd-completion": "*",
+        "@fsr/cmd-doctor": "*",
+        "@fsr/cmd-encryption": "*",
+        "@fsr/cmd-generate": "*",
+        "@fsr/cmd-greet": "*",
+        "@fsr/cmd-plugins": "*",
+        "@fsr/cmd-run": "*",
+        "@fsr/cmd-start": "*",
+        "@fsr/cmd-upgrade": "*",
+        "@fsr/core": "*",
+        "chalk": "^5.6.2",
+        "yargs": "^18.0.0"
+    }
+}

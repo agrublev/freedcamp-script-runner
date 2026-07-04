@@ -1,0 +1,15 @@
+{
+    "name": "@fsr/cmd-greet",
+    "version": "7.4.3",
+    "description": "fsr greet command — shell greeting hook",
+    "type": "module",
+    "main": "./index.js",
+    "license": "MIT",
+    "dependencies": {
+        "@fsr/cmd-completion": "*",
+        "@fsr/core": "*",
+        "chalk": "^5.6.2",
+        "fs-extra": "^11.3.5",
+        "inquirer": "^14.0.2"
+    }
+}
