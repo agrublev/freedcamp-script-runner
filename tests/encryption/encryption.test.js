@@ -244,7 +244,11 @@ describe("init", () => {
             decrypt: vi.fn(() => "PLAIN")
         };
         const consoleMock = { log: vi.fn(), warn: vi.fn(), error: vi.fn() };
-        const fsMock = { readFileSync: vi.fn(() => Buffer.from("data")), writeFileSync: vi.fn() };
+        const fsMock = {
+            readFileSync: vi.fn(() => Buffer.from("data")),
+            writeFileSync: vi.fn(),
+            existsSync: vi.fn(() => true)
+        };
 
         vi.doMock("../../lib/utils/helpers.js", () => helperMocks);
         vi.doMock("../../lib/utils/encryption.js", () => cryptoMocks);
@@ -313,6 +317,26 @@ describe("init", () => {
         expect(cryptoMocks.encrypt).toHaveBeenCalledTimes(1);
         expect(helperMocks.appendToFile).not.toHaveBeenCalled();
         expect(helperMocks.boxInform).not.toHaveBeenCalled();
+    });
+
+    it("encrypts listed files when .gitignore is missing (readFile returns '')", async () => {
+        // Regression: utils.readFile used to return {} on error, so a missing
+        // .gitignore crashed init() with "encrypted.ignore.split is not a function".
+        const { init, cryptoMocks, helperMocks } = await loadInit({
+            packageJson: { fscripts: { encryptedFiles: ["config.json"] } },
+            gitignore: ""
+        });
+        // simulate the real readFile failure fallback: an empty string
+        helperMocks.readFile.mockResolvedValue("");
+        promptMock.mockResolvedValueOnce({ pass: "k" });
+        promptMock.mockResolvedValueOnce({ encryptDecrypt: "encrypt" });
+
+        await init();
+
+        expect(cryptoMocks.encrypt).toHaveBeenCalledTimes(1);
+        expect(helperMocks.appendToFile).toHaveBeenCalledTimes(1);
+        const [, appended] = helperMocks.appendToFile.mock.calls[0];
+        expect(appended).toContain("config.json");
     });
 
     it("does nothing when package.json has no fscripts section", async () => {

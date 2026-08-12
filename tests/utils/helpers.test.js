@@ -197,9 +197,9 @@ describe("file-helper error paths (logged, never thrown)", () => {
         vi.restoreAllMocks();
     });
 
-    it("readFile returns {} and logs when the file is missing", async () => {
+    it("readFile returns an empty string and logs when the file is missing", async () => {
         const result = await readFile(path.join(tmpDir, "does-not-exist.txt"));
-        expect(result).toEqual({});
+        expect(result).toBe("");
         expect(errSpy).toHaveBeenCalled();
     });
 
