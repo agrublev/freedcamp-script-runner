@@ -193,7 +193,6 @@ const COMMANDS = [
                     default: false
                 })
                 .option("verbose", {
-                    alias: "v",
                     type: "boolean",
                     description: "Show verbose output",
                     default: false
@@ -333,7 +332,8 @@ const COMMANDS = [
     // examples, BUILTIN_COMMANDS, and the interactive picker menu.
     let yi = yargs(process.argv.slice(2))
         .usage("Usage: $0 <command> [options]")
-        .version(getPackageVersion());
+        .version(getPackageVersion())
+        .alias("v", "version");
 
     for (const { cmd, desc, builder, handler, examples } of COMMANDS) {
         yi = yi.command(cmd, desc, builder || (() => {}), handler);
