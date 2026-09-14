@@ -127,3 +127,9 @@ const completionScriptsSource = resolve(root, "lib/completions/scripts");
 const completionScriptsTarget = resolve(dist, "scripts");
 await cp(completionScriptsSource, completionScriptsTarget, { recursive: true, force: true });
 console.log("Copied completion scripts to dist/scripts");
+
+// Also ship built-in plugins for npm consumers
+const builtinPluginsSource = resolve(root, "lib/plugins");
+const builtinPluginsTarget = resolve(dist, "plugins");
+await cp(builtinPluginsSource, builtinPluginsTarget, { recursive: true, force: true });
+console.log("Copied built-in plugins to dist/plugins");
