@@ -95,7 +95,6 @@ try {
     const parts = content.split("<!-- end toc -->");
     const body = parts.length === 2 ? parts[1] : parts[0];
     const tasks = [...body.matchAll(/^## ([^\n]+)/gm)].map((m) => m[1].trim());
-    console.log(JSON.stringify(tasks));
     if (tasks.includes(cmd)) {
         const r = spawnSync("yarn", ["fsr", cmd, ...args.slice(1)], { stdio: "inherit" });
         process.exit(r.status ?? 1);
