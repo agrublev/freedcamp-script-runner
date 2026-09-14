@@ -39,9 +39,9 @@ describe("checkNodeVersion", () => {
         expect(result.details).toHaveProperty("required");
     });
 
-    it("uses default minVersion of 18.0.0 when no options passed", async () => {
+    it("uses default minVersion of 22.0.0 when no options passed", async () => {
         const result = await checkNodeVersion();
-        expect(result.details.required).toContain("18.0.0");
+        expect(result.details.required).toContain("22.0.0");
     });
 });
 
