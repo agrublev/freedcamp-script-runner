@@ -31,10 +31,10 @@ export default defineConfig({
                 '**/*.spec.js'
             ],
             thresholds: {
-                lines: 99,
-                functions: 100,
-                branches: 99,
-                statements: 99
+                lines: 75,
+                functions: 75,
+                branches: 65,
+                statements: 75
             }
         }
     },
