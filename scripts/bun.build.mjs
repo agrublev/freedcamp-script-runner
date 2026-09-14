@@ -1,6 +1,6 @@
-import { rm, mkdir, cp } from "fs/promises";
+import { rm, mkdir, cp, readdir } from "fs/promises";
 import { fileURLToPath } from "url";
-import { dirname, resolve } from "path";
+import { dirname, resolve, join } from "path";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dist = resolve(root, "dist");
@@ -128,19 +128,25 @@ const completionScriptsTarget = resolve(dist, "scripts");
 await cp(completionScriptsSource, completionScriptsTarget, { recursive: true, force: true });
 console.log("Copied completion scripts to dist/scripts");
 
-// Also ship built-in plugins for npm consumers
+// Also ship built-in plugins for npm consumers — copy only plugin directories
 const builtinPluginsSource = resolve(root, "lib/plugins");
 const builtinPluginsTarget = resolve(dist, "plugins");
-await cp(builtinPluginsSource, builtinPluginsTarget, { recursive: true, force: true });
-console.log("Copied built-in plugins to dist/plugins");
+await mkdir(builtinPluginsTarget, { recursive: true });
+const pluginEntries = await readdir(builtinPluginsSource, { withFileTypes: true });
+for (const entry of pluginEntries) {
+    if (!entry.isDirectory()) continue;
+    await cp(join(builtinPluginsSource, entry.name), join(builtinPluginsTarget, entry.name), {
+        recursive: true,
+        force: true
+    });
+}
+console.log("Copied built-in plugin directories to dist/plugins");
 
-// Plugins import ../../utils and ../../cache relative to dist/plugins/<name>/
-const utilsSource = resolve(root, "lib/utils");
-const utilsTarget = resolve(dist, "utils");
-await cp(utilsSource, utilsTarget, { recursive: true, force: true });
-console.log("Copied lib/utils to dist/utils");
-
-const cacheSource = resolve(root, "lib/cache");
-const cacheTarget = resolve(dist, "cache");
-await cp(cacheSource, cacheTarget, { recursive: true, force: true });
-console.log("Copied lib/cache to dist/cache");
+// Ensure runtime-relative imports from plugins resolve by mirroring shared modules
+const sharedDirs = ["utils", "cache"];
+for (const d of sharedDirs) {
+    const src = resolve(root, "lib", d);
+    const dst = resolve(dist, d);
+    await cp(src, dst, { recursive: true, force: true });
+    console.log(`Copied lib/${d} → dist/${d}`);
+}
