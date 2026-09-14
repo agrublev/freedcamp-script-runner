@@ -133,3 +133,14 @@ const builtinPluginsSource = resolve(root, "lib/plugins");
 const builtinPluginsTarget = resolve(dist, "plugins");
 await cp(builtinPluginsSource, builtinPluginsTarget, { recursive: true, force: true });
 console.log("Copied built-in plugins to dist/plugins");
+
+// Plugins import ../../utils and ../../cache relative to dist/plugins/<name>/
+const utilsSource = resolve(root, "lib/utils");
+const utilsTarget = resolve(dist, "utils");
+await cp(utilsSource, utilsTarget, { recursive: true, force: true });
+console.log("Copied lib/utils to dist/utils");
+
+const cacheSource = resolve(root, "lib/cache");
+const cacheTarget = resolve(dist, "cache");
+await cp(cacheSource, cacheTarget, { recursive: true, force: true });
+console.log("Copied lib/cache to dist/cache");
