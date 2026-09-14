@@ -106,6 +106,7 @@ Real Node.js. Executed directly. Documented inline. No extra files. 💥
 | 🧹 `fsr clear`       | clear recent task history                                           |
 | 💬 `fsr commit`      | stage + commit with AI-generated conventional commit messages        |
 | 🔌 `fsr plugins`     | list all installed plugins (built-in and npm `fscr-plugin-*`)       |
+| 👋 `fsr greet`       | install a shell greeting that reminds you to use `yarn fsr` when `fscripts.md` is present |
 
 > 🌍 **`--env <name>`** (alias `-e`) is a global flag that works with every command above. It restricts the visible and runnable tasks to a specific [environment profile](#-environment-profiles).
 

@@ -19,12 +19,38 @@ import {
 } from "./lib/plugins/loader.js";
 import { fireHook } from "./lib/plugins/hooks.js";
 import yargs from "yargs";
+import fs from "fs";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
 import fsrLog from "./lib/utils/console.js";
 import commit from "./lib/git/commit.js";
 import greet from "./lib/shell/greet.js";
 
 const taskName = chalk.rgb(39, 173, 96).bold.underline;
 const textDescription = chalk.rgb(159, 161, 181);
+
+// Normalize short environment names to canonical values
+const normalizeEnvName = (value) => {
+    if (value === "prod") return "production";
+    if (value === "dev") return "development";
+    return value;
+};
+
+// Resolve this package's version (works from source and from a packed install)
+const getPackageVersion = () => {
+    try {
+        const here = dirname(fileURLToPath(import.meta.url));
+        // Try package.json next to this file (source tree), then one level up (packed dist)
+        const tryPaths = [resolve(here, "package.json"), resolve(here, "../package.json")];
+        const jsonPath = tryPaths.find((p) => {
+            try { return fs.statSync(p).isFile(); } catch { return false; }
+        });
+        const json = jsonPath ? JSON.parse(fs.readFileSync(jsonPath, "utf8")) : {};
+        return json.version || "unknown";
+    } catch {
+        return "unknown";
+    }
+};
 
 /**
  * Single source of truth for all built-in fsr commands.
@@ -305,7 +331,9 @@ const COMMANDS = [
 
     // Build yargs from COMMANDS — single source of truth for registration,
     // examples, BUILTIN_COMMANDS, and the interactive picker menu.
-    let yi = yargs(process.argv.slice(2)).usage("Usage: $0 <command> [options]");
+    let yi = yargs(process.argv.slice(2))
+        .usage("Usage: $0 <command> [options]")
+        .version(getPackageVersion());
 
     for (const { cmd, desc, builder, handler, examples } of COMMANDS) {
         yi = yi.command(cmd, desc, builder || (() => {}), handler);
@@ -323,8 +351,26 @@ const COMMANDS = [
             type: "string",
             description:
                 "Filter scripts to the named environment profile (defined via `## [env:name]` sections in fscripts.md)",
+            global: true,
+            coerce: (v) => normalizeEnvName(v)
+        })
+        // Convenience shortcuts that map to --env production / development
+        .option("prod", {
+            type: "boolean",
+            description: "Shortcut for --env production",
             global: true
         })
+        .option("dev", {
+            type: "boolean",
+            description: "Shortcut for --env development",
+            global: true
+        })
+        // Ensure handlers always see a normalized argv.env
+        .middleware((argv) => {
+            if (argv.prod) argv.env = "production";
+            if (argv.dev) argv.env = "development";
+            if (argv.env) argv.env = normalizeEnvName(argv.env);
+        }, true)
         .help();
     registerPluginCommands(yi, pluginCommands);
 

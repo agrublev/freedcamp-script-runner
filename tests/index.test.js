@@ -418,6 +418,29 @@ describe("--env flag → process.env injection", () => {
     });
 });
 
+describe("env shortcuts and normalization", () => {
+    it("`run --prod` maps to argv.env='production' and filters parseScriptFile", async () => {
+        h.parseScriptFile.mockResolvedValue({ allTasks: [{ name: "push" }] });
+        await runCli(["run", "push", "--prod"]);
+        expect(h.parseScriptFile).toHaveBeenCalledWith({ env: "production" });
+    });
+    it("`run --dev` maps to argv.env='development' and filters parseScriptFile", async () => {
+        h.parseScriptFile.mockResolvedValue({ allTasks: [{ name: "push" }] });
+        await runCli(["run", "push", "--dev"]);
+        expect(h.parseScriptFile).toHaveBeenCalledWith({ env: "development" });
+    });
+    it("normalizes `--env prod` to 'production' for filtering", async () => {
+        h.parseScriptFile.mockResolvedValue({ allTasks: [{ name: "push" }] });
+        await runCli(["run", "push", "--env", "prod"]);
+        expect(h.parseScriptFile).toHaveBeenCalledWith({ env: "production" });
+    });
+    it("accepts canonical `--env development` unchanged", async () => {
+        h.parseScriptFile.mockResolvedValue({ allTasks: [{ name: "push" }] });
+        await runCli(["run", "push", "--env", "development"]);
+        expect(h.parseScriptFile).toHaveBeenCalledWith({ env: "development" });
+    });
+});
+
 describe("`plugins` command", () => {
     it("lists runnable plugins with their source badge", async () => {
         const pluginList = {

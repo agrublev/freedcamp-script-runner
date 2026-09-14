@@ -8,6 +8,7 @@
         "find-scripts-in-fscripts": "you can find all scripts in fscripts.md",
         "fsr": "bun ./dist/index.js",
         "start": "yarn fsr",
+        "test": "vitest run",
         "list": "yarn fsr start",
         "test:coverage": "vitest run --coverage"
     },
@@ -22,6 +23,9 @@
     "private": false,
     "license": "MIT",
     "author": "Angel Grablev <agrublev@gmail.com>",
+    "engines": {
+        "node": ">=22"
+    },
     "files": [
         "dist",
         "bin"
