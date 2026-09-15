@@ -88,4 +88,13 @@ describe("promptQuestion", () => {
         const result = await promptQuestion();
         expect(result).toBe("RESULT");
     });
+
+    it("keeps stdin referenced while handing the terminal to Inquirer", async () => {
+        const refSpy = vi.spyOn(process.stdin, "ref");
+
+        await promptQuestion();
+
+        expect(refSpy).toHaveBeenCalledTimes(1);
+        refSpy.mockRestore();
+    });
 });
