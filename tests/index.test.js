@@ -187,6 +187,15 @@ describe("interactive picker (no args)", () => {
         expect(h.spawn).not.toHaveBeenCalled();
     });
 
+    it("selecting upgrade does not require an fsr package script", async () => {
+        h.selectPlugin.mockResolvedValue("upgrade");
+
+        await runCli([]);
+
+        expect(h.upgradePackages).toHaveBeenCalledTimes(1);
+        expect(h.spawn).not.toHaveBeenCalled();
+    });
+
     it("declining the picker prints a goodbye and spawns nothing", async () => {
         h.selectPlugin.mockResolvedValue(null);
         await runCli([]);
