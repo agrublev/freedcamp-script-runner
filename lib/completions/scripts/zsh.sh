@@ -44,6 +44,7 @@ _fscr() {
         'clear:Clear recent task history'
         'generate:Generate sample fscripts.md'
         'toc:Generate table of contents'
+        'toc-file:Pick a markdown file and generate its Table of Contents'
         'completion:Manage shell completions'
     )
 

@@ -29,7 +29,7 @@ _fscr_completion() {
     _init_completion || return
 
     # Main commands
-    local commands="start run list scripts run-s run-p bump upgrade branch remote encryption clear generate toc completion"
+    local commands="start run list scripts run-s run-p bump upgrade branch remote encryption clear generate toc toc-file completion"
 
     # Completion subcommands
     local completion_cmds="install uninstall status generate"

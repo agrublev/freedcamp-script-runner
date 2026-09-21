@@ -1,6 +1,6 @@
 import bump from "./lib/release/bump.js";
 import chalk from "chalk";
-import { generateFScripts, generateToc } from "./lib/generators/index.js";
+import { generateFScripts, generateToc, generateTocFile } from "./lib/generators/index.js";
 import parseScriptFile from "./lib/parsers/parseScriptsMd.js";
 import upgradePackages from "./lib/upgradePackages.js";
 import { runCLICommand, runParallel, runSequence } from "./lib/running/index.js";
@@ -174,6 +174,13 @@ const COMMANDS = [
         cmd: "toc",
         desc: "Regenerate the Table of Contents in fscripts.md",
         handler: async (argv) => generateToc(argv._[1]),
+        menu: true
+    },
+    {
+        cmd: "toc-file",
+        desc: "Pick a markdown file and generate its Table of Contents",
+        handler: async () => generateTocFile(),
+        examples: [["$0 toc-file", "Pick any .md file via the file picker and generate its TOC"]],
         menu: true
     },
     {

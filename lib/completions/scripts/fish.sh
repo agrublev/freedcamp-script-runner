@@ -54,6 +54,7 @@ complete -c fsr -n "not __fscr_using_command encryption" -a "encryption" -d "Enc
 complete -c fsr -n "not __fscr_using_command clear" -a "clear" -d "Clear recent task history"
 complete -c fsr -n "not __fscr_using_command generate" -a "generate" -d "Generate sample fscripts.md"
 complete -c fsr -n "not __fscr_using_command toc" -a "toc" -d "Generate table of contents"
+complete -c fsr -n "not __fscr_using_command toc-file" -a "toc-file" -d "Pick a markdown file and generate its Table of Contents"
 complete -c fsr -n "not __fscr_using_command completion" -a "completion" -d "Manage shell completions"
 
 # Task completion for 'run' command
@@ -92,6 +93,7 @@ complete -c fsr -n "not __fscr_using_command encryption" -a "encryption" -d "Enc
 complete -c fsr -n "not __fscr_using_command clear" -a "clear" -d "Clear recent task history"
 complete -c fsr -n "not __fscr_using_command generate" -a "generate" -d "Generate sample fscripts.md"
 complete -c fsr -n "not __fscr_using_command toc" -a "toc" -d "Generate table of contents"
+complete -c fsr -n "not __fscr_using_command toc-file" -a "toc-file" -d "Pick a markdown file and generate its Table of Contents"
 complete -c fsr -n "not __fscr_using_command completion" -a "completion" -d "Manage shell completions"
 complete -c fsr -n "__fscr_using_command run" -a "(__fscr_get_tasks)" -d "Run task"
 complete -c fsr -n "__fscr_using_command run-s" -a "(__fscr_get_tasks)" -d "Run task"

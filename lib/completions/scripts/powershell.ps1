@@ -48,6 +48,7 @@ $scriptBlock = {
         [PSCustomObject]@{Name='clear'; Description='Clear recent task history'}
         [PSCustomObject]@{Name='generate'; Description='Generate sample fscripts.md'}
         [PSCustomObject]@{Name='toc'; Description='Generate table of contents'}
+        [PSCustomObject]@{Name='toc-file'; Description='Pick a markdown file and generate its Table of Contents'}
         [PSCustomObject]@{Name='completion'; Description='Manage shell completions'}
     )
 

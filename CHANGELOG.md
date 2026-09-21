@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added `fsr toc-file` command — pick any markdown file with the interactive file picker (`.md` files only, powered by fc-filepick) and generate its Table of Contents. Also available from the bare `fsr` interactive menu and shell completions.
 - Added `greet` command to install a shell greeting that reminds users to run `yarn fsr` when fscripts.md is present in a directory.
 
 ### Added

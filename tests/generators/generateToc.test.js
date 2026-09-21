@@ -147,6 +147,26 @@ describe("generateToc", () => {
         }
     });
 
+    it("warns with the file name and exits when a custom file is missing", async () => {
+        const dir = mkdtempSync(join(tmpdir(), "fscr-toc-"));
+        const missing = join(dir, "Custom.md");
+        const origCwd = process.cwd;
+        process.cwd = () => dir;
+        const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+        const exitSpy = vi.spyOn(process, "exit").mockImplementation(() => {});
+        try {
+            const result = await generateToc(missing);
+            expect(exitSpy).toHaveBeenCalledWith(0);
+            expect(result).toBeNull();
+            expect(writeFile).not.toHaveBeenCalled();
+        } finally {
+            process.cwd = origCwd;
+            rmSync(dir, { recursive: true, force: true });
+            warnSpy.mockRestore();
+            exitSpy.mockRestore();
+        }
+    });
+
     it("writes only the TOC marker for an empty file (no toc content)", async () => {
         const dir = mkdtempSync(join(tmpdir(), "fscr-toc-"));
         writeFileSync(join(dir, "fscripts.md"), "", "utf-8");
