@@ -1,40 +1,45 @@
-- [Fun](#fun)
-  * [awesome](#awesome)
-  * [env:test](#envtest)
-- [Build](#build)
-  * [build](#build)
-  * [build:ui](#buildui)
-  * [watch](#watch)
-- [Development](#development)
-  * [fsr](#fsr)
-  * [start](#start)
-  * [start:run](#startrun)
-- [Release](#release)
-  * [release](#release)
-  * [release:bump](#releasebump)
-  * [release:commit](#releasecommit)
-  * [release:publish](#releasepublish)
-- [Testing](#testing)
-  * [test](#test)
-  * [test:watch](#testwatch)
-  * [test:coverage](#testcoverage)
-  * [test:coverage:open](#testcoverageopen)
-<!-- end toc -->
-
-# Fun
+-   [Fun](#fun)
+    -   [awesome](#awesome)
+    -   [env:test](#envtest)
+-   [Build](#build)
+    -   [build](#build)
+    -   [build:ui](#buildui)
+    -   [watch](#watch)
+-   [Development](#development)
+    -   [fsr](#fsr)
+    -   [start](#start)
+    -   [start:run](#startrun)
+-   [Release](#release)
+    -   [release](#release)
+    -   [release:bump](#releasebump)
+    -   [release:commit](#releasecommit)
+    -   [release:publish](#releasepublish)
+-   [Testing](#testing)
+    -   [test](#test)
+    -   [test:watch](#testwatch)
+    -   [test:coverage](#testcoverage)
+    -   [test:coverage:open](#testcoverageopen)
+    <!-- end toc -->
 
 ## awesome
 
 ```bash
-sleep 2
-echo "----"
+sleep 2 && echo "----"
 ```
 
 ## env:test
 
 ```javascript
 import "dotenv";
-console.log(process.env.NODE_ENV);
+import chalk from "chalk";
+(async () => {
+    await new Promise((r) => {
+        r();
+    }, 2000);
+    console.log(`===========
+${chalk.green.underline.bold(`${process.env.NODE_ENV}`)}
+===========`);
+})();
 ```
 
 # Build
@@ -62,7 +67,7 @@ node scripts/build-ui.mjs
 Starts a nodemon watcher over `lib/` and `index.js`. On any `.js` change it runs the full `bun.build.mjs` so `dist/` stays in sync automatically. Use during active development alongside a separate terminal running `fsr`.
 
 ```bash
-nodemon --watch lib --watch index.js --ext js --exec "bun scripts/bun.build.mjs" --ignore 'node_modules' -I
+bun --watch lib
 ```
 
 # Development

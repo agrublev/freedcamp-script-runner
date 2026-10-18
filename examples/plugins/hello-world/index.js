@@ -47,8 +47,6 @@ export default {
         `Task completed: ${data.taskName} [${status}] (${data.duration}ms)`
       );
     });
-
-    context.logger.success('Hello World plugin initialized');
   },
 
   async destroy() {

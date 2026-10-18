@@ -137,7 +137,5 @@ export default {
       },
       examples: ['fsr deploy-history']
     });
-
-    context.logger.success('Deployment plugin initialized');
   }
 };

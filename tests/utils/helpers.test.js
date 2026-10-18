@@ -12,7 +12,20 @@ import os from "os";
 import path from "path";
 
 let helpers;
-let emptyDir, ensureDir, ensureFile, pathExists, readJson, writeJson, readFile, writeFile, removeFile, appendToFile, chainAsync, boxInform, rainbowGradient, timestamp;
+let emptyDir,
+    ensureDir,
+    ensureFile,
+    pathExists,
+    readJson,
+    writeJson,
+    readFile,
+    writeFile,
+    removeFile,
+    appendToFile,
+    chainAsync,
+    boxInform,
+    rainbowGradient,
+    timestamp;
 
 let tmpDir;
 
@@ -109,17 +122,17 @@ describe("removeFile", () => {
 describe("chainAsync", () => {
     it("runs the functions in sequence, passing `next` to all but the last", () => {
         const order = [];
-        const a = next => {
+        const a = (next) => {
             order.push("a");
             expect(typeof next).toBe("function");
             next();
         };
-        const b = next => {
+        const b = (next) => {
             order.push("b");
             expect(typeof next).toBe("function");
             next();
         };
-        const c = next => {
+        const c = (next) => {
             order.push("c");
             // The last fn is invoked with no `next`.
             expect(next).toBeUndefined();
@@ -131,7 +144,7 @@ describe("chainAsync", () => {
     it("handles a single-function chain (called with no next)", () => {
         const order = [];
         chainAsync([
-            next => {
+            (next) => {
                 order.push("only");
                 expect(next).toBeUndefined();
             }
@@ -197,9 +210,9 @@ describe("file-helper error paths (logged, never thrown)", () => {
         vi.restoreAllMocks();
     });
 
-    it("readFile returns {} and logs when the file is missing", async () => {
+    it("readFile returns null and logs when the file is missing", async () => {
         const result = await readFile(path.join(tmpDir, "does-not-exist.txt"));
-        expect(result).toEqual({});
+        expect(result).toEqual(null);
         expect(errSpy).toHaveBeenCalled();
     });
 

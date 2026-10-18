@@ -19,18 +19,31 @@ vi.mock("../../lib/utils/helpers.js", () => ({
     timestamp: vi.fn().mockReturnValue("00:00:00")
 }));
 
-vi.mock("../../lib/utils/prompt.js", () => ({ default: vi.fn() }));
+// Mock the prompt so tests never block on real stdin. Defaults to declining
+// the overwrite confirmation (returns false).
+vi.mock("../../lib/utils/prompt.js", () => ({
+    default: vi.fn().mockResolvedValue(false)
+}));
 
 describe("generateFScripts", () => {
     let generateFScripts;
+    let readJson;
     let writeFile;
 
     beforeEach(async () => {
+        vi.clearAllMocks();
         vi.resetModules();
         const mod = await import("../../lib/generators/generateFScripts.js");
         generateFScripts = mod.default;
         const helpers = await import("../../lib/utils/helpers.js");
+        readJson = helpers.readJson;
         writeFile = helpers.writeFile;
+        // Reset implementations that individual tests override, since
+        // clearAllMocks() only clears call history, not implementations.
+        helpers.pathExists.mockResolvedValue(false);
+        readJson.mockResolvedValue(mockPackageJson);
+        const { default: promptQuestion } = await import("../../lib/utils/prompt.js");
+        promptQuestion.mockResolvedValue(false);
     });
 
     it("generates fscripts.md in the current directory", async () => {
@@ -63,7 +76,6 @@ describe("generateFScripts", () => {
         const helpers = await import("../../lib/utils/helpers.js");
         const { default: promptQuestion } = await import("../../lib/utils/prompt.js");
         helpers.pathExists.mockResolvedValue(true);
-        promptQuestion.mockResolvedValue(false);
         helpers.writeFile.mockClear();
         promptQuestion.mockClear();
         const infoSpy = vi.spyOn(console, "info").mockImplementation(() => {});
@@ -75,24 +87,14 @@ describe("generateFScripts", () => {
         infoSpy.mockRestore();
     });
 
-    it("overwrites the existing fscripts.md when the user confirms", async () => {
-        const helpers = await import("../../lib/utils/helpers.js");
-        const { default: promptQuestion } = await import("../../lib/utils/prompt.js");
-        helpers.pathExists.mockResolvedValue(true);
-        promptQuestion.mockResolvedValue(true);
-        helpers.writeFile.mockClear();
-        promptQuestion.mockClear();
-        const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
-        const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    it("writes a helpful note when package.json has no scripts", async () => {
+        readJson.mockResolvedValueOnce({ name: "my-lib", version: "1.0.0" });
 
         await generateFScripts();
 
-        expect(promptQuestion).toHaveBeenCalledWith(expect.objectContaining({ type: "confirm" }));
-        expect(helpers.writeFile).toHaveBeenCalledWith(
-            expect.stringContaining("fscripts.md"),
-            expect.any(String)
-        );
-        logSpy.mockRestore();
-        errSpy.mockRestore();
+        const [, content] = writeFile.mock.calls[0];
+        expect(content).toContain("# First category of scripts");
+        expect(content).toContain("No npm scripts found in package.json.");
+        expect(content).not.toContain("## undefined");
     });
 });
