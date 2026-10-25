@@ -137,7 +137,12 @@ pub fn spawn(task: &Task, opts: &RunOpts, own_group: bool) -> Result<Running> {
     #[cfg(not(unix))]
     let _ = own_group;
     if !opts.quiet {
-        eprintln!("\x1b[1;32m[fsr]\x1b[0m \x1b[1m{}\x1b[0m", task.name);
+        // fsrLog.log(chalk.green.bgHex("#181c24").bold("[HH:mm:ss]") + chalk.bgHex("#181c24").bold.hex("#8c91a7")(" name: "))
+        let t = chrono::Local::now().format("%H:%M:%S");
+        println!(
+            "\x1b[90m{t}\x1b[39m \x1b[90;1m[LOG]\x1b[0m \x1b[48;2;24;28;36;32;1m[{t}]\x1b[0m\x1b[48;2;24;28;36;1;38;2;140;145;167m {}: \x1b[0m",
+            task.name
+        );
     }
     let child = cmd
         .spawn()
@@ -237,7 +242,8 @@ pub fn wait_all(mut running: Vec<Running>, group: bool, signals: &AtomicUsize) -
                     let r = running.remove(i);
                     if code != 0 {
                         eprintln!(
-                            "\x1b[31mERROR\x1b[0m task '{}' exited with code {code}",
+                            "\x1b[90m{}\x1b[39m \x1b[31;1m× [ERROR]\x1b[0m \x1b[31mERROR\x1b[39m exit code {code} ({})",
+                            chrono::Local::now().format("%H:%M:%S"),
                             r.name
                         );
                         if first_fail.is_none() {
