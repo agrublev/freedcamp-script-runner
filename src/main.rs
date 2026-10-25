@@ -149,6 +149,7 @@ enum Cmd {
 }
 
 fn main() -> ExitCode {
+    fsr::doctor::mark_start();
     match real_main() {
         Ok(code) => ExitCode::from(code.clamp(0, 255) as u8),
         Err(e) => {
