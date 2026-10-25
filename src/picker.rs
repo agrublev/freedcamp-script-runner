@@ -1,7 +1,6 @@
 //! Interactive pickers: port of `lib/startScripts.js` + `lib/taskList.js`
-//! (ink/react UI replaced with dialoguer fuzzy-select). Recent tasks are kept
+//! (ink/react UI ported to ratatui in `crate::ui`). Recent tasks are kept
 //! in the cache exactly like JS (`recentTasks`, reset when fscripts.md size changes).
-//! Not ported: ink TaskPicker visuals, touch/mouse support, autocomplete sublabels layout.
 
 use crate::cache::Cache;
 use crate::parse::Parsed;
