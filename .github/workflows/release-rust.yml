@@ -59,6 +59,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           set -euo pipefail
+          test "${GITHUB_REF_NAME}" = "v$(node -p 'require("./package.json").version')"
           for package in packages/fscr-*/package.json; do npm publish "$(dirname "$package")" --access public; done
           node -e 'const fs=require("fs");const p=JSON.parse(fs.readFileSync("package.json"));p.optionalDependencies=Object.fromEntries(["linux-x64","linux-arm64","darwin-x64","darwin-arm64","win32-x64"].map(k=>[`fscr-${k}`,p.version]));fs.writeFileSync("package.json",JSON.stringify(p,null,2)+"\n")'
           npm publish --access public

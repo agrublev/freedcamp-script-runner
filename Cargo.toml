@@ -1,6 +1,6 @@
 [package]
 name = "fscr"
-version = "7.6.1"
+version = "7.6.3"
 edition = "2024"
 description = "Runs scripts documented in fscripts.md"
 license = "MIT"

@@ -349,7 +349,7 @@ dependencies = [
 
 [[package]]
 name = "fscr"
-version = "7.6.1"
+version = "7.6.3"
 dependencies = [
  "aes",
  "base64 0.22.1",

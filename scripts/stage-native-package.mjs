@@ -1,10 +1,11 @@
 import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const target = process.argv[2];
 const binary = process.argv[3];
 if (!target || !binary) throw new Error("usage: node scripts/stage-native-package.mjs <target-triple> <binary-path>");
-const root = resolve(dirname(new URL(import.meta.url).pathname), "..");
+const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const pkgName = `fscr-${target.includes("windows") ? "win32" : target.includes("apple-darwin") ? "darwin" : "linux"}-${target.includes("aarch64") || target.includes("arm64") ? "arm64" : "x64"}`;
 const out = resolve(root, "packages", pkgName);
 mkdirSync(resolve(out, "bin"), { recursive: true });
