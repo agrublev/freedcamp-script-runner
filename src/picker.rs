@@ -117,8 +117,11 @@ pub fn pick_package_script(scripts: &[(String, String)]) -> Result<Option<String
 }
 
 /// Bare `fsr`: the PluginPicker command menu.
-pub fn pick_command() -> Result<Option<String>> {
-    ui::run(Menu::new(ui::menu::default_items()))
+/// Bare `fsr` menu: built-in commands, then `plugin:<name>` items (index.js).
+pub fn pick_command(extra: Vec<ui::menu::MenuItem>) -> Result<Option<String>> {
+    let mut items = ui::menu::default_items();
+    items.extend(extra);
+    ui::run(Menu::new(items))
 }
 
 /// Markdown files under `root` (skips node_modules, .git, target, dist).

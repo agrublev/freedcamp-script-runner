@@ -6,8 +6,9 @@
 //! * SIGINT/SIGTERM/SIGHUP are forwarded to children and reflected in the
 //!   exit code (128 + signal) instead of orphaning them.
 //!
-//! TODO(plugins): JS fires `pre-task` / `post-task` / `task-error` hooks
-//! (`lib/plugins/hooks.js`). Plugins stay in JS; hooks are not fired yet.
+//!
+//! Lifecycle hooks (`pre-task`, `post-task`, `task-error`) are fired through
+//! [`Hooks`] sinks: the JS plugin host (`crate::plugins`) and native built-ins.
 
 use crate::parse::Task;
 use crate::task::{Script, parse_task};
@@ -18,7 +19,20 @@ use std::sync::Arc;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::time::{Duration, Instant};
 
-#[derive(Debug, Clone)]
+/// Receives lifecycle hooks (same names/data as `lib/plugins/hooks.js`).
+pub trait Hooks: Send + Sync {
+    fn fire(&self, name: &str, data: serde_json::Value);
+}
+
+pub type HookList = Vec<Arc<dyn Hooks>>;
+
+pub fn fire(hooks: &HookList, name: &str, data: serde_json::Value) {
+    for h in hooks {
+        h.fire(name, data.clone());
+    }
+}
+
+#[derive(Clone)]
 pub struct RunOpts {
     pub cwd: PathBuf,
     /// Path of the running fsr binary (used for `fsr …` / `yarn fsr …` tasks).
@@ -26,6 +40,7 @@ pub struct RunOpts {
     /// Active profile; children get NODE_ENV/FSR_ENV = profile or "development".
     pub profile: Option<String>,
     pub quiet: bool,
+    pub hooks: HookList,
 }
 
 const POLL: Duration = Duration::from_millis(20);
@@ -88,6 +103,7 @@ pub struct Running {
     pub name: String,
     pub child: Child,
     tmp: Option<PathBuf>,
+    started: Instant,
 }
 
 impl Drop for Running {
@@ -103,6 +119,12 @@ impl Drop for Running {
 /// so interactive programs and Ctrl-C behave normally.
 pub fn spawn(task: &Task, opts: &RunOpts, own_group: bool) -> Result<Running> {
     let script = parse_task(task);
+    fire(
+        &opts.hooks,
+        "pre-task",
+        serde_json::json!({"taskName": task.name}),
+    );
+    let started = Instant::now();
     let mut tmp = None;
     let mut cmd = if script.lang.as_deref() == Some("javascript") {
         let name = format!(".fsr-task-{:012x}.mjs", rand_u64() & 0xffff_ffff_ffff);
@@ -144,13 +166,23 @@ pub fn spawn(task: &Task, opts: &RunOpts, own_group: bool) -> Result<Running> {
             task.name
         );
     }
-    let child = cmd
-        .spawn()
-        .with_context(|| format!("spawning task '{}'", task.name))?;
+    let child = match cmd.spawn() {
+        Ok(c) => c,
+        Err(e) => {
+            let msg = format!("spawning task '{}': {e}", task.name);
+            fire(
+                &opts.hooks,
+                "task-error",
+                serde_json::json!({"taskName": task.name, "duration": 0, "error": msg}),
+            );
+            bail!(msg);
+        }
+    };
     Ok(Running {
         name: task.name.clone(),
         child,
         tmp,
+        started,
     })
 }
 
@@ -215,7 +247,12 @@ fn send(pid: u32, sig: i32, group: bool) {
 
 /// Wait for a set of children. `fail_fast_group`: on first failure, terminate
 /// the rest (run-p). Returns the first non-zero code (or 0).
-pub fn wait_all(mut running: Vec<Running>, group: bool, signals: &AtomicUsize) -> i32 {
+pub fn wait_all(
+    mut running: Vec<Running>,
+    group: bool,
+    signals: &AtomicUsize,
+    hooks: &HookList,
+) -> i32 {
     let mut first_fail: Option<i32> = None;
     let mut forwarded = 0usize;
     let mut kill_deadline: Option<Instant> = None;
@@ -240,6 +277,20 @@ pub fn wait_all(mut running: Vec<Running>, group: bool, signals: &AtomicUsize) -
                 Ok(Some(st)) => {
                     let code = exit_code(st);
                     let r = running.remove(i);
+                    let duration = r.started.elapsed().as_millis() as u64;
+                    if code == 0 {
+                        fire(
+                            hooks,
+                            "post-task",
+                            serde_json::json!({"taskName": r.name, "duration": duration, "success": true}),
+                        );
+                    } else {
+                        fire(
+                            hooks,
+                            "task-error",
+                            serde_json::json!({"taskName": r.name, "duration": duration, "error": format!("exit code {code}")}),
+                        );
+                    }
                     if code != 0 {
                         eprintln!(
                             "\x1b[90m{}\x1b[39m \x1b[31;1m× [ERROR]\x1b[0m \x1b[31mERROR\x1b[39m exit code {code} ({})",
@@ -292,7 +343,7 @@ fn find<'a>(tasks: &'a [Task], name: &str) -> Result<&'a Task> {
 
 pub fn run_one(tasks: &[Task], name: &str, opts: &RunOpts, sig: &AtomicUsize) -> Result<i32> {
     let r = spawn(find(tasks, name)?, opts, false)?;
-    Ok(wait_all(vec![r], false, sig))
+    Ok(wait_all(vec![r], false, sig, &opts.hooks))
 }
 
 /// Sequential, fail-fast.
@@ -339,12 +390,12 @@ pub fn run_parallel(
                 for r in &running {
                     send(r.child.id(), nix::libc::SIGTERM, true);
                 }
-                wait_all(running, true, sig);
+                wait_all(running, true, sig, &opts.hooks);
                 return Ok(1);
             }
         }
     }
-    Ok(wait_all(running, true, sig))
+    Ok(wait_all(running, true, sig, &opts.hooks))
 }
 
 #[cfg(test)]

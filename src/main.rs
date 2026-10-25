@@ -92,6 +92,13 @@ enum Cmd {
     },
     /// Print a shell completion script (bash, zsh, fish, powershell, elvish)
     Completion { shell: clap_complete::Shell },
+    /// List all installed plugins (local .fsr/plugins and npm fscr-plugin-*)
+    Plugins,
+    /// Run a runnable plugin by name
+    Plugin { name: String },
+    /// Plugin command, or bare task shorthand (`fsr build` = `fsr run build`)
+    #[command(external_subcommand)]
+    External(Vec<String>),
 }
 
 fn main() -> ExitCode {
@@ -115,31 +122,27 @@ fn real_main() -> Result<i32> {
     let cli = Cli::parse_from(std::iter::once(argv[0].clone()).chain(rest));
     let cwd = std::env::current_dir()?;
     let cache = Cache::new(fsr::cache::default_dir());
-    let opts = runner::RunOpts {
-        cwd: cwd.clone(),
-        self_exe: std::env::current_exe().unwrap_or_else(|_| "fsr".into()),
-        profile: profile.clone(),
-        quiet: false,
-    };
-    let load = || -> Result<parse::Parsed> {
-        parse::parse_script_file(&cwd, profile.as_deref())?.context("No fscripts.md file found")
-    };
-    let sig = runner::install_signal_flag();
-    let pick_and_run = |by_category: bool| -> Result<i32> {
-        let p = load()?;
-        let recent = picker::recent(&cache, &cwd.join("fscripts.md")).unwrap_or_default();
-        let opts_recent = picker::recent_options(&cache, &recent);
-        let Some(name) = picker::pick_task(&p, &opts_recent, by_category)? else {
-            fsr::ui::log("See you soon!");
-            return Ok(0);
-        };
-        let _ = picker::remember(&cache, &name);
-        runner::run_one(&p.all_tasks, &name, &opts, &sig)
-    };
     let cmd = match cli.cmd {
         Some(c) => c,
         None if !tty() => Cmd::List { plain: true },
-        None => match picker::pick_command()?.as_deref() {
+        None => match {
+            let listing = fsr::plugins::list(&cwd).unwrap_or_else(|e| {
+                eprintln!("[fsr] plugins disabled: {e:#}");
+                Default::default()
+            });
+            let extra = listing
+                .plugins
+                .iter()
+                .filter(|p| p.runnable)
+                .map(|p| fsr::ui::menu::MenuItem {
+                    name: format!("plugin:{}", p.name),
+                    message: p.description.clone(),
+                })
+                .collect();
+            picker::pick_command(extra)?
+        }
+        .as_deref()
+        {
             None => {
                 fsr::ui::log("See you soon!");
                 return Ok(0);
@@ -163,6 +166,10 @@ fn real_main() -> Result<i32> {
                 fix: false,
                 json: false,
             },
+            Some("plugins") => Cmd::Plugins,
+            Some(p) if p.starts_with("plugin:") => Cmd::Plugin {
+                name: p["plugin:".len()..].to_string(),
+            },
             Some(other) => {
                 eprintln!(
                     "'{other}' needs arguments or is not available in the Rust build yet (see `fsr --help`)."
@@ -170,6 +177,54 @@ fn real_main() -> Result<i32> {
                 return Ok(1);
             }
         },
+    };
+    let mut _host_keep = None;
+    let hooks: runner::HookList = if matches!(
+        cmd,
+        Cmd::Start
+            | Cmd::List { .. }
+            | Cmd::Scripts { .. }
+            | Cmd::Run { .. }
+            | Cmd::RunS { .. }
+            | Cmd::RunP { .. }
+            | Cmd::External(_)
+    ) {
+        match fsr::plugins::Host::start(&cwd) {
+            Ok(Some(h)) => {
+                let h = std::sync::Arc::new(h);
+                _host_keep = Some(h.listing.clone());
+                vec![h as std::sync::Arc<dyn runner::Hooks>]
+            }
+            Ok(None) => Vec::new(),
+            Err(e) => {
+                eprintln!("[fsr] plugins disabled: {e:#}");
+                Vec::new()
+            }
+        }
+    } else {
+        Vec::new()
+    };
+    let opts = runner::RunOpts {
+        cwd: cwd.clone(),
+        self_exe: std::env::current_exe().unwrap_or_else(|_| "fsr".into()),
+        profile: profile.clone(),
+        quiet: false,
+        hooks,
+    };
+    let load = || -> Result<parse::Parsed> {
+        parse::parse_script_file(&cwd, profile.as_deref())?.context("No fscripts.md file found")
+    };
+    let sig = runner::install_signal_flag();
+    let pick_and_run = |by_category: bool| -> Result<i32> {
+        let p = load()?;
+        let recent = picker::recent(&cache, &cwd.join("fscripts.md")).unwrap_or_default();
+        let opts_recent = picker::recent_options(&cache, &recent);
+        let Some(name) = picker::pick_task(&p, &opts_recent, by_category)? else {
+            fsr::ui::log("See you soon!");
+            return Ok(0);
+        };
+        let _ = picker::remember(&cache, &name);
+        runner::run_one(&p.all_tasks, &name, &opts, &sig)
     };
     match cmd {
         Cmd::Start if !tty() => {
@@ -250,9 +305,82 @@ fn real_main() -> Result<i32> {
             }
         },
         Cmd::Doctor { fix, json } => fsr::doctor::cmd_doctor(&cwd, &cache, fix, json),
+        Cmd::Plugins => cmd_plugins(&cwd),
+        Cmd::Plugin { name } => fsr::plugins::run_plugin(&cwd, &name),
+        Cmd::External(args) => {
+            let name = &args[0];
+            let listing = _host_keep.clone().unwrap_or_default();
+            if let Some(c) = listing
+                .commands
+                .iter()
+                .find(|c| &c.name == name || c.aliases.contains(name))
+            {
+                drop(opts); // stop the hook host; the command host fires its own hooks
+                return fsr::plugins::run_command(
+                    &cwd,
+                    &c.name,
+                    &fsr::plugins::argv_json(c, &args[1..]),
+                );
+            }
+            runner::run_one(&load()?.all_tasks, name, &opts, &sig)
+        }
         Cmd::Completion { shell } => {
             clap_complete::generate(shell, &mut Cli::command(), "fsr", &mut std::io::stdout());
             Ok(0)
         }
     }
+}
+
+fn cmd_plugins(cwd: &std::path::Path) -> Result<i32> {
+    let l = fsr::plugins::list(cwd)?;
+    let mut all: Vec<(String, String, String)> = l
+        .plugins
+        .iter()
+        .filter(|p| p.runnable)
+        .map(|p| (p.name.clone(), p.description.clone(), p.source.clone()))
+        .collect();
+    for c in &l.commands {
+        if !all.iter().any(|a| a.0 == c.name) {
+            let src = l
+                .plugins
+                .iter()
+                .find(|p| p.name == c.plugin)
+                .map(|p| p.source.clone())
+                .unwrap_or_default();
+            all.push((c.name.clone(), c.description.clone(), src));
+        }
+    }
+    let log = |m: &str| {
+        println!(
+            "\x1b[90m{}\x1b[39m \x1b[90;1m[LOG]\x1b[0m {m}",
+            chrono::Local::now().format("%H:%M:%S")
+        )
+    };
+    if all.is_empty() {
+        log("\x1b[33mNo plugins found.\x1b[39m");
+        return Ok(0);
+    }
+    log(&format!(
+        "\x1b[1m\nInstalled plugins ({}):\x1b[22m",
+        all.len()
+    ));
+    log(&format!("\x1b[2m{}\x1b[22m", "─".repeat(60)));
+    for (name, desc, src) in &all {
+        let badge = match src.as_str() {
+            "npm" => "\x1b[34m[npm]\x1b[39m",
+            "local" => "\x1b[32m[local]\x1b[39m",
+            _ => "\x1b[2m[builtin]\x1b[22m",
+        };
+        log(&format!(
+            "  {badge} \x1b[1m{name}\x1b[22m  \x1b[2m{desc}\x1b[22m"
+        ));
+    }
+    let npm = l.plugins.iter().filter(|p| p.source == "npm").count();
+    if npm > 0 {
+        log(&format!(
+            "\x1b[2m\n{npm} npm plugin(s) discovered in node_modules.\x1b[22m"
+        ));
+    }
+    log("");
+    Ok(0)
 }
