@@ -89,7 +89,10 @@ impl Drop for Guard {
     fn drop(&mut self) {
         let _ = ratatui::crossterm::execute!(
             std::io::stdout(),
-            ratatui::crossterm::event::DisableMouseCapture
+            ratatui::crossterm::event::DisableMouseCapture,
+            // ratatui::restore() does not re-show the cursor draw() hid; the
+            // Terminal's Drop does, but be explicit in case it is leaked.
+            ratatui::crossterm::cursor::Show
         );
         ratatui::restore();
     }
