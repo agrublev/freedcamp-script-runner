@@ -233,3 +233,54 @@ fn keys_map_like_ink() {
     assert_eq!(m(MouseEventKind::Down(MouseButton::Right)), Input::Other);
     assert_eq!(m(MouseEventKind::ScrollDown), Input::ScrollDown);
 }
+
+/// Regression: a fresh Terminal over a screen that still shows a previous
+/// picker only wrote changed cells, so old text showed through the new frame.
+#[test]
+fn new_picker_over_old_screen_leaves_no_stale_cells() {
+    let mut backend = TestBackend::new(W, H);
+    // Previous picker (the command menu) left on screen.
+    {
+        let mut old = Terminal::new(backend.clone()).unwrap();
+        let mut m = Menu::new(default_items());
+        old.draw(|f| {
+            let a = f.area();
+            m.render(a, f.buffer_mut())
+        })
+        .unwrap();
+        backend = old.backend().clone();
+    }
+    let render_new = |backend: TestBackend, reset: bool| {
+        let mut t = Terminal::new(backend).unwrap();
+        if reset {
+            fsr::ui::reset_viewport(&mut t).unwrap();
+        }
+        let mut p = TaskPicker::new(parsed(), recents(), W);
+        t.draw(|f| {
+            let a = f.area();
+            p.render(a, f.buffer_mut())
+        })
+        .unwrap();
+        let buf = t.backend().buffer().clone();
+        (0..H)
+            .map(|y| {
+                (0..W)
+                    .map(|x| buf[(x, y)].symbol().to_string())
+                    .collect::<String>()
+            })
+            .collect::<Vec<_>>()
+            .join("\n")
+    };
+    let stale = render_new(backend.clone(), false);
+    assert!(
+        stale.contains("Choose a category then a task"),
+        "test should reproduce the bug without reset"
+    );
+    let clean = render_new(backend, true);
+    assert!(
+        !clean.contains("Choose a category then a task")
+            && !clean.contains("FSR Commands")
+            && !clean.contains("┌")
+    );
+    assert!(clean.contains("FSR Script Runner"));
+}

@@ -75,6 +75,11 @@ pub trait Picker {
     /// `Some(result)` ends the picker (`result` may be `None` = cancelled).
     fn handle(&mut self, input: Input, area: Rect) -> Option<Option<Self::Out>>;
     fn render(&mut self, area: Rect, buf: &mut Buffer);
+    /// Changes whenever the picker switches to a different screen; the event
+    /// loop then fully repaints instead of diffing against the old screen.
+    fn screen_id(&self) -> u64 {
+        0
+    }
 }
 
 /// Restores the terminal even on early return / panic.
@@ -108,20 +113,40 @@ pub fn run<P: Picker>(mut p: P) -> anyhow::Result<Option<P::Out>> {
         std::io::stdout(),
         ratatui::crossterm::event::EnableMouseCapture
     )?;
+    // A new Terminal assumes a blank screen and only writes changed cells, so
+    // anything already on screen (a previous picker, shell output) showed
+    // through wherever the new frame has spaces. Force a full erase + redraw.
+    reset_viewport(&mut term)?;
     let res = event_loop(&mut p, &mut term);
-    let bottom = term.get_frame().area().bottom().saturating_sub(1);
-    let _ = term.set_cursor_position((0, bottom));
+    // Erase the picker so the next screen / task output starts clean.
+    let _ = reset_viewport(&mut term);
+    let _ = term.set_cursor_position((0, 0));
     let _ = term.show_cursor();
     drop(_g);
-    print!("\r\n");
     res
+}
+
+/// Erase the whole viewport and invalidate ratatui's diff buffers so the next
+/// draw repaints every cell (used on start, screen transitions and exit).
+/// `Terminal::clear` is avoided: it queries the cursor position, which can time
+/// out; `resize` on a fixed viewport erases it and resets the buffers instead.
+pub fn reset_viewport<B: ratatui::backend::Backend>(
+    term: &mut ratatui::Terminal<B>,
+) -> Result<(), B::Error> {
+    let area = term.get_frame().area();
+    term.resize(area)
 }
 
 fn event_loop<P: Picker>(
     p: &mut P,
     term: &mut ratatui::DefaultTerminal,
 ) -> anyhow::Result<Option<P::Out>> {
+    let mut shown = p.screen_id();
     loop {
+        if p.screen_id() != shown {
+            shown = p.screen_id();
+            reset_viewport(term)?;
+        }
         term.draw(|f| {
             let a = f.area();
             p.render(a, f.buffer_mut());

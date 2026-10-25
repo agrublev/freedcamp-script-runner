@@ -347,6 +347,13 @@ impl TaskPicker {
 impl Picker for TaskPicker {
     type Out = String;
 
+    fn screen_id(&self) -> u64 {
+        match self.screen {
+            Screen::Main => 0,
+            Screen::Tasks(c) => c as u64 + 1,
+        }
+    }
+
     fn handle(&mut self, input: Input, area: Rect) -> Option<Option<String>> {
         self.columns = area.width;
         let list = self.list();
