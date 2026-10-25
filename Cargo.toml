@@ -1,0 +1,10 @@
+[package]
+name = "fsr"
+version = "7.6.1"
+description = "Runs scripts documented in fscripts.md (Rust port)"
+license = "MIT"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.104"
+clap = { version = "4.6.7", features = ["derive", "env"] }
