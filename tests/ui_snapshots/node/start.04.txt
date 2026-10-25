@@ -1,0 +1,31 @@
+# step 4: '\\r'
+╭──────────────────────────────────────────────────────────────────────────────────────────────────╮
+│                                                                                                  │
+│    Build                                                                            ← Esc: back │
+│ ──────────────────────────────────────────────────────────────────────────────────────────────── │
+│                                                                                                  │
+│ ›  type to filter                                                                                │
+│                                                                                                  │
+│ ❯ build ~ Wipes `dist/`, recreates `dist/lib/`, copies the full `lib/` source tree and `in       │
+│   build:ui ~ Transpiles only the three JSX UI components (`TaskPicker`, `AutoComplete`, `P       │
+│   watch ~ Starts a nodemon watcher over `lib/` and `index.js`. On any `.js` change it runs       │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│ ──────────────────────────────────────────────────────────────────────────────────────────────── │
+│ ↑↓ navigate  ↵  select  ⇥  expand  ← Esc  back                                                   │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯

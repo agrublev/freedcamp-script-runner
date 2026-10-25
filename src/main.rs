@@ -128,14 +128,63 @@ fn real_main() -> Result<i32> {
     let pick_and_run = |by_category: bool| -> Result<i32> {
         let p = load()?;
         let recent = picker::recent(&cache, &cwd.join("fscripts.md")).unwrap_or_default();
-        let Some(name) = picker::pick_task(&p, &recent, by_category)? else {
-            println!("See you soon!");
+        let opts_recent = picker::recent_options(&cache, &recent);
+        let Some(name) = picker::pick_task(&p, &opts_recent, by_category)? else {
+            fsr::ui::log("See you soon!");
             return Ok(0);
         };
         let _ = picker::remember(&cache, &name);
         runner::run_one(&p.all_tasks, &name, &opts, &sig)
     };
-    match cli.cmd.unwrap_or(Cmd::Start) {
+    let cmd = match cli.cmd {
+        Some(c) => c,
+        None if !tty() => Cmd::List { plain: true },
+        None => match picker::pick_command()?.as_deref() {
+            None => {
+                fsr::ui::log("See you soon!");
+                return Ok(0);
+            }
+            Some("start") => Cmd::Start,
+            Some("scripts") => Cmd::Scripts { plain: false },
+            Some("list" | "run") => Cmd::List { plain: false },
+            Some("upgrade") => Cmd::Upgrade,
+            Some("bump") => Cmd::Bump {
+                kind: None,
+                skip_git: false,
+            },
+            Some("encryption") => Cmd::Encryption {
+                direction: None,
+                yes: false,
+            },
+            Some("generate") => Cmd::Generate { yes: false },
+            Some("toc") => Cmd::Toc { file: None },
+            Some("toc-file") => Cmd::TocFile,
+            Some("doctor") => Cmd::Doctor {
+                fix: false,
+                json: false,
+            },
+            Some(other) => {
+                eprintln!(
+                    "'{other}' needs arguments or is not available in the Rust build yet (see `fsr --help`)."
+                );
+                return Ok(1);
+            }
+        },
+    };
+    match cmd {
+        Cmd::Start if !tty() => {
+            for c in &load()?.categories {
+                println!("# {}", c.name);
+                for t in &c.tasks {
+                    println!(
+                        "  {}  {}",
+                        t.name,
+                        t.description.lines().next().unwrap_or("")
+                    );
+                }
+            }
+            Ok(0)
+        }
         Cmd::Start => pick_and_run(true),
         Cmd::List { plain } if !plain && tty() => pick_and_run(false),
         Cmd::List { .. } => {

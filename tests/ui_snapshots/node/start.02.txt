@@ -1,0 +1,31 @@
+# step 2: '\\x1b[B'
+╭──────────────────────────────────────────────────────────────────────────────────────────────────╮
+│                                                                                                  │
+│    FSR Script Runner                                                                   q: quit  │
+│ ──────────────────────────────────────────────────────────────────────────────────────────────── │
+│                                                                                                  │
+│ ›  type to filter                                                                                │
+│                                                                                                  │
+│   ★ Recent                                                                                       │
+│   build ~ Today at 10:49 PM                                                                      │
+│   test ~ Today at 10:48 PM                                                                       │
+│                                                                                                  │
+│                                                                                                  │
+│   ⬡ Categories                                                                                   │
+│ ❯ Fun                                                                                            │
+│  Build ~ Everything needed to compile source into `dist/` — from a full clean rebuild to         │
+│        incremental UI-only transpilation and file watching.                                      │
+│   Development ~ Run and explore the CLI during day-to-day development.                           │
+│   Release ~ Scripts for cutting and publishing new versions of the package.                      │
+│  Testing ~ All Vitest-based test commands, from a single CI pass to interactive watch mode and   │
+│          per-layer targeted runs.                                                                │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│ ──────────────────────────────────────────────────────────────────────────────────────────────── │
+│ ↑↓ navigate  ↵  select  Esc  quit                                                                │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯

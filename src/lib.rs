@@ -12,6 +12,7 @@ pub mod release;
 pub mod runner;
 pub mod task;
 pub mod toc;
+pub mod ui;
 
 // TODO(plugins): user plugins stay JavaScript (`lib/plugins/loader.js`). Plan: a
 // small Node host (`lib/plugins/host.mjs`) spoken to over JSON lines on
