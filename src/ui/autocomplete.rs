@@ -35,11 +35,17 @@ pub fn filter(items: &[AcItem], q: &str) -> Vec<AcItem> {
     if q.is_empty() {
         return items.to_vec();
     }
-    let q = q.to_lowercase();
-    items
-        .iter()
-        .filter(|i| i.label.to_lowercase().contains(&q) || i.sublabel.to_lowercase().contains(&q))
-        .cloned()
+    // Substring hits first in original order, then nucleo fuzzy hits by score.
+    let (exact, fuzzy) = super::fuzzy::rank(
+        q,
+        items
+            .iter()
+            .map(|i| (i.label.as_str(), i.sublabel.as_str())),
+    );
+    exact
+        .into_iter()
+        .chain(fuzzy)
+        .map(|i| items[i].clone())
         .collect()
 }
 

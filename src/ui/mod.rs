@@ -3,6 +3,7 @@
 //! `render(area, buf)` so it can be snapshot-tested with `TestBackend`.
 
 pub mod autocomplete;
+pub mod fuzzy;
 pub mod menu;
 pub mod task_picker;
 

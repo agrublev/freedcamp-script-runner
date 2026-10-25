@@ -120,13 +120,21 @@ pub fn build_tasks(cat: &Category, columns: u16) -> Vec<Item> {
     task_items(cat, (columns as isize - 15).max(0))
 }
 
+/// Substring hits keep their sections and order (as in JS); fuzzy-only hits
+/// (nucleo) follow under a "≈ Similar" section, best first.
 pub fn filter_list(list: &[Item], query: &str) -> Vec<Item> {
     if query.is_empty() {
         return list.to_vec();
     }
-    let q = query.to_lowercase();
+    let sel: Vec<&Item> = list.iter().filter(|i| i.sel()).collect();
+    let (exact, fuzzy) = super::fuzzy::rank(
+        query,
+        sel.iter().map(|i| (i.label.as_str(), i.sublabel.as_str())),
+    );
+    let exact: std::collections::HashSet<usize> = exact.into_iter().collect();
     let mut out = Vec::new();
     let mut section: Option<&Item> = None;
+    let mut si = 0;
     for it in list {
         if it.kind == Kind::Section {
             section = Some(it);
@@ -135,12 +143,17 @@ pub fn filter_list(list: &[Item], query: &str) -> Vec<Item> {
         if !it.sel() {
             continue;
         }
-        if it.label.to_lowercase().contains(&q) || it.sublabel.to_lowercase().contains(&q) {
+        si += 1;
+        if exact.contains(&(si - 1)) {
             if let Some(s) = section.take() {
                 out.push(s.clone());
             }
             out.push(it.clone());
         }
+    }
+    if !fuzzy.is_empty() {
+        out.push(Item::plain(Kind::Section, "  ≈ Similar"));
+        out.extend(fuzzy.iter().map(|&i| sel[i].clone()));
     }
     out
 }
@@ -521,5 +534,37 @@ impl Picker for TaskPicker {
             ]),
         };
         footer.draw(buf, c.x, fy, c.width);
+    }
+}
+
+#[cfg(test)]
+mod fuzzy_tests {
+    use super::*;
+    fn task(n: &str) -> Item {
+        Item {
+            kind: Kind::Task,
+            label: n.into(),
+            sublabel: String::new(),
+            value: n.into(),
+            desc: String::new(),
+        }
+    }
+    #[test]
+    fn substring_hits_keep_sections_then_similar() {
+        let list = vec![
+            Item::plain(Kind::Section, "A"),
+            task("test:coverage"),
+            task("toc"),
+            Item::plain(Kind::Gap, ""),
+            Item::plain(Kind::Section, "B"),
+            task("tc"),
+        ];
+        let names = |v: Vec<Item>| v.into_iter().map(|i| i.label).collect::<Vec<_>>();
+        assert_eq!(
+            names(filter_list(&list, "tc")),
+            vec!["B", "tc", "  ≈ Similar", "test:coverage", "toc"]
+        );
+        assert_eq!(names(filter_list(&list, "toc")), vec!["A", "toc"]);
+        assert_eq!(first_sel(&filter_list(&list, "tc")), 1);
     }
 }
