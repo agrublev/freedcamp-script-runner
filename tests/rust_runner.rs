@@ -143,3 +143,39 @@ fn sigterm_is_forwarded_and_reported() {
     assert!(t.elapsed() < Duration::from_secs(4));
     assert_eq!(st.code(), Some(128 + 15));
 }
+
+#[test]
+fn non_interactive_commands() {
+    let d = setup();
+    let out = |args: &[&str]| {
+        let o = Command::new(env!("CARGO_BIN_EXE_fsr"))
+            .args(args)
+            .current_dir(d.path())
+            .env("HOME", d.path())
+            .output()
+            .unwrap();
+        (
+            o.status.code().unwrap(),
+            String::from_utf8_lossy(&o.stdout).to_string(),
+        )
+    };
+    let (c, s) = out(&["list"]);
+    assert_eq!(c, 0);
+    assert!(s.contains("# Group") && s.contains("deploy [env:staging]"));
+    let (c, s) = out(&["completion", "bash"]);
+    assert_eq!(c, 0);
+    assert!(s.contains("run-p"));
+    assert_eq!(out(&["toc"]).0, 0);
+    assert!(
+        std::fs::read_to_string(d.path().join("fscripts.md"))
+            .unwrap()
+            .starts_with("- [Group](#group)")
+    );
+    assert_eq!(out(&["run", "ok"]).0, 0, "toc'd file still runs");
+    let (c, s) = out(&["doctor", "--json"]);
+    assert_eq!(c, 1, "no package.json is a critical failure");
+    assert!(s.contains("\"fscriptsFile\""));
+    std::fs::write(d.path().join("package.json"), r#"{"scripts":{"b":"tsc"}}"#).unwrap();
+    assert_eq!(out(&["scripts"]).1.trim(), "b  tsc");
+    assert_eq!(out(&["clear"]).0, 0);
+}
