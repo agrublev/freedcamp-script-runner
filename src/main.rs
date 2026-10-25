@@ -22,6 +22,26 @@ enum Cmd {
     /// Run tasks in parallel (a failure stops the others)
     #[command(name = "run-p")]
     RunP { tasks: Vec<String> },
+    /// Encrypt a file to <file>.encrypted
+    Encrypt {
+        file: std::path::PathBuf,
+        /// Overwrite without asking
+        #[arg(short, long)]
+        yes: bool,
+    },
+    /// Decrypt a <file>.encrypted file
+    Decrypt {
+        file: std::path::PathBuf,
+        #[arg(short, long)]
+        yes: bool,
+    },
+    /// Encrypt or decrypt package.json fscripts.encryptedFiles
+    Encryption {
+        /// encrypt | decrypt (prompted when omitted)
+        direction: Option<String>,
+        #[arg(short, long)]
+        yes: bool,
+    },
 }
 
 fn main() -> ExitCode {
@@ -69,5 +89,10 @@ fn real_main() -> Result<i32> {
         Cmd::Run { task } => runner::run_one(&load()?.all_tasks, &task, &opts, &sig),
         Cmd::RunS { tasks } => runner::run_sequence(&load()?.all_tasks, &tasks, &opts, &sig),
         Cmd::RunP { tasks } => runner::run_parallel(&load()?.all_tasks, &tasks, &opts, &sig),
+        Cmd::Encrypt { file, yes } => fsr::encryption::cmd_encrypt(&file, yes).map(|_| 0),
+        Cmd::Decrypt { file, yes } => fsr::encryption::cmd_decrypt(&file, yes).map(|_| 0),
+        Cmd::Encryption { direction, yes } => {
+            fsr::encryption::cmd_encryption(&cwd, direction.as_deref(), yes).map(|_| 0)
+        }
     }
 }
