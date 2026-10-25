@@ -53,6 +53,20 @@ You know the drill 😤: you clone a repo, there's a `README.md` that vaguely ge
 npm i -g fscr
 ```
 
+## Rust core CLI (work in progress)
+
+The Rust rewrite is being developed alongside the existing CLI. The first slice supports listing tasks and running named tasks from `fscripts.md`:
+
+```bash
+cargo run -- list
+cargo run -- run build
+cargo run -- run-s build test
+cargo run -- run-p start:web start:api
+cargo run -- --env staging run deploy:api
+```
+
+Rust code is in `src/`; `cargo run -- --help` lists the commands currently ported. Commands such as the interactive picker, plugins, release tooling, doctor, and encryption remain in the existing CLI until they are ported.
+
 > 💡 Package name: `fscr`. Command: `fsr`. Yes, on purpose. 😄
 
 ---

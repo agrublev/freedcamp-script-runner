@@ -1,0 +1,14 @@
+[package]
+name = "fscr"
+version = "7.6.1"
+edition = "2024"
+description = "Runs scripts documented in fscripts.md"
+license = "MIT"
+
+[[bin]]
+name = "fsr"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4.5", features = ["derive"] }
+pulldown-cmark = "0.12"
