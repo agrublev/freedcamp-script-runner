@@ -1,7 +1,7 @@
 use super::helpers::{git_output, read_json, run_command};
 use crate::{ScriptFile, Task, run_task};
-use dialoguer::{Confirm, Input, Select};
-use serde_json::Value;
+use dialoguer::{Confirm, FuzzySelect, Input, Select};
+use serde_json::{Value, json};
 use std::collections::{BTreeMap, HashMap};
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -28,14 +28,21 @@ pub fn interactive(script: &ScriptFile, profile: Option<&str>) -> ExitCode {
         }
     };
     let category = &script.categories[category_index];
-    let task_labels: Vec<String> = category.tasks.iter().map(|t| task_label(t)).collect();
-    match Select::new()
+    let recent = recent_tasks(script);
+    let mut category_tasks: Vec<_> = category.tasks.iter().collect();
+    category_tasks
+        .sort_by_key(|task| std::cmp::Reverse(recent.get(&task.name).copied().unwrap_or(0)));
+    let task_labels: Vec<String> = category_tasks
+        .iter()
+        .map(|t| recent_label(t, &recent))
+        .collect();
+    match FuzzySelect::new()
         .with_prompt(&category.name)
         .items(&task_labels)
         .default(0)
         .interact_opt()
     {
-        Ok(Some(index)) => run_one(script, &category.tasks[index].name, profile),
+        Ok(Some(index)) => run_one(script, &category_tasks[index].name, profile),
         Ok(None) => ExitCode::SUCCESS,
         Err(error) => {
             eprintln!("{error}");
@@ -62,7 +69,7 @@ pub fn list_package_scripts() -> Result<(), String> {
         .iter()
         .map(|(name, command)| format!("{name}  —  {command}"))
         .collect();
-    if let Some(index) = Select::new()
+    if let Some(index) = FuzzySelect::new()
         .with_prompt("Choose a package script")
         .items(&labels)
         .interact_opt()
@@ -197,17 +204,28 @@ fn slugify(title: &str) -> String {
 
 pub fn clear_recent() -> Result<(), String> {
     let path = recent_path();
-    if path.exists() {
-        fs::remove_file(path).map_err(|e| e.to_string())?;
-    }
+    let mut cache = read_cache(&path);
+    cache["entries"]["recentTasks"]["value"] = json!({});
+    cache["entries"]["recentTasks"]["updatedAt"] = json!(chrono_millis());
+    fs::create_dir_all(path.parent().ok_or("invalid cache path")?).map_err(|e| e.to_string())?;
+    fs::write(
+        path,
+        serde_json::to_vec_pretty(&cache).map_err(|e| e.to_string())?,
+    )
+    .map_err(|e| e.to_string())?;
     println!("Recent task history cleared.");
     Ok(())
 }
 
 pub fn choose_task(script: &ScriptFile, profile: Option<&str>) -> ExitCode {
-    let tasks: Vec<_> = script.all_tasks.iter().collect();
-    let labels: Vec<_> = tasks.iter().map(|task| task_label(task)).collect();
-    match Select::new()
+    let recent = recent_tasks(script);
+    let mut tasks: Vec<_> = script.all_tasks.iter().collect();
+    tasks.sort_by_key(|task| std::cmp::Reverse(recent.get(&task.name).copied().unwrap_or(0)));
+    let labels: Vec<_> = tasks
+        .iter()
+        .map(|task| recent_label(task, &recent))
+        .collect();
+    match FuzzySelect::new()
         .with_prompt("Choose a task to run")
         .items(&labels)
         .interact_opt()
@@ -265,24 +283,102 @@ fn task_label(task: &Task) -> String {
 }
 
 fn recent_path() -> PathBuf {
-    Path::new(".fsr").join("recent-tasks.json")
+    std::env::var_os("HOME")
+        .or_else(|| std::env::var_os("USERPROFILE"))
+        .map(PathBuf::from)
+        .unwrap_or_else(|| PathBuf::from("."))
+        .join(".fsr")
+        .join("cache.json")
 }
 
 fn remember_task(name: &str) {
     let path = recent_path();
-    let mut recent: BTreeMap<String, u64> = fs::read_to_string(&path)
+    let mut cache = read_cache(&path);
+    reset_recent_if_scripts_changed(&mut cache);
+    let recent = cache["entries"]["recentTasks"]["value"]
+        .as_object_mut()
+        .expect("cache initialized");
+    recent.insert(name.to_owned(), json!({"lastExecuted": chrono_millis()}));
+    cache["entries"]["recentTasks"]["updatedAt"] = json!(chrono_millis());
+    cache["updatedAt"] = json!(chrono_millis());
+    if let Some(parent) = path.parent() {
+        let _ = fs::create_dir_all(parent);
+    }
+    let _ = fs::write(path, serde_json::to_vec_pretty(&cache).unwrap_or_default());
+}
+
+fn chrono_millis() -> u128 {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_millis()
+}
+
+fn read_cache(path: &Path) -> Value {
+    let mut cache = fs::read_to_string(path)
         .ok()
-        .and_then(|data| serde_json::from_str(&data).ok())
+        .and_then(|s| serde_json::from_str(&s).ok())
+        .filter(|v: &Value| v.is_object())
+        .unwrap_or_else(|| json!({"updatedAt":"","entries":{}}));
+    if !cache["entries"].is_object() {
+        cache["entries"] = json!({});
+    }
+    cache
+}
+
+fn reset_recent_if_scripts_changed(cache: &mut Value) {
+    let size = fs::metadata("fscripts.md").map(|m| m.len()).unwrap_or(0);
+    let entries = cache["entries"].as_object_mut().expect("cache initialized");
+    let old_size = entries
+        .get("fscriptsSize")
+        .and_then(|e| e["value"].as_u64());
+    if old_size != Some(size) {
+        entries.insert(
+            "recentTasks".into(),
+            json!({"value":{},"updatedAt":chrono_millis(),"changesLog":[]}),
+        );
+        entries.insert(
+            "fscriptsSize".into(),
+            json!({"value":size,"updatedAt":chrono_millis(),"changesLog":[]}),
+        );
+    }
+}
+
+fn recent_tasks(script: &ScriptFile) -> BTreeMap<String, u128> {
+    let path = recent_path();
+    let mut cache = read_cache(&path);
+    reset_recent_if_scripts_changed(&mut cache);
+    let recent = cache["entries"]["recentTasks"]["value"]
+        .as_object()
+        .cloned()
         .unwrap_or_default();
-    recent.insert(
-        name.to_owned(),
-        std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .unwrap_or_default()
-            .as_secs(),
-    );
-    let _ = fs::create_dir_all(".fsr");
-    let _ = fs::write(path, serde_json::to_vec_pretty(&recent).unwrap_or_default());
+    if let Some(parent) = path.parent() {
+        let _ = fs::create_dir_all(parent);
+    }
+    let _ = fs::write(path, serde_json::to_vec_pretty(&cache).unwrap_or_default());
+    let names: std::collections::HashSet<_> =
+        script.all_tasks.iter().map(|t| t.name.as_str()).collect();
+    recent
+        .into_iter()
+        .filter_map(|(name, info)| {
+            names.contains(name.as_str()).then(|| {
+                let ts = info
+                    .get("lastExecuted")
+                    .and_then(Value::as_u64)
+                    .unwrap_or(0) as u128;
+                (name, ts)
+            })
+        })
+        .collect()
+}
+
+fn recent_label(task: &Task, recent: &BTreeMap<String, u128>) -> String {
+    let label = task_label(task);
+    if recent.contains_key(&task.name) {
+        format!("★ {label}")
+    } else {
+        label
+    }
 }
 
 pub fn run_git_branch() -> Result<(), String> {

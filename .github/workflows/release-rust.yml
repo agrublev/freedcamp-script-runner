@@ -1,0 +1,64 @@
+name: Publish Rust binaries
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+          - runner: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+          - runner: macos-13
+            target: x86_64-apple-darwin
+          - runner: macos-latest
+            target: aarch64-apple-darwin
+          - runner: windows-latest
+            target: x86_64-pc-windows-msvc
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.99.1
+        with:
+          target: ${{ matrix.target }}
+      - run: cargo build --locked --release --target ${{ matrix.target }}
+      - name: Stage platform npm package
+        shell: bash
+        run: |
+          if [[ "${{ matrix.target }}" == *windows* ]]; then BIN="target/${{ matrix.target }}/release/fsr.exe"; else BIN="target/${{ matrix.target }}/release/fsr"; fi
+          node scripts/stage-native-package.mjs "${{ matrix.target }}" "$BIN"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: npm-${{ matrix.target }}
+          path: packages/fscr-*/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: npm-*
+          path: packages
+          merge-multiple: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - name: Publish native packages then fscr
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+          for package in packages/fscr-*/package.json; do npm publish "$(dirname "$package")" --access public; done
+          node -e 'const fs=require("fs");const p=JSON.parse(fs.readFileSync("package.json"));p.optionalDependencies=Object.fromEntries(["linux-x64","linux-arm64","darwin-x64","darwin-arm64","win32-x64"].map(k=>[`fscr-${k}`,p.version]));fs.writeFileSync("package.json",JSON.stringify(p,null,2)+"\n")'
+          npm publish --access public

@@ -6,6 +6,13 @@ import { fileURLToPath } from "node:url";
 
 const root = dirname(fileURLToPath(import.meta.url));
 const cargoManifest = resolve(root, "Cargo.toml");
+const platformPackage = `fscr-${process.platform}-${process.arch}`;
+const nativeBinary = resolve(root, "..", platformPackage, "bin", process.platform === "win32" ? "fsr.exe" : "fsr");
+
+if (existsSync(nativeBinary)) {
+    const result = spawnSync(nativeBinary, process.argv.slice(2), { stdio: "inherit" });
+    process.exit(result.status ?? 1);
+}
 
 if (existsSync(cargoManifest)) {
     const result = spawnSync("cargo", ["run", "--quiet", "--manifest-path", cargoManifest, "--", ...process.argv.slice(2)], { stdio: "inherit" });

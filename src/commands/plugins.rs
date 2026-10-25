@@ -62,8 +62,8 @@ pub fn run_plugin(name: &str, args: &[String]) -> Result<(), String> {
     if let Ok(text) = fs::read_to_string(&manifest_path) {
         if let Ok(manifest) = serde_json::from_str::<Value>(&text) {
             if let Some(script) = manifest.get("run").and_then(Value::as_str) {
-                let mut command = Command::new("sh");
-                command.arg("-c").arg(script).arg("fsr-plugin").args(args);
+                let mut command = shell_command(script);
+                command.arg("fsr-plugin").args(args);
                 let status = command.status().map_err(|e| e.to_string())?;
                 return if status.success() {
                     Ok(())
@@ -75,8 +75,8 @@ pub fn run_plugin(name: &str, args: &[String]) -> Result<(), String> {
     }
     for executable in [local.join("run"), local.join("run.sh")] {
         if executable.is_file() {
-            let mut command = Command::new("sh");
-            command.arg(&executable).args(args);
+            let mut command = shell_command(&executable.to_string_lossy());
+            command.args(args);
             let status = command.status().map_err(|e| e.to_string())?;
             return if status.success() {
                 Ok(())
@@ -87,7 +87,7 @@ pub fn run_plugin(name: &str, args: &[String]) -> Result<(), String> {
     }
     let js_entry = local.join("index.js");
     if js_entry.is_file() {
-        let script = "const m=await import(process.argv[1]);const p=m.default||m;if(typeof p.run!==\"function\")throw new Error(\"plugin does not export run()\");await p.run({logger:{info:console.log,success:console.log,warn:console.warn,error:console.error}});";
+        let script = "import{readFileSync,writeFileSync,mkdirSync}from'node:fs';import{basename,dirname,join}from'node:path';const m=await import(process.argv[1]);const p=m.default||m;const logger={info:console.log,success:console.log,warn:console.warn,error:console.error};const file=join('.fscr',p.name||basename(dirname(process.argv[1])),'storage.json');const ctx={logger,registerHook:()=>{},registerCommand:()=>{},getStorage:()=>{try{return JSON.parse(readFileSync(file,'utf8'))}catch{return {}}},setStorage:data=>{mkdirSync(dirname(file),{recursive:true});writeFileSync(file,JSON.stringify(data,null,2))}};if(typeof p.init==='function')await p.init(ctx);if(typeof p.run!=='function')throw new Error('plugin does not export run()');await p.run({logger});";
         let status = Command::new("node")
             .args([
                 "--input-type=module",
@@ -105,7 +105,7 @@ pub fn run_plugin(name: &str, args: &[String]) -> Result<(), String> {
     }
     let package_entry = Path::new("node_modules").join(name).join("index.js");
     if package_entry.is_file() {
-        let script = "const m=await import(process.argv[1]);const p=m.default||m;if(typeof p.run!==\"function\")throw new Error(\"plugin does not export run()\");await p.run({logger:{info:console.log,success:console.log,warn:console.warn,error:console.error}});";
+        let script = "import{readFileSync,writeFileSync,mkdirSync}from'node:fs';import{basename,dirname,join}from'node:path';const m=await import(process.argv[1]);const p=m.default||m;const logger={info:console.log,success:console.log,warn:console.warn,error:console.error};const file=join('.fscr',p.name||basename(dirname(process.argv[1])),'storage.json');const ctx={logger,registerHook:()=>{},registerCommand:()=>{},getStorage:()=>{try{return JSON.parse(readFileSync(file,'utf8'))}catch{return {}}},setStorage:data=>{mkdirSync(dirname(file),{recursive:true});writeFileSync(file,JSON.stringify(data,null,2))}};if(typeof p.init==='function')await p.init(ctx);if(typeof p.run!=='function')throw new Error('plugin does not export run()');await p.run({logger});";
         let status = Command::new("node")
             .args([
                 "--input-type=module",
@@ -130,10 +130,9 @@ pub fn run_plugin(name: &str, args: &[String]) -> Result<(), String> {
 
 pub fn fire_plugin_hook(event: &str, task_name: &str) {
     let plugins = Path::new(".fsr/plugins");
-    let Ok(entries) = fs::read_dir(plugins) else {
-        return;
-    };
-    for entry in entries
+    for entry in fs::read_dir(plugins)
+        .into_iter()
+        .flatten()
         .flatten()
         .filter(|entry| entry.file_type().is_ok_and(|kind| kind.is_dir()))
     {
@@ -153,9 +152,7 @@ pub fn fire_plugin_hook(event: &str, task_name: &str) {
             _ => Vec::new(),
         };
         for command in commands {
-            let result = Command::new("sh")
-                .arg("-c")
-                .arg(command)
+            let result = shell_command(command)
                 .env("FSR_HOOK", event)
                 .env("FSR_TASK_NAME", task_name)
                 .status();
@@ -167,6 +164,73 @@ pub fn fire_plugin_hook(event: &str, task_name: &str) {
                 _ => {}
             }
         }
+    }
+    // Compatibility with the legacy JS plugin API (`init(context)` + registerHook).
+    let bridge = r#"
+import {readdirSync,existsSync,readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+import {join,resolve} from 'node:path';
+const [event,task]=process.argv.slice(1), hooks=[];
+const logger={info:console.log,success:console.log,warn:console.warn,error:console.error};
+const roots=[];
+for(const p of [resolve('.fsr/plugins'),resolve('lib/plugins'),resolve('node_modules')]) if(existsSync(p)) roots.push(p);
+const files=[];
+for(const root of roots) for(const name of readdirSync(root,{withFileTypes:true}).filter(x=>x.isDirectory()).map(x=>x.name)) {
+  if(root.endsWith('node_modules')&&!name.startsWith('fscr-plugin-')) continue;
+  const file=join(root,name,'index.js'); if(existsSync(file)) files.push({name,file});
+}
+
+for(const {name,file} of files) try {
+  const mod=await import(new URL(`file://${file}`)), plugin=mod.default||mod;
+  if(typeof plugin.init!=='function') continue;
+  const dir=resolve('.fscr',plugin.name||name), store=join(dir,'storage.json');
+  await plugin.init({logger,registerHook:(key,fn)=>{if(key===event&&typeof fn==='function')hooks.push(fn)},registerCommand:()=>{},
+    getStorage:()=>{try{return JSON.parse(readFileSync(store,'utf8'))}catch{return {}}},
+    setStorage:data=>{mkdirSync(dir,{recursive:true});writeFileSync(store,JSON.stringify(data,null,2))}});
+} catch(e){console.error(`[plugin:${name}] ${e.message}`)}
+for(const hook of hooks) try { await hook({taskName:task,command:task}); } catch(e){console.error(`[hook:${event}] ${e.message}`)}
+"#;
+    let mut has_js_plugins = false;
+    for root in [
+        Path::new(".fsr/plugins"),
+        Path::new("lib/plugins"),
+        Path::new("node_modules"),
+    ] {
+        let Ok(entries) = fs::read_dir(root) else {
+            continue;
+        };
+        for entry in entries
+            .flatten()
+            .filter(|entry| entry.file_type().is_ok_and(|kind| kind.is_dir()))
+        {
+            let name = entry.file_name().to_string_lossy().to_string();
+            if root == Path::new("node_modules") && !name.starts_with("fscr-plugin-") {
+                continue;
+            }
+            has_js_plugins |= entry.path().join("index.js").is_file();
+        }
+    }
+    if has_js_plugins {
+        let result = Command::new("node")
+            .args(["--input-type=module", "-e", bridge, event, task_name])
+            .status();
+        if let Err(error) = result {
+            eprintln!("[hook:{event}] {error}");
+        }
+    }
+}
+
+fn shell_command(script: &str) -> Command {
+    #[cfg(windows)]
+    {
+        let mut cmd = Command::new("cmd.exe");
+        cmd.args(["/D", "/S", "/C", script]);
+        cmd
+    }
+    #[cfg(not(windows))]
+    {
+        let mut cmd = Command::new("sh");
+        cmd.args(["-c", script]);
+        cmd
     }
 }
 

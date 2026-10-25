@@ -53,7 +53,7 @@ You know the drill 😤: you clone a repo, there's a `README.md` that vaguely ge
 cargo install --path .
 ```
 
-The Rust binary is `fsr`. The npm artifact remains available during migration but uses the legacy Node implementation.
+The Rust binary is `fsr`. npm installation uses native platform binaries starting with the next tagged release; the current npm version remains on the legacy Node implementation until that release is published.
 
 ## Rust CLI
 
@@ -70,7 +70,7 @@ cargo run -- --env staging run deploy:api
 cargo run -- doctor --json
 ```
 
-Project-local plugins can use a `.fsr/plugins/<name>/plugin.json` manifest with a `description`, optional shell `run` command, and optional `hooks` for `pre-task`, `post-task`, and `task-error`. Executable `run` or `run.sh` files and JavaScript `index.js` modules exporting `run()` also work. The npm artifact still uses the legacy Node implementation while native Rust binary packaging is prepared.
+Project-local plugins can use a `.fsr/plugins/<name>/plugin.json` manifest with a `description`, optional shell `run` command, and optional `hooks` for `pre-task`, `post-task`, and `task-error`. Executable `run` or `run.sh` files and JavaScript `index.js` modules are supported. JavaScript plugins can register task hooks through the legacy `init(context)` API; Rust task execution invokes those hooks through Node.
 
 Example plugin manifest:
 

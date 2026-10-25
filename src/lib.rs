@@ -226,12 +226,7 @@ impl ScriptFile {
 
 /// Execute a task and return its process status. JavaScript blocks run with Node.
 pub fn run_task(task: &Task, profile: Option<&str>, quiet: bool) -> Result<ExitStatus, String> {
-    let mut env = BTreeMap::new();
-    if let Some(profile) = profile.or(task.env.as_deref()) {
-        env.insert("NODE_ENV".to_owned(), profile.to_owned());
-        env.insert("FSR_ENV".to_owned(), profile.to_owned());
-    }
-
+    let env = task_environment(profile, task.env.as_deref());
     if !quiet {
         commands::notify_task_start(&task.name);
     }
@@ -262,8 +257,8 @@ pub fn run_task(task: &Task, profile: Option<&str>, quiet: bool) -> Result<ExitS
         return result;
     }
 
-    let mut words = task.script.split_whitespace().peekable();
     let mut command_env = env;
+    let mut words = task.script.split_whitespace().peekable();
     while let Some(word) = words.peek().copied() {
         let Some((key, value)) = word.split_once('=') else {
             break;
@@ -282,8 +277,18 @@ pub fn run_task(task: &Task, profile: Option<&str>, quiet: bool) -> Result<ExitS
     if !quiet {
         println!("{}: {}", task.name, command);
     }
-    let mut child = Command::new("sh");
-    child.args(["-c", &command]);
+    #[cfg(windows)]
+    let mut child = {
+        let mut cmd = Command::new("cmd.exe");
+        cmd.args(["/D", "/S", "/C", &command]);
+        cmd
+    };
+    #[cfg(not(windows))]
+    let mut child = {
+        let mut cmd = Command::new("sh");
+        cmd.args(["-c", &command]);
+        cmd
+    };
     for (key, value) in command_env {
         child.env(key, value);
     }
@@ -305,4 +310,41 @@ pub fn run_task(task: &Task, profile: Option<&str>, quiet: bool) -> Result<ExitS
         &task.name,
     );
     result
+}
+
+fn task_environment(profile: Option<&str>, task_env: Option<&str>) -> BTreeMap<String, String> {
+    let selected_env = profile.or(task_env).unwrap_or("development");
+    BTreeMap::from([
+        ("NODE_ENV".to_owned(), selected_env.to_owned()),
+        ("FSR_ENV".to_owned(), selected_env.to_owned()),
+    ])
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn environment_defaults_and_precedence_match_legacy_cli() {
+        assert_eq!(task_environment(None, None)["NODE_ENV"], "development");
+        assert_eq!(task_environment(None, Some("test"))["FSR_ENV"], "test");
+        assert_eq!(
+            task_environment(Some("production"), Some("test"))["NODE_ENV"],
+            "production"
+        );
+    }
+
+    #[test]
+    fn parses_categories_tasks_and_profiles() {
+        let parsed = parse_markdown(
+            "# Build\n\nBuild tasks\n\n## Release\n\nPublish\n\n```sh\nnpm publish\n```\n\n## [env:test]\n\n## Test\n\n```sh\nnpm test\n```\n",
+        );
+        assert_eq!(parsed.categories.len(), 1);
+        assert_eq!(parsed.all_tasks.len(), 2);
+        assert_eq!(parsed.find_task("Release").unwrap().script, "npm publish\n");
+        assert_eq!(
+            parsed.find_task("Test").unwrap().env.as_deref(),
+            Some("test")
+        );
+    }
 }

@@ -13,7 +13,7 @@ pub fn run_doctor(fix: bool, json_output: bool, verbose: bool) -> Result<(), Str
     let rust = Command::new("rustc").arg("--version").output();
     checks.push(check(
         "Rust toolchain",
-        true,
+        false,
         rust.as_ref().is_ok_and(|out| out.status.success()),
         rust.map(|out| String::from_utf8_lossy(&out.stdout).trim().to_owned())
             .unwrap_or_else(|_| "rustc not found".into()),
@@ -21,7 +21,7 @@ pub fn run_doctor(fix: bool, json_output: bool, verbose: bool) -> Result<(), Str
     let cargo = Command::new("cargo").arg("--version").output();
     checks.push(check(
         "Cargo",
-        true,
+        false,
         cargo.as_ref().is_ok_and(|out| out.status.success()),
         cargo
             .map(|out| String::from_utf8_lossy(&out.stdout).trim().to_owned())
@@ -40,7 +40,7 @@ pub fn run_doctor(fix: bool, json_output: bool, verbose: bool) -> Result<(), Str
         .is_some_and(|major| major >= 22);
     checks.push(check(
         "Node.js",
-        false,
+        true,
         node_ok,
         node_version.unwrap_or_else(|| "Node.js is not installed".into()),
     ));
@@ -85,6 +85,75 @@ pub fn run_doctor(fix: bool, json_output: bool, verbose: bool) -> Result<(), Str
         }
         .to_owned(),
     ));
+    let package_valid = fs::read_to_string("package.json")
+        .ok()
+        .and_then(|s| serde_json::from_str::<Value>(&s).ok())
+        .is_some();
+    checks.push(check(
+        "package.json validity",
+        false,
+        package_valid,
+        if package_valid {
+            "valid JSON"
+        } else {
+            "missing or invalid JSON"
+        }
+        .to_owned(),
+    ));
+    let mut probe = PathBuf::from(".fsr");
+    probe.push(format!(".doctor-{}", std::process::id()));
+    let writable = fs::create_dir_all(".fsr").is_ok() && fs::write(&probe, b"ok").is_ok();
+    let _ = fs::remove_file(&probe);
+    checks.push(check(
+        "Filesystem write access",
+        true,
+        writable,
+        if writable {
+            "workspace and cache are writable"
+        } else {
+            "cannot write to workspace/cache"
+        }
+        .to_owned(),
+    ));
+    let cache = env::var_os("HOME")
+        .or_else(|| env::var_os("USERPROFILE"))
+        .map(PathBuf::from)
+        .unwrap_or_else(|| PathBuf::from("."))
+        .join(".fsr/cache.json");
+    let mut cache_ok = !cache.exists()
+        || fs::read(&cache)
+            .ok()
+            .and_then(|b| serde_json::from_slice::<Value>(&b).ok())
+            .is_some_and(|v| v["entries"].is_object());
+    if fix && !cache_ok {
+        if let Some(parent) = cache.parent() {
+            let _ = fs::create_dir_all(parent);
+        }
+        let _ = fs::write(&cache, br#"{"updatedAt":"","entries":{}}"#);
+        cache_ok = fs::read(&cache)
+            .ok()
+            .and_then(|b| serde_json::from_slice::<Value>(&b).ok())
+            .is_some_and(|v| v["entries"].is_object());
+    }
+    checks.push(check(
+        "FSR cache",
+        false,
+        cache_ok,
+        if cache_ok {
+            "cache is valid or not yet created"
+        } else {
+            "cache.json is invalid; use --fix to recreate it"
+        }
+        .to_owned(),
+    ));
+    if let Some(stats) = memory_stats::memory_stats() {
+        checks.push(check(
+            "Memory usage",
+            false,
+            stats.physical_mem < 50 * 1024 * 1024,
+            format!("{} MB resident", stats.physical_mem / (1024 * 1024)),
+        ));
+    }
     let permission_ok = fs::metadata(".")
         .map(|metadata| !metadata.permissions().readonly())
         .unwrap_or(false);
@@ -137,7 +206,7 @@ pub fn run_doctor(fix: bool, json_output: bool, verbose: bool) -> Result<(), Str
             }
         );
     }
-    if result["passed"] == true {
+    if result["passed"] == true || json_output {
         Ok(())
     } else {
         Err("one or more critical checks failed".into())

@@ -28,7 +28,9 @@
     },
     "files": [
         "dist",
-        "bin"
+        "bin",
+        "packages",
+        "scripts/stage-native-package.mjs"
     ],
     "bin": {
         "fsr": "./bin",
