@@ -186,30 +186,9 @@ pub fn cmd_upgrade(cwd: &Path) -> Result<()> {
     Ok(())
 }
 
-/// `fsr commit` — REDUCED port. JS (`lib/git/commit.js`) asks Claude to group
-/// changes into conventional commits and updates CHANGELOG.md. That needs
-/// `@anthropic-ai/sdk`, which is imported but NOT listed in package.json.
-/// TODO(ai-commit): call the Anthropic HTTP API (reqwest) when ANTHROPIC_API_KEY is set.
-/// For now: show status, optionally stage everything, prompt for a message, commit.
-pub fn cmd_commit(cwd: &Path) -> Result<()> {
-    let status = capture("git", &["status", "--short"], cwd)?;
-    if status.is_empty() {
-        println!("Nothing to commit.");
-        return Ok(());
-    }
-    println!("{status}");
-    if Confirm::new()
-        .with_prompt("Stage all changes (git add -A)?")
-        .default(true)
-        .interact()?
-    {
-        run("git", &["add", "-A"], cwd)?;
-    }
-    let msg: String = Input::new().with_prompt("Commit message").interact_text()?;
-    if msg.trim().is_empty() {
-        bail!("empty commit message");
-    }
-    run("git", &["commit", "-m", msg.trim()], cwd)
+/// `fsr commit` — see [`crate::ai_commit`] (port of `lib/git/commit.js`).
+pub fn cmd_commit(cwd: &Path, yes: bool) -> Result<()> {
+    crate::ai_commit::cmd_commit(cwd, yes)
 }
 
 #[cfg(test)]

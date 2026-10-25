@@ -41,8 +41,13 @@ enum Cmd {
     RunP { tasks: Vec<String> },
     /// Create a new branch — prevents working directly on Development
     Branch,
-    /// Stage and commit (reduced: manual message; AI grouping not ported)
-    Commit,
+    /// Group changes into Conventional Commits with Claude and update CHANGELOG.md
+    /// (manual message when ANTHROPIC_API_KEY is not set)
+    Commit {
+        /// Include all untracked files and accept the proposal without prompting
+        #[arg(short, long)]
+        yes: bool,
+    },
     /// Upgrade all packages except those listed in 'ignore-upgrade'
     Upgrade,
     /// Bump the version in package.json
@@ -359,7 +364,7 @@ fn real_main() -> Result<i32> {
         Cmd::RunS { tasks } => runner::run_sequence(&load()?.all_tasks, &tasks, &opts, &sig),
         Cmd::RunP { tasks } => runner::run_parallel(&load()?.all_tasks, &tasks, &opts, &sig),
         Cmd::Branch => release::cmd_branch(&cwd).map(|_| 0),
-        Cmd::Commit => release::cmd_commit(&cwd).map(|_| 0),
+        Cmd::Commit { yes } => release::cmd_commit(&cwd, yes).map(|_| 0),
         Cmd::Upgrade => release::cmd_upgrade(&cwd).map(|_| 0),
         Cmd::Bump { kind, skip_git } => release::cmd_bump(&cwd, kind, skip_git).map(|_| 0),
         Cmd::Encrypt { file, yes } => encryption::cmd_encrypt(&file, yes).map(|_| 0),
