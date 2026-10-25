@@ -4,6 +4,7 @@ node_modules/
 # Build output
 dist/
 target/
+packages/
 .fsr/recent-tasks.json
 .fsr/task-notifier.json
 .fsr/deployment-history.json
