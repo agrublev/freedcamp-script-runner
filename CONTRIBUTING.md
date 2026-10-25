@@ -9,8 +9,9 @@ Thanks for wanting to help! `fsr` is intentionally small and focused — a scrip
 ```bash
 git clone https://github.com/agrublev/freedcamp-script-runner.git
 cd freedcamp-script-runner
-yarn          # install deps
-yarn test     # make sure everything passes before you touch anything
+cargo build --locked
+cargo check --locked
+yarn test     # legacy JavaScript suite during the Rust migration
 ```
 
 ---
@@ -38,7 +39,7 @@ tests/                # vitest unit tests, mirrors lib/ structure
 
 - **JS only, no TypeScript.** No `.ts` files, no type annotations, no `tsconfig`.
 - **ESM throughout.** Every file uses `import`/`export`. No `require()`.
-- **`yarn`, not `npm`.** Don't commit `package-lock.json`.
+- The Rust CLI is built with Cargo. The npm package and JavaScript tests remain during the migration; don't commit `package-lock.json`.
 - **No new dependencies unless necessary.** Ask first if you think you need one.
 
 ---

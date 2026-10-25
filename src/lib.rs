@@ -4,6 +4,8 @@ use std::fs;
 use std::path::Path;
 use std::process::{Command, ExitStatus};
 
+pub mod commands;
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Task {
     pub name: String,
@@ -230,15 +232,34 @@ pub fn run_task(task: &Task, profile: Option<&str>, quiet: bool) -> Result<ExitS
         env.insert("FSR_ENV".to_owned(), profile.to_owned());
     }
 
+    if !quiet {
+        commands::notify_task_start(&task.name);
+    }
+    commands::fire_plugin_hook("pre-task", &task.name);
     if task.lang.as_deref() == Some("javascript") || task.lang.as_deref() == Some("js") {
         let mut command = Command::new("node");
         command.args(["--input-type=module", "-e", &task.script]);
         for (key, value) in env {
             command.env(key, value);
         }
-        return command
+        let result = command
             .status()
             .map_err(|e| format!("could not start node: {e}"));
+        if !quiet {
+            commands::notify_task_end(
+                &task.name,
+                result.as_ref().is_ok_and(|status| status.success()),
+            );
+        }
+        commands::fire_plugin_hook(
+            if result.as_ref().is_ok_and(|status| status.success()) {
+                "post-task"
+            } else {
+                "task-error"
+            },
+            &task.name,
+        );
+        return result;
     }
 
     let mut words = task.script.split_whitespace().peekable();
@@ -266,7 +287,22 @@ pub fn run_task(task: &Task, profile: Option<&str>, quiet: bool) -> Result<ExitS
     for (key, value) in command_env {
         child.env(key, value);
     }
-    child
+    let result = child
         .status()
-        .map_err(|e| format!("could not start task '{}': {e}", task.name))
+        .map_err(|e| format!("could not start task '{}': {e}", task.name));
+    if !quiet {
+        commands::notify_task_end(
+            &task.name,
+            result.as_ref().is_ok_and(|status| status.success()),
+        );
+    }
+    commands::fire_plugin_hook(
+        if result.as_ref().is_ok_and(|status| status.success()) {
+            "post-task"
+        } else {
+            "task-error"
+        },
+        &task.name,
+    );
+    result
 }

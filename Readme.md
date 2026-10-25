@@ -50,33 +50,50 @@ You know the drill 😤: you clone a repo, there's a `README.md` that vaguely ge
 ## 📦 install
 
 ```bash
-npm i -g fscr
+cargo install --path .
 ```
 
-## Rust core CLI (work in progress)
+The Rust binary is `fsr`. The npm artifact remains available during migration but uses the legacy Node implementation.
 
-The Rust rewrite is being developed alongside the existing CLI. The first slice supports listing tasks and running named tasks from `fscripts.md`:
+## Rust CLI
+
+The Rust CLI supports the built-in script, package, release, encryption, diagnostic, shell integration, and deployment commands. Build and run it from a checkout with Rust 1.99.1 or newer:
 
 ```bash
+cargo build --release --locked
+cargo install --path .
 cargo run -- list
 cargo run -- run build
 cargo run -- run-s build test
 cargo run -- run-p start:web start:api
 cargo run -- --env staging run deploy:api
+cargo run -- doctor --json
 ```
 
-Rust code is in `src/`; `cargo run -- --help` lists the commands currently ported. Commands such as the interactive picker, plugins, release tooling, doctor, and encryption remain in the existing CLI until they are ported.
+Project-local plugins can use a `.fsr/plugins/<name>/plugin.json` manifest with a `description`, optional shell `run` command, and optional `hooks` for `pre-task`, `post-task`, and `task-error`. Executable `run` or `run.sh` files and JavaScript `index.js` modules exporting `run()` also work. The npm artifact still uses the legacy Node implementation while native Rust binary packaging is prepared.
 
-> 💡 Package name: `fscr`. Command: `fsr`. Yes, on purpose. 😄
+Example plugin manifest:
+
+```json
+{
+  "description": "Announce task completion",
+  "run": "echo plugin args: $*",
+  "hooks": {
+    "post-task": "echo finished $FSR_TASK_NAME"
+  }
+}
+```
+
+> 💡 The npm package name remains `fscr`; the Rust binary is `fsr`.
 
 ---
 
 ## 🚀 get started in 3 commands
 
 ```bash
-npm i -g fscr        # 📦 install fsr globally
-fsr generate         # ✨ imports your package.json scripts → fscripts.md
-fsr                  # 🎯 interactive picker — choose and run
+cargo install --path . # 📦 install the Rust CLI
+fsr generate           # ✨ imports your package.json scripts → fscripts.md
+fsr                    # 🎯 interactive picker — choose and run
 ```
 
 That's it. Your `package.json` scripts are now **documented, readable, and runnable** from a single Markdown file. No more mystery. No more Slack messages. No more broken staging environments. 🙌
@@ -139,7 +156,7 @@ Real Node.js. Executed directly. Documented inline. No extra files. 💥
 | -------------------- | ------------------------------------------------------------------- |
 | ⚡ `fsr`             | interactive picker — shows all scripts + plugins, just pick and run |
 | 🗂️ `fsr start`       | browse scripts by category                                          |
-| 🔍 `fsr list`        | fuzzy search across all tasks                                       |
+| 🔍 `fsr list`        | interactively choose any task                                        |
 | ▶️ `fsr run [task]`  | run a specific named task directly                                  |
 | 🔗 `fsr run-s t1 t2` | run tasks sequentially, one after another                           |
 | ⚡ `fsr run-p t1 t2` | run tasks in parallel, at the same time                             |
@@ -158,7 +175,7 @@ Real Node.js. Executed directly. Documented inline. No extra files. 💥
 | 🧹 `fsr clear`       | clear recent task history                                           |
 | 💬 `fsr commit`      | stage + commit with AI-generated conventional commit messages        |
 | 🔌 `fsr plugins`     | list all installed plugins (built-in and npm `fscr-plugin-*`)       |
-| 👋 `fsr greet`       | install a shell greeting that reminds you to use `yarn fsr` when `fscripts.md` is present |
+| 👋 `fsr greet`       | install a shell greeting that reminds you to use `fsr` when `fscripts.md` is present |
 
 > ℹ️ `fsr -v` / `fsr --version` prints the installed `fscr` version.
 

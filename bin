@@ -1,2 +1,15 @@
 #!/usr/bin/env node
-import('./dist/index.js');
+import { spawnSync } from "node:child_process";
+import { existsSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const root = dirname(fileURLToPath(import.meta.url));
+const cargoManifest = resolve(root, "Cargo.toml");
+
+if (existsSync(cargoManifest)) {
+    const result = spawnSync("cargo", ["run", "--quiet", "--manifest-path", cargoManifest, "--", ...process.argv.slice(2)], { stdio: "inherit" });
+    process.exit(result.status ?? 1);
+}
+
+await import("./dist/index.js");

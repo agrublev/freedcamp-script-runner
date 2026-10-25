@@ -6,10 +6,10 @@
     "main": "./dist/index.js",
     "scripts": {
         "find-scripts-in-fscripts": "you can find all scripts in fscripts.md",
-        "fsr": "bun ./dist/index.js",
-        "start": "yarn fsr",
+        "fsr": "cargo run --",
+        "start": "cargo run --",
         "test": "vitest run",
-        "list": "yarn fsr start",
+        "list": "cargo run -- list",
         "test:coverage": "vitest run --coverage"
     },
     "fscripts": {
