@@ -4,9 +4,14 @@
 //! Not ported: ink TaskPicker visuals, touch/mouse support, autocomplete sublabels layout.
 
 use crate::cache::Cache;
-use crate::parse::{Parsed, Task};
+use crate::parse::Parsed;
+use crate::ui::{
+    self,
+    autocomplete::{AcItem, AutoComplete},
+    menu::Menu,
+    task_picker::TaskPicker,
+};
 use anyhow::Result;
-use dialoguer::{FuzzySelect, theme::ColorfulTheme};
 use serde_json::{Value, json};
 use std::path::{Path, PathBuf};
 
@@ -15,17 +20,6 @@ fn now_ms() -> f64 {
         .duration_since(std::time::UNIX_EPOCH)
         .map(|d| d.as_millis() as f64)
         .unwrap_or(0.0)
-}
-
-fn fuzzy(prompt: &str, items: &[String]) -> Result<Option<usize>> {
-    if items.is_empty() {
-        return Ok(None);
-    }
-    Ok(FuzzySelect::with_theme(&ColorfulTheme::default())
-        .with_prompt(prompt)
-        .items(items)
-        .default(0)
-        .interact_opt()?)
 }
 
 /// Up to 3 most recently run task names (newest first).
@@ -67,43 +61,64 @@ pub fn clear_recent(cache: &Cache) -> Result<()> {
     Ok(())
 }
 
-fn label(t: &Task) -> String {
-    if t.description.is_empty() {
-        t.name.clone()
-    } else {
-        format!(
-            "{}   ~   {}",
-            t.name,
-            t.description.lines().next().unwrap_or("")
-        )
-    }
+fn term_cols() -> u16 {
+    ratatui::crossterm::terminal::size()
+        .map(|s| s.0)
+        .unwrap_or(80)
 }
 
-/// `fsr start`: recent tasks + categories, then a task. `fsr list`: all tasks fuzzy.
-pub fn pick_task(parsed: &Parsed, recent: &[String], by_category: bool) -> Result<Option<String>> {
-    if !by_category {
-        let items: Vec<String> = parsed.all_tasks.iter().map(label).collect();
-        return Ok(fuzzy("Choose task to run", &items)?.map(|i| parsed.all_tasks[i].name.clone()));
+/// Recent task options in TaskPicker format: `name   ~   <moment calendar>`.
+pub fn recent_options(cache: &Cache, names: &[String]) -> Vec<String> {
+    let rt = cache
+        .get("recentTasks")
+        .ok()
+        .flatten()
+        .map(|e| e["value"].clone())
+        .unwrap_or(json!({}));
+    let now = chrono::Local::now();
+    names
+        .iter()
+        .map(|n| {
+            format!(
+                "{n}   ~   {}",
+                ui::calendar(rt[n]["lastExecuted"].as_f64().unwrap_or(0.0), now)
+            )
+        })
+        .collect()
+}
+
+/// `fsr start` (TaskPicker) or `fsr list` (AutoComplete over all tasks).
+pub fn pick_task(
+    parsed: &Parsed,
+    recent_opts: &[String],
+    by_category: bool,
+) -> Result<Option<String>> {
+    if by_category {
+        return ui::run(TaskPicker::new(
+            parsed.clone(),
+            recent_opts.to_vec(),
+            term_cols(),
+        ));
     }
-    let mut items: Vec<String> = recent.iter().map(|r| format!("↺ {r}")).collect();
-    items.extend(parsed.categories.iter().map(|c| format!("# {}", c.name)));
-    let Some(i) = fuzzy("Choose a category", &items)? else {
-        return Ok(None);
-    };
-    if i < recent.len() {
-        return Ok(Some(recent[i].clone()));
-    }
-    let cat = &parsed.categories[i - recent.len()];
-    let items: Vec<String> = cat.tasks.iter().map(label).collect();
-    Ok(fuzzy(&format!("{} — choose task", cat.name), &items)?.map(|j| cat.tasks[j].name.clone()))
+    let items = parsed
+        .all_tasks
+        .iter()
+        .map(|t| AcItem::from_opt(&format!("{}   ~   {}", t.name, t.description)))
+        .collect();
+    Ok(ui::run(AutoComplete::new(items, "Choose task to run"))?.map(|i| i.value))
 }
 
 pub fn pick_package_script(scripts: &[(String, String)]) -> Result<Option<String>> {
-    let items: Vec<String> = scripts
+    let items = scripts
         .iter()
-        .map(|(k, v)| format!("{k}   ~   {v}"))
+        .map(|(k, v)| AcItem::from_opt(&format!("{k}   ~   {v}")))
         .collect();
-    Ok(fuzzy("Choose package script", &items)?.map(|i| scripts[i].0.clone()))
+    Ok(ui::run(AutoComplete::new(items, "Choose package script"))?.map(|i| i.value))
+}
+
+/// Bare `fsr`: the PluginPicker command menu.
+pub fn pick_command() -> Result<Option<String>> {
+    ui::run(Menu::new(ui::menu::default_items()))
 }
 
 /// Markdown files under `root` (skips node_modules, .git, target, dist).
@@ -136,9 +151,14 @@ pub fn markdown_files(root: &Path) -> Vec<PathBuf> {
 }
 
 pub fn pick_markdown(root: &Path) -> Result<Option<PathBuf>> {
-    let files = markdown_files(root);
-    let items: Vec<String> = files.iter().map(|p| p.display().to_string()).collect();
-    Ok(fuzzy("Choose a markdown (.md) file", &items)?.map(|i| root.join(&files[i])))
+    let items = markdown_files(root)
+        .iter()
+        .map(|p| AcItem::from_opt(&p.display().to_string()))
+        .collect();
+    Ok(
+        ui::run(AutoComplete::new(items, "Choose a markdown (.md) file"))?
+            .map(|i| root.join(i.value)),
+    )
 }
 
 #[cfg(test)]

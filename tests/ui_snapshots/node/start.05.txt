@@ -1,0 +1,31 @@
+# step 5: '\\t'
+╭──────────────────────────────────────────────────────────────────────────────────────────────────╮
+│                                                                                                  │
+│    Build                                                                            ← Esc: back │
+│ ──────────────────────────────────────────────────────────────────────────────────────────────── │
+│                                                                                                  │
+│ ›  type to filter                                                                                │
+│                                                                                                  │
+│ ❯ build                                                                                          │
+│   Wipes `dist/`, recreates `dist/lib/`, copies the full `lib/` source tree and `index.js`, then  │
+│   transpiles the three JSX UI components via esbuild (overwriting the raw copies). Run before    │
+│   publishing or before running the CLI from `dist/`.                                             │
+│                                                                                                  │
+│   build:ui                                                                                       │
+│   watch                                                                                          │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│ ──────────────────────────────────────────────────────────────────────────────────────────────── │
+│ ↑↓ navigate  ↵  select  ⇥  collapse  ← Esc  back                                                 │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
