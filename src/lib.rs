@@ -1,4 +1,5 @@
 //! fsr — Rust port of freedcamp-script-runner (see `lib/` for the JS original).
+pub mod ai_commit;
 pub mod builtins;
 pub mod cache;
 pub mod crypto;
