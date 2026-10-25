@@ -128,6 +128,33 @@ pub fn run_plugin(name: &str, args: &[String]) -> Result<(), String> {
     ))
 }
 
+pub fn run_legacy_plugin_command(name: &str, args: &[String]) -> Result<(), String> {
+    let bridge = r#"
+import{readdirSync,existsSync,readFileSync,writeFileSync,mkdirSync}from'node:fs';import{join,resolve}from'node:path';
+const [commandName,...raw]=process.argv.slice(1),commands=[],hooks=[],logger={info:console.log,success:console.log,warn:console.warn,error:console.error};
+for(const root of [resolve('lib/plugins'),resolve('.fsr/plugins'),resolve('node_modules')])if(existsSync(root))for(const dir of readdirSync(root,{withFileTypes:true}).filter(x=>x.isDirectory()).map(x=>x.name)){
+ if(root.endsWith('node_modules')&&!dir.startsWith('fscr-plugin-'))continue;const file=join(root,dir,'index.js');if(!existsSync(file))continue;
+ try{const mod=await import(new URL(`file://${file}`)),plugin=mod.default||mod;if(typeof plugin.init!=='function')continue;const store=join(resolve('.fscr',plugin.name||dir),'storage.json'),storageDir=join(resolve('.fscr',plugin.name||dir));
+ await plugin.init({logger,registerHook:(event,fn)=>{if(typeof fn==='function')hooks.push([event,fn])},registerCommand:def=>commands.push(def),getStorage:()=>{try{return JSON.parse(readFileSync(store,'utf8'))}catch{return {}}},setStorage:data=>{mkdirSync(storageDir,{recursive:true});writeFileSync(store,JSON.stringify(data,null,2))}})}catch(e){console.error(`[plugin:${dir}] ${e.message}`)}
+}
+const def=commands.find(c=>c.name===commandName||(c.aliases||[]).includes(commandName));if(!def){console.error(`Unknown command '${commandName}' (no plugin registered it)`);process.exitCode=2}else{
+ const argv={_:[], $0:'fsr'};for(let i=0;i<raw.length;i++){const token=raw[i];if(token.startsWith('--')){const [flag,value]=token.slice(2).split('=',2),opt=(def.options||[]).find(o=>o.flags?.includes(`--${flag}`));argv[flag]=value??(opt?.type==='boolean'?true:raw[++i]??true)}else if(token.startsWith('-')&&token.length===2){const short=token[1],opt=(def.options||[]).find(o=>o.flags?.includes(`-${short}`)),long=opt?.flags?.match(/--([a-z-]+)/)?.[1]||short;argv[long]=opt?.type==='boolean'?true:raw[++i]??true}else argv._.push(token)}
+ const data={taskName:commandName,command:commandName};for(const [event,fn]of hooks)if(event==='pre-task')try{await fn(data)}catch(e){console.error(e)}
+ try{await def.handler(argv,{logger});for(const [event,fn]of hooks)if(event==='post-task'||event==='post-command')try{await fn({...data,success:true})}catch(e){console.error(e)}}catch(e){process.exitCode=1;for(const [event,fn]of hooks)if(event==='task-error')try{await fn({...data,error:e})}catch(h){console.error(h)}console.error(e?.stack||e)}
+}
+"#;
+    let status = Command::new("node")
+        .args(["--input-type=module", "-e", bridge, name])
+        .args(args)
+        .status()
+        .map_err(|error| format!("could not start Node.js plugin bridge: {error}"))?;
+    if status.success() {
+        Ok(())
+    } else {
+        Err(format!("plugin command exited with {status}"))
+    }
+}
+
 pub fn fire_plugin_hook(event: &str, task_name: &str) {
     let plugins = Path::new(".fsr/plugins");
     for entry in fs::read_dir(plugins)

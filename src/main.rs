@@ -129,7 +129,7 @@ enum Commands {
 #[derive(Args)]
 #[group(required = false, multiple = false)]
 struct NotifyArgs {
-    #[arg(short, long)]
+    #[arg(long)]
     enable: bool,
     #[arg(short, long)]
     disable: bool,
@@ -138,7 +138,30 @@ struct NotifyArgs {
 }
 
 fn main() -> ExitCode {
-    let mut cli = Cli::parse();
+    let mut cli = match Cli::try_parse() {
+        Ok(cli) => cli,
+        Err(error) => {
+            let args: Vec<String> = std::env::args().skip(1).collect();
+            let mut index = 0;
+            while index < args.len() {
+                if args[index] == "--env" || args[index] == "-e" {
+                    index += 2;
+                } else if args[index] == "--prod" || args[index] == "--dev" {
+                    index += 1;
+                } else {
+                    break;
+                }
+            }
+            if let Some(name) = args.get(index).filter(|arg| !arg.starts_with('-')) {
+                return command_result(commands::run_legacy_plugin_command(
+                    name,
+                    &args[index + 1..],
+                ));
+            }
+            let _ = error.print();
+            return ExitCode::FAILURE;
+        }
+    };
     let profile = if cli.prod {
         Some("production".to_owned())
     } else if cli.dev {

@@ -70,7 +70,7 @@ cargo run -- --env staging run deploy:api
 cargo run -- doctor --json
 ```
 
-Project-local plugins can use a `.fsr/plugins/<name>/plugin.json` manifest with a `description`, optional shell `run` command, and optional `hooks` for `pre-task`, `post-task`, and `task-error`. Executable `run` or `run.sh` files and JavaScript `index.js` modules are supported. JavaScript plugins can register task hooks through the legacy `init(context)` API; Rust task execution invokes those hooks through Node.
+Project-local plugins can use a `.fsr/plugins/<name>/plugin.json` manifest with a `description`, optional shell `run` command, and optional `hooks` for `pre-task`, `post-task`, and `task-error`. Executable `run` or `run.sh` files and JavaScript `index.js` modules are supported. JavaScript plugins can register hooks and top-level commands through the legacy `init(context)` API; Rust task execution invokes those hooks and command handlers through Node.
 
 Example plugin manifest:
 
