@@ -92,6 +92,48 @@ enum Cmd {
     },
     /// Print a shell completion script (bash, zsh, fish, powershell, elvish)
     Completion { shell: clap_complete::Shell },
+    /// Deploy to a specific surge domain (built-in deployment plugin)
+    #[command(visible_alias = "ship")]
+    Deploy {
+        /// Location of files to publish
+        #[arg(long)]
+        files: Option<String>,
+        /// What is the surge.sh subdomain
+        #[arg(long)]
+        subdomain: Option<String>,
+    },
+    /// View deployment history
+    #[command(name = "deploy-history")]
+    DeployHistory,
+    /// Control task notifications (built-in task-notifier plugin)
+    Notify {
+        #[arg(short, long)]
+        enable: bool,
+        #[arg(short, long)]
+        disable: bool,
+        #[arg(short, long)]
+        status: bool,
+    },
+    /// Install a shell greeting that reminds you to use yarn fsr when fscripts.md is present
+    Greet {
+        /// install | uninstall | status
+        action: Option<String>,
+        /// Target shell (bash or zsh)
+        #[arg(short, long)]
+        shell: Option<String>,
+        #[arg(long)]
+        force: bool,
+        #[arg(short, long)]
+        yes: bool,
+    },
+    /// Publish the package to npm (lib/release/publish.js)
+    Publish {
+        /// dist-tag (prompted when omitted)
+        #[arg(long)]
+        tag: Option<String>,
+        #[arg(short, long)]
+        yes: bool,
+    },
     /// List all installed plugins (local .fsr/plugins and npm fscr-plugin-*)
     Plugins,
     /// Run a runnable plugin by name
@@ -130,14 +172,17 @@ fn real_main() -> Result<i32> {
                 eprintln!("[fsr] plugins disabled: {e:#}");
                 Default::default()
             });
-            let extra = listing
-                .plugins
-                .iter()
-                .filter(|p| p.runnable)
-                .map(|p| fsr::ui::menu::MenuItem {
-                    name: format!("plugin:{}", p.name),
-                    message: p.description.clone(),
-                })
+            let builtin = fsr::ui::menu::MenuItem {
+                name: "plugin:deployment".into(),
+                message: "Deploy your application to various environments".into(),
+            };
+            let extra = std::iter::once(builtin)
+                .chain(listing.plugins.iter().filter(|p| p.runnable).map(|p| {
+                    fsr::ui::menu::MenuItem {
+                        name: format!("plugin:{}", p.name),
+                        message: p.description.clone(),
+                    }
+                }))
                 .collect();
             picker::pick_command(extra)?
         }
@@ -167,6 +212,12 @@ fn real_main() -> Result<i32> {
                 json: false,
             },
             Some("plugins") => Cmd::Plugins,
+            Some("greet") => Cmd::Greet {
+                action: None,
+                shell: None,
+                force: false,
+                yes: false,
+            },
             Some(p) if p.starts_with("plugin:") => Cmd::Plugin {
                 name: p["plugin:".len()..].to_string(),
             },
@@ -179,7 +230,10 @@ fn real_main() -> Result<i32> {
         },
     };
     let mut _host_keep = None;
-    let hooks: runner::HookList = if matches!(
+    let notifier: std::sync::Arc<dyn runner::Hooks> =
+        std::sync::Arc::new(fsr::builtins::Notifier::new(&cache));
+    let mut hooks: runner::HookList = vec![notifier.clone()];
+    let host_hooks: runner::HookList = if matches!(
         cmd,
         Cmd::Start
             | Cmd::List { .. }
@@ -203,6 +257,27 @@ fn real_main() -> Result<i32> {
         }
     } else {
         Vec::new()
+    };
+    hooks.extend(host_hooks);
+    // Built-in plugin commands fire hooks like loader.js registerPluginCommands.
+    let with_hooks = |name: &str, f: &dyn Fn() -> Result<i32>| -> Result<i32> {
+        let t = std::time::Instant::now();
+        notifier.fire(
+            "pre-task",
+            serde_json::json!({"taskName": name, "command": name}),
+        );
+        match f() {
+            Ok(code) => {
+                let d = serde_json::json!({"taskName": name, "command": name, "duration": t.elapsed().as_millis() as u64, "success": true});
+                notifier.fire("post-task", d.clone());
+                notifier.fire("post-command", d);
+                Ok(code)
+            }
+            Err(e) => {
+                notifier.fire("task-error", serde_json::json!({"taskName": name, "command": name, "duration": t.elapsed().as_millis() as u64, "error": format!("{e:#}")}));
+                Err(e)
+            }
+        }
     };
     let opts = runner::RunOpts {
         cwd: cwd.clone(),
@@ -306,7 +381,30 @@ fn real_main() -> Result<i32> {
         },
         Cmd::Doctor { fix, json } => fsr::doctor::cmd_doctor(&cwd, &cache, fix, json),
         Cmd::Plugins => cmd_plugins(&cwd),
+        Cmd::Plugin { name } if name == "deployment" => {
+            with_hooks("deployment", &|| fsr::builtins::run_deployment(&cwd))
+        }
         Cmd::Plugin { name } => fsr::plugins::run_plugin(&cwd, &name),
+        Cmd::Deploy { files, subdomain } => with_hooks("deploy", &|| {
+            fsr::builtins::cmd_deploy(&cwd, files.as_deref(), subdomain.as_deref())
+        }),
+        Cmd::DeployHistory => with_hooks("deploy-history", &|| {
+            fsr::builtins::cmd_deploy_history(&cwd)
+        }),
+        Cmd::Notify {
+            enable,
+            disable,
+            status,
+        } => with_hooks("notify", &|| {
+            fsr::builtins::cmd_notify(&cache, enable, disable, status).map(|_| 0)
+        }),
+        Cmd::Greet {
+            action,
+            shell,
+            force,
+            yes,
+        } => fsr::builtins::cmd_greet(action.as_deref(), shell, force, yes),
+        Cmd::Publish { tag, yes } => fsr::builtins::cmd_publish(&cwd, tag, yes),
         Cmd::External(args) => {
             let name = &args[0];
             let listing = _host_keep.clone().unwrap_or_default();
@@ -333,12 +431,23 @@ fn real_main() -> Result<i32> {
 
 fn cmd_plugins(cwd: &std::path::Path) -> Result<i32> {
     let l = fsr::plugins::list(cwd)?;
-    let mut all: Vec<(String, String, String)> = l
-        .plugins
-        .iter()
-        .filter(|p| p.runnable)
-        .map(|p| (p.name.clone(), p.description.clone(), p.source.clone()))
-        .collect();
+    // Built-ins first (loader.js loads lib/plugins/* before local/npm).
+    let b = |n: &str, d: &str| (n.to_string(), d.to_string(), "builtin".to_string());
+    let mut all: Vec<(String, String, String)> = vec![
+        b(
+            "deployment",
+            "Deploy your application to various environments",
+        ),
+        b("deploy", "Deploy to a specific surge domain"),
+        b("deploy-history", "View deployment history"),
+        b("notify", "Control task notifications"),
+    ];
+    all.extend(
+        l.plugins
+            .iter()
+            .filter(|p| p.runnable)
+            .map(|p| (p.name.clone(), p.description.clone(), p.source.clone())),
+    );
     for c in &l.commands {
         if !all.iter().any(|a| a.0 == c.name) {
             let src = l

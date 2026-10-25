@@ -106,7 +106,8 @@ fn plugin_commands_plugins_listing_and_run() {
     );
     let (_, out) = fsr(d.path(), &["plugins"]);
     assert!(
-        out.contains("Installed plugins (2)")
+        out.contains("Installed plugins (6)")
+            && out.contains("[builtin]")
             && out.contains("recorder")
             && out.contains("hello")
             && out.contains("[local]"),
@@ -134,7 +135,17 @@ fn no_plugins_no_node_needed() {
         .output()
         .unwrap();
     assert!(o.status.success());
-    assert!(!d.path().join(".fsr").exists());
+    // The embedded host is only written to ~/.fsr when Node is started.
+    let host_written = std::fs::read_dir(d.path().join(".fsr"))
+        .map(|rd| {
+            rd.flatten()
+                .any(|e| e.file_name().to_string_lossy().starts_with("plugin-host-"))
+        })
+        .unwrap_or(false);
+    assert!(!host_written);
     let (_, out) = fsr(d.path(), &["plugins"]);
-    assert!(out.contains("No plugins found."), "{out}");
+    assert!(
+        out.contains("Installed plugins (4)") && !out.contains("[local]"),
+        "{out}"
+    );
 }
