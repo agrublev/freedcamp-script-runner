@@ -59,7 +59,7 @@ fn blocks(md: &str) -> Vec<Block> {
                             out.push(Block::Heading(level(*l), heading_text(raw)));
                         }
                         Tag::Paragraph => {
-                            out.push(Block::Paragraph(md[range.clone()].trim().to_string()))
+                            out.push(Block::Paragraph(paragraph_raw(md, range.clone())))
                         }
                         Tag::CodeBlock(kind) => {
                             let lang = match kind {
@@ -98,6 +98,20 @@ fn blocks(md: &str) -> Vec<Block> {
         }
     }
     out
+}
+
+/// marked keeps leading indentation and drops the trailing newline.
+fn paragraph_raw(md: &str, r: std::ops::Range<usize>) -> String {
+    let line_start = md[..r.start].rfind('\n').map_or(0, |i| i + 1);
+    let start = if md[line_start..r.start]
+        .chars()
+        .all(|c| c == ' ' || c == '\t')
+    {
+        line_start
+    } else {
+        r.start
+    };
+    md[start..r.end].trim_end_matches(['\n', '\r']).to_string()
 }
 
 fn heading_text(raw: &str) -> String {
@@ -241,4 +255,223 @@ pub fn parse_script_file(dir: &Path, env: Option<&str>) -> std::io::Result<Optio
         Some(e) => filter_by_env(&parsed, e),
         None => parsed,
     }))
+}
+
+/// Ported from `tests/parsers/parse.test.js` and `tests/parsers/parseScriptsMd.test.js`.
+#[cfg(test)]
+mod tests {
+    use super::*;
+    fn md(lines: &[&str]) -> String {
+        lines.join("\n")
+    }
+    fn find<'a>(p: &'a Parsed, n: &str) -> &'a Task {
+        p.all_tasks.iter().find(|t| t.name == n).unwrap()
+    }
+    const ENV_MD: &[&str] = &[
+        "# Deployment",
+        "",
+        "## [env:staging]",
+        "",
+        "## deploy:api",
+        "",
+        "Deploy to staging.",
+        "",
+        "```bash",
+        "node deploy.js staging",
+        "```",
+        "",
+        "## deploy:web",
+        "",
+        "```bash",
+        "node web.js staging",
+        "```",
+        "",
+        "## [env:production]",
+        "",
+        "## deploy:api",
+        "",
+        "Deploy to production.",
+        "",
+        "```bash",
+        "node deploy.js production",
+        "```",
+        "",
+    ];
+
+    #[test]
+    fn category_and_task_description() {
+        let p = parse(&md(&[
+            "# Group",
+            "",
+            "The group description.",
+            "",
+            "## task-a",
+            "",
+            "Does A.",
+            "",
+            "```bash",
+            "echo a",
+            "```",
+            "",
+        ]));
+        assert_eq!(p.categories[0].name, "Group");
+        assert_eq!(p.categories[0].description, "The group description.");
+        let a = find(&p, "task-a");
+        assert_eq!(
+            (
+                a.description.as_str(),
+                a.lang.as_deref(),
+                a.script.as_str(),
+                a.order
+            ),
+            ("Does A.", Some("bash"), "echo a", 0)
+        );
+    }
+    #[test]
+    fn code_directly_under_heading() {
+        let p = parse(&md(&[
+            "# Group",
+            "",
+            "## task-b",
+            "",
+            "```javascript",
+            "console.log(\"b\")",
+            "```",
+            "",
+        ]));
+        let b = find(&p, "task-b");
+        assert_eq!(
+            (b.description.as_str(), b.lang.as_deref(), b.script.as_str()),
+            ("", Some("javascript"), "console.log(\"b\")")
+        );
+    }
+    #[test]
+    fn lonely_heading_has_empty_script() {
+        let p = parse(&md(&["# Group", "", "## lonely", ""]));
+        assert_eq!(find(&p, "lonely").script, "");
+        assert_eq!(find(&p, "lonely").lang, None);
+        assert_eq!(find(&p, "lonely").env, None);
+    }
+    #[test]
+    fn env_sections() {
+        let p = parse(&md(ENV_MD));
+        assert!(p.all_tasks.iter().all(|t| !t.name.starts_with("[env:")));
+        let staging: Vec<_> = p
+            .all_tasks
+            .iter()
+            .filter(|t| t.env.as_deref() == Some("staging"))
+            .map(|t| t.name.as_str())
+            .collect();
+        assert_eq!(staging, ["deploy:api", "deploy:web"]);
+        let mut envs: Vec<_> = p
+            .all_tasks
+            .iter()
+            .filter(|t| t.name == "deploy:api")
+            .map(|t| t.env.clone().unwrap())
+            .collect();
+        envs.sort();
+        assert_eq!(envs, ["production", "staging"]);
+        // category.tasks: last definition wins
+        let c = &p.categories[0];
+        assert_eq!(
+            c.tasks
+                .iter()
+                .find(|t| t.name == "deploy:api")
+                .unwrap()
+                .env
+                .as_deref(),
+            Some("production")
+        );
+    }
+    #[test]
+    fn env_reset_and_scoping() {
+        let p = parse(&md(&[
+            "# Section A",
+            "",
+            "## [env:dev]",
+            "",
+            "## task-a",
+            "",
+            "```bash",
+            "echo a",
+            "```",
+            "",
+            "# Section B",
+            "",
+            "## task-b",
+            "",
+            "```bash",
+            "echo b",
+            "```",
+            "",
+        ]));
+        assert_eq!(find(&p, "task-a").env.as_deref(), Some("dev"));
+        assert_eq!(find(&p, "task-b").env, None);
+        let p = parse(&md(&[
+            "# Group",
+            "",
+            "## early-task",
+            "",
+            "```bash",
+            "echo early",
+            "```",
+            "",
+            "## [env:prod]",
+            "",
+            "## late-task",
+            "",
+            "```bash",
+            "echo late",
+            "```",
+            "",
+        ]));
+        assert_eq!(find(&p, "early-task").env, None);
+        assert_eq!(find(&p, "late-task").env.as_deref(), Some("prod"));
+        let p = parse(&md(&[
+            "# Group",
+            "",
+            "## [env:my-env.v2]",
+            "",
+            "## some-task",
+            "",
+            "```bash",
+            "echo hi",
+            "```",
+            "",
+        ]));
+        assert_eq!(find(&p, "some-task").env.as_deref(), Some("my-env.v2"));
+    }
+    #[test]
+    fn filter_by_env_keeps_per_env_versions() {
+        let p = parse(&md(ENV_MD));
+        let s = filter_by_env(&p, "staging");
+        assert_eq!(s.all_tasks.len(), 2);
+        assert_eq!(
+            s.categories[0]
+                .tasks
+                .iter()
+                .find(|t| t.name == "deploy:api")
+                .unwrap()
+                .script,
+            "node deploy.js staging"
+        );
+        assert!(filter_by_env(&p, "nope").categories.is_empty());
+    }
+    #[test]
+    fn parse_script_file_missing_empty_and_toc() {
+        let d = tempfile::tempdir().unwrap();
+        assert!(parse_script_file(d.path(), None).unwrap().is_none());
+        std::fs::write(d.path().join("fscripts.md"), "").unwrap();
+        assert_eq!(
+            parse_script_file(d.path(), None).unwrap().unwrap(),
+            Parsed::default()
+        );
+        std::fs::write(
+            d.path().join("fscripts.md"),
+            "- [x](#x)\n<!-- end toc -->\n\n# G\n\n## x\n\n```bash\necho\n```\n",
+        )
+        .unwrap();
+        let p = parse_script_file(d.path(), None).unwrap().unwrap();
+        assert_eq!(p.all_tasks.len(), 1);
+    }
 }

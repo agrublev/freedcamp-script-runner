@@ -6,3 +6,4 @@ pub mod fsutil;
 pub mod parse;
 pub mod runner;
 pub mod task;
+pub mod toc;

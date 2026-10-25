@@ -1,0 +1,160 @@
+{
+  "categories": [
+    {
+      "name": "",
+      "description": "",
+      "tasks": [
+        "say:hello"
+      ]
+    },
+    {
+      "name": "Run",
+      "description": "Run description here **test** sasa",
+      "tasks": [
+        "node:script",
+        "say:hello",
+        "decrypt",
+        "run:s",
+        "run:p",
+        "run:one",
+        "run:one:d",
+        "run:two",
+        "run:three"
+      ]
+    },
+    {
+      "name": "Samples",
+      "description": "Here we execute some node scripts",
+      "tasks": [
+        "console:sample",
+        "input:sample"
+      ]
+    },
+    {
+      "name": "Three",
+      "description": "",
+      "tasks": [
+        "threez"
+      ]
+    }
+  ],
+  "allTasks": [
+    {
+      "name": "say:hello",
+      "description": "Say hello task outside any category.",
+      "script": "console.log(\"Say hello to my little friend!\");",
+      "lang": "javascript",
+      "order": 0,
+      "env": null,
+      "category": ""
+    },
+    {
+      "name": "node:script",
+      "description": "Javascript ran with import",
+      "script": "const chalk = require(\"chalk\");\nconsole.log(\"NODEENV\", process.env.NODE_ENV);\n(async () => {\n    console.log(` -- ${chalk.bold.red(\"RED\")} -- `);\n    await new Promise((resolve) =>\n        setTimeout(() => {\n            console.log(\"DONE\");\n        }, 2000)\n    );\n})();",
+      "lang": "javascript",
+      "order": 0,
+      "env": null,
+      "category": "Run"
+    },
+    {
+      "name": "say:hello",
+      "description": "JavaScript with template literals",
+      "script": "console.log(`HELLO!! : ${Date.now()}`);",
+      "lang": "javascript",
+      "order": 1,
+      "env": null,
+      "category": "Run"
+    },
+    {
+      "name": "decrypt",
+      "description": "Run encryption/decrytion with password \"fscripts\" to get file .config.json to become config.json",
+      "script": "SPECIAL=test node lib/encryption/decryptConfig.js",
+      "lang": "bash",
+      "order": 2,
+      "env": null,
+      "category": "Run"
+    },
+    {
+      "name": "run:s",
+      "description": "Explain sequence with **bold** stuifff and more **boldss** s",
+      "script": "NODE_ENV=RUNSEQ yarn fsr run-s run:one run:one:d node:script run:three  run:one:d run:one run:one:d run:one",
+      "lang": "bash",
+      "order": 3,
+      "env": null,
+      "category": "Run"
+    },
+    {
+      "name": "run:p",
+      "description": "Run parallel",
+      "script": "yarn fsr run-p run:one run:one:d node:script run:one  run:one:d run:one run:one:d run:one",
+      "lang": "bash",
+      "order": 4,
+      "env": null,
+      "category": "Run"
+    },
+    {
+      "name": "run:one",
+      "description": "",
+      "script": "NODE_ENV=test echo \"ONE\"",
+      "lang": "bash",
+      "order": 5,
+      "env": null,
+      "category": "Run"
+    },
+    {
+      "name": "run:one:d",
+      "description": "",
+      "script": "sleep 1",
+      "lang": "bash",
+      "order": 6,
+      "env": null,
+      "category": "Run"
+    },
+    {
+      "name": "run:two",
+      "description": "",
+      "script": "node ../lib/test-files/testConsole.js",
+      "lang": "bash",
+      "order": 7,
+      "env": null,
+      "category": "Run"
+    },
+    {
+      "name": "run:three",
+      "description": "",
+      "script": "INPUT=THREE node ../lib/test-files/testInput.js",
+      "lang": "bash",
+      "order": 8,
+      "env": null,
+      "category": "Run"
+    },
+    {
+      "name": "console:sample",
+      "description": "Showing some console messages with delays",
+      "script": "node ../lib/test-files/consoleSample.js",
+      "lang": "bash",
+      "order": 0,
+      "env": null,
+      "category": "Samples"
+    },
+    {
+      "name": "input:sample",
+      "description": "Showcase asking user for input from script",
+      "script": "node ../lib/test-files/inputSample.js",
+      "lang": "bash",
+      "order": 1,
+      "env": null,
+      "category": "Samples"
+    },
+    {
+      "name": "threez",
+      "description": "",
+      "script": "echo \"Damn girl!\"",
+      "lang": "bash",
+      "order": 0,
+      "env": null,
+      "category": "Three"
+    }
+  ]
+}
