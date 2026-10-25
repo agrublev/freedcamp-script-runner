@@ -32,3 +32,11 @@ unicode-width = "0.2.2"
 walkdir = "2.5.0"
 which = "8.0.6"
 zeroize = "1.9.1"
+
+[dev-dependencies]
+nix = { version = "0.31.3", features = ["signal", "process", "term", "fs"] }
+
+# Test helper: a picker that panics mid-render (tests/rust_terminal.rs).
+[[example]]
+name = "ui_panic"
+path = "tests/support/ui_panic.rs"
