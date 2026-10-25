@@ -22,6 +22,15 @@ enum Cmd {
     /// Run tasks in parallel (a failure stops the others)
     #[command(name = "run-p")]
     RunP { tasks: Vec<String> },
+    /// List package.json scripts
+    Scripts,
+    /// Generate a sample fscripts.md from package.json
+    Generate {
+        #[arg(short, long)]
+        yes: bool,
+    },
+    /// Regenerate the Table of Contents in fscripts.md (or the given file)
+    Toc { file: Option<std::path::PathBuf> },
     /// Encrypt a file to <file>.encrypted
     Encrypt {
         file: std::path::PathBuf,
@@ -89,6 +98,16 @@ fn real_main() -> Result<i32> {
         Cmd::Run { task } => runner::run_one(&load()?.all_tasks, &task, &opts, &sig),
         Cmd::RunS { tasks } => runner::run_sequence(&load()?.all_tasks, &tasks, &opts, &sig),
         Cmd::RunP { tasks } => runner::run_parallel(&load()?.all_tasks, &tasks, &opts, &sig),
+        Cmd::Scripts => {
+            for (k, v) in fsr::toc::package_scripts(&cwd)? {
+                println!("  \x1b[1m{k}\x1b[0m  {v}");
+            }
+            Ok(0)
+        }
+        Cmd::Generate { yes } => fsr::toc::cmd_generate(&cwd, yes).map(|_| 0),
+        Cmd::Toc { file } => {
+            fsr::toc::cmd_toc(&file.unwrap_or_else(|| cwd.join("fscripts.md"))).map(|_| 0)
+        }
         Cmd::Encrypt { file, yes } => fsr::encryption::cmd_encrypt(&file, yes).map(|_| 0),
         Cmd::Decrypt { file, yes } => fsr::encryption::cmd_decrypt(&file, yes).map(|_| 0),
         Cmd::Encryption { direction, yes } => {

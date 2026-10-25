@@ -1,0 +1,68 @@
+{
+  "categories": [
+    {
+      "name": "Group1",
+      "description": "Explained G 1",
+      "tasks": [
+        "parcel:script",
+        "script:js"
+      ]
+    },
+    {
+      "name": "Groups2",
+      "description": "",
+      "tasks": [
+        "console:js",
+        "input:js-",
+        "crazy:javascript"
+      ]
+    }
+  ],
+  "allTasks": [
+    {
+      "name": "parcel:script",
+      "description": "Described script 1",
+      "script": "parcel ./index.html --no-cache",
+      "lang": "bash",
+      "order": 0,
+      "env": null,
+      "category": "Group1"
+    },
+    {
+      "name": "script:js",
+      "description": "",
+      "script": "const chalk = require(\"chalk\");\nconsole.log(`${chalk.underline.bold(\"RUNS JS\\n\\nTEST\")}`);",
+      "lang": "js",
+      "order": 1,
+      "env": null,
+      "category": "Group1"
+    },
+    {
+      "name": "console:js",
+      "description": "Only one script here with bash",
+      "script": "node src/sampleScripts/exampleLogTimeout.js",
+      "lang": "bash",
+      "order": 0,
+      "env": null,
+      "category": "Groups2"
+    },
+    {
+      "name": "input:js-",
+      "description": "Get some input from user",
+      "script": "node src/sampleScripts/exampleInput.js",
+      "lang": "bash",
+      "order": 1,
+      "env": null,
+      "category": "Groups2"
+    },
+    {
+      "name": "crazy:javascript",
+      "description": "",
+      "script": "const chalk = require(\"chalk\");\nconst sample = arr => arr[Math.floor(Math.random() * arr.length)];\nconst quotes = [\n    \"The trickster's functiowhat they reslly s function is to break taboos, create mischief, stir things up. In the end, the trickster gives people what they res function is to break taboos, create mischief, stir things up. In the end, the trickster gives people what they rewant, some sort of freedom. - Tom Robbins\",\n    '\"Disbelief in magic can  really s function is to break taboos, create mischief, stir things up. In the end, the trickster gives people what they res function is to break taboos, create mischief, stir things up. In the end, the trickster gives people what they rewant, some sort of freedom. - Tom Robbins\",\\n' +\n        '    \"Disbelief in magic can force a poor soul into believing in government and business. - Tom Robbins',\n    'The trouble with the fasforce a poor soul into believing in government and business. - Tom Robbins\",\\n' +\n        '    \"The trouble with the fasforce a poor soul into believing in government and business. - Tom Robbins\",\\n' +\n        '    \"The trouble with the fast lane is that all the movement is horizontal. And I like to go vertical sometimes. - Tom Robbins',\n    \"Our world isn't made of earth, air and water or even molecules and atoms; our world is made of language. - Tom Robbimade of earth, air and water or even molecules and atoms; our world is made of language. - Tom Robbins\",\n    \"I'm not infatuated with frivoith frivoith frivoith frivoith frivoith frivoith frivoith frivolousness. We're just good friends. - Tom Robbins\",\n    \"In fiction, when you paint yourself into a corner, you can write a pair of suction cups onto the bottoms of your shoes and walk up the wall and out the skylight and see the sun breaking through the clouds. In nonfiction, you don't have that luxury. - Tom Robbins\"\n];\nlet sxy;\nconst getOption = st => {\n    // if (Math.random() > 0.5) {\n    //     st = st + sample(quotes) + sample(quotes) + sample(quotes);\n    // }\n    let options = [\n        chalk.blue(st),\n        chalk.underline.green(st),\n        chalk.green.bgRed.bold(st),\n        chalk.blue(st, st, st, st),\n        chalk.red(st, chalk.underline.bgBlue(st) + st)\n    ];\n    return sample(options);\n};\nlet isMil = 0;\nconst theRun = async () => {\n    return new Promise(resolve => {\n        sxy = setInterval(() => {\n            const qt = sample(quotes);\n            console.log(new Date() + \" ------- ----- ---- \\n\");\n            console.log(getOption(qt));\n            console.log(new Date() + \" ------- ----- ---- \\n\");\n            console.log(\"----- ---- \\n\");\n            console.log(\"----- ---- \\n\");\n            console.log(\"----- ---- \\n\");\n            if (isMil === 30) {\n            \tclearInterval(sxy);\n            \tconsole.log(\"DONE DONE DONE\");\n            \tresolve();\n            } else {\n                isMil += 10;\n            }\n        }, 1000);\n    });\n};\n\ntheRun();",
+      "lang": "js",
+      "order": 2,
+      "env": null,
+      "category": "Groups2"
+    }
+  ]
+}

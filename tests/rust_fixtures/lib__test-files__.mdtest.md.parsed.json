@@ -1,0 +1,52 @@
+{
+  "categories": [
+    {
+      "name": "First category of scripts",
+      "description": " Welcome to your new amazing .fscripts.md file. It replaces the headaches of npm scripts! But so much more.",
+      "tasks": [
+        "fsr",
+        "fsr:d",
+        "deploy",
+        "pretty"
+      ]
+    }
+  ],
+  "allTasks": [
+    {
+      "name": "fsr",
+      "description": "TBD",
+      "script": "node bin/run",
+      "lang": "bash",
+      "order": 0,
+      "env": null,
+      "category": "First category of scripts"
+    },
+    {
+      "name": "fsr:d",
+      "description": "TBD",
+      "script": "DEBUG=* node bin/run",
+      "lang": "bash",
+      "order": 1,
+      "env": null,
+      "category": "First category of scripts"
+    },
+    {
+      "name": "deploy",
+      "description": "TBD",
+      "script": "node src/utils/release/publish.js",
+      "lang": "bash",
+      "order": 2,
+      "env": null,
+      "category": "First category of scripts"
+    },
+    {
+      "name": "pretty",
+      "description": "TBD",
+      "script": "prettier src/*.js --write",
+      "lang": "bash",
+      "order": 3,
+      "env": null,
+      "category": "First category of scripts"
+    }
+  ]
+}

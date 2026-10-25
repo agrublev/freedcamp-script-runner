@@ -1,0 +1,72 @@
+{
+  "categories": [
+    {
+      "name": "FSCR Plugin Examples",
+      "description": "This directory contains example plugins demonstrating various features of the FSCR v7.0.0 plugin system.",
+      "tasks": [
+        "Available Examples",
+        "Installation",
+        "Creating Your Own Plugin",
+        "Documentation",
+        "Plugin Ideas",
+        "Contributing"
+      ]
+    }
+  ],
+  "allTasks": [
+    {
+      "name": "Available Examples",
+      "description": "",
+      "script": "",
+      "lang": null,
+      "order": 0,
+      "env": null,
+      "category": "FSCR Plugin Examples"
+    },
+    {
+      "name": "Installation",
+      "description": "",
+      "script": "",
+      "lang": null,
+      "order": 1,
+      "env": null,
+      "category": "FSCR Plugin Examples"
+    },
+    {
+      "name": "Creating Your Own Plugin",
+      "description": "",
+      "script": "",
+      "lang": null,
+      "order": 2,
+      "env": null,
+      "category": "FSCR Plugin Examples"
+    },
+    {
+      "name": "Documentation",
+      "description": "",
+      "script": "",
+      "lang": null,
+      "order": 3,
+      "env": null,
+      "category": "FSCR Plugin Examples"
+    },
+    {
+      "name": "Plugin Ideas",
+      "description": "",
+      "script": "",
+      "lang": null,
+      "order": 4,
+      "env": null,
+      "category": "FSCR Plugin Examples"
+    },
+    {
+      "name": "Contributing",
+      "description": "",
+      "script": "",
+      "lang": null,
+      "order": 5,
+      "env": null,
+      "category": "FSCR Plugin Examples"
+    }
+  ]
+}

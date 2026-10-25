@@ -1,0 +1,211 @@
+{
+  "categories": [
+    {
+      "name": "⚡ fsr",
+      "description": "",
+      "tasks": [
+        "📦 install",
+        "🚀 get started in 3 commands",
+        "🤔 what is fscripts.md?",
+        "build:prod",
+        "🤯 full javascript blocks — yes, really",
+        "🎮 commands",
+        "⚡ parallel & sequential execution",
+        "🔐 encryption",
+        "🔌 plugins",
+        "📋 table of contents",
+        "🩺 doctor",
+        "😤 why not just use package.json?",
+        "📝 the fscripts.md format",
+        "another-script",
+        "🌍 environment profiles",
+        "push",
+        "🆚 fsr vs. the alternatives",
+        "💡 pro tips",
+        "📄 license"
+      ]
+    }
+  ],
+  "allTasks": [
+    {
+      "name": "📦 install",
+      "description": "",
+      "script": "npm i -g fscr",
+      "lang": "bash",
+      "order": 0,
+      "env": null,
+      "category": "⚡ fsr"
+    },
+    {
+      "name": "🚀 get started in 3 commands",
+      "description": "",
+      "script": "npm i -g fscr        # 📦 install fsr globally\nfsr generate         # ✨ imports your package.json scripts → fscripts.md\nfsr                  # 🎯 interactive picker — choose and run",
+      "lang": "bash",
+      "order": 1,
+      "env": null,
+      "category": "⚡ fsr"
+    },
+    {
+      "name": "🤔 what is fscripts.md?",
+      "description": "",
+      "script": "",
+      "lang": null,
+      "order": 2,
+      "env": null,
+      "category": "⚡ fsr"
+    },
+    {
+      "name": "build:prod",
+      "description": "🏗️ Full production build. Cleans dist/, compiles, minifies. Takes ~2 min.",
+      "script": "npm run clean && npm run compile && npm run minify",
+      "lang": "bash",
+      "order": 3,
+      "env": null,
+      "category": "⚡ fsr"
+    },
+    {
+      "name": "🤯 full javascript blocks — yes, really",
+      "description": "`fscripts.md` isn't just for bash. You can write **full executable JavaScript** right in your Markdown: 🔥",
+      "script": "## db:seed\n\n🌱 Seeds the local database with test fixtures. Wipes existing data first — don't run on prod.\n\n```javascript\nimport { seed } from \"./db/seed.js\";\nawait seed({ wipe: true });\n```",
+      "lang": "markdown",
+      "order": 4,
+      "env": null,
+      "category": "⚡ fsr"
+    },
+    {
+      "name": "🎮 commands",
+      "description": "",
+      "script": "",
+      "lang": null,
+      "order": 5,
+      "env": null,
+      "category": "⚡ fsr"
+    },
+    {
+      "name": "⚡ parallel & sequential execution",
+      "description": "Run multiple scripts **at the same time** 🚀:",
+      "script": "fsr run-p start:web start:desktop start:api",
+      "lang": "bash",
+      "order": 6,
+      "env": null,
+      "category": "⚡ fsr"
+    },
+    {
+      "name": "🔐 encryption",
+      "description": "Keep secrets safe without a third-party vault 🔒:",
+      "script": "fsr encrypt    # 🔐 password-protect any file(s)\nfsr decrypt    # 🔓 unlock them when you need them",
+      "lang": "bash",
+      "order": 7,
+      "env": null,
+      "category": "⚡ fsr"
+    },
+    {
+      "name": "🔌 plugins",
+      "description": "",
+      "script": "",
+      "lang": null,
+      "order": 8,
+      "env": null,
+      "category": "⚡ fsr"
+    },
+    {
+      "name": "📋 table of contents",
+      "description": "Your `fscripts.md` grows fast 📈. Keep it navigable:",
+      "script": "fsr toc",
+      "lang": "bash",
+      "order": 9,
+      "env": null,
+      "category": "⚡ fsr"
+    },
+    {
+      "name": "🩺 doctor",
+      "description": "Something broken? Run the doc 🏥:",
+      "script": "fsr doctor            # 🔍 check system health\nfsr doctor --fix      # 🔧 auto-fix where possible\nfsr doctor --json     # 📊 output results as JSON (great for CI)\nfsr doctor --verbose  # 🔬 show everything",
+      "lang": "bash",
+      "order": 10,
+      "env": null,
+      "category": "⚡ fsr"
+    },
+    {
+      "name": "😤 why not just use package.json?",
+      "description": "",
+      "script": "",
+      "lang": null,
+      "order": 11,
+      "env": null,
+      "category": "⚡ fsr"
+    },
+    {
+      "name": "📝 the fscripts.md format",
+      "description": "",
+      "script": "# 🗂️ Group Name\n\n## script-name\n\nDescription of what this does, when to run it, any gotchas. ✍️\n\n```bash\nyour-command --here\n```",
+      "lang": "markdown",
+      "order": 12,
+      "env": null,
+      "category": "⚡ fsr"
+    },
+    {
+      "name": "another-script",
+      "description": "",
+      "script": "// 🟨 full Node.js — executed directly\nimport { something } from \"./lib/index.js\";\nawait something();",
+      "lang": "javascript",
+      "order": 13,
+      "env": null,
+      "category": "⚡ fsr"
+    },
+    {
+      "name": "🌍 environment profiles",
+      "description": "",
+      "script": "",
+      "lang": null,
+      "order": 14,
+      "env": null,
+      "category": "⚡ fsr"
+    },
+    {
+      "name": "push",
+      "description": "Push image to staging registry.",
+      "script": "docker push registry/myapp:staging",
+      "lang": "bash",
+      "order": 15,
+      "env": "staging",
+      "category": "⚡ fsr"
+    },
+    {
+      "name": "push",
+      "description": "Push image to production registry.",
+      "script": "docker push registry/myapp:production",
+      "lang": "bash",
+      "order": 16,
+      "env": "production",
+      "category": "⚡ fsr"
+    },
+    {
+      "name": "🆚 fsr vs. the alternatives",
+      "description": "",
+      "script": "",
+      "lang": null,
+      "order": 17,
+      "env": "production",
+      "category": "⚡ fsr"
+    },
+    {
+      "name": "💡 pro tips",
+      "description": "",
+      "script": "",
+      "lang": null,
+      "order": 18,
+      "env": "production",
+      "category": "⚡ fsr"
+    },
+    {
+      "name": "📄 license",
+      "description": "",
+      "script": "",
+      "lang": null,
+      "order": 19,
+      "env": "production",
+      "category": "⚡ fsr"
+    }
+  ]
+}
