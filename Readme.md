@@ -535,3 +535,15 @@ _⚡ Built by the [Freedcamp](https://freedcamp.com) team. Battle-tested on our 
 ### Similar
 - https://github.com/egoist/maid
 - https://github.com/joerdav/xc
+## Building the Rust version (`feature/rust`)
+
+Requires Rust stable (install via [rustup](https://rustup.rs)).
+
+```bash
+cargo build --release        # binary at target/release/fsr
+cargo test                   # unit + integration tests
+cargo clippy -- -D warnings  # lint
+./target/release/fsr --help
+```
+
+Optional: `cargo install --path .` puts `fsr` on your PATH. Set `FSR_SECRET` to skip the encryption password prompt. Plugins still run on Node (not yet bridged from Rust).
