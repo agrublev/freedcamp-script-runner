@@ -42,12 +42,13 @@ pub fn encrypt_file(plain: &Path, out: &Path, pass: &str, yes: bool) -> Result<b
 }
 
 pub fn decrypt_file(enc: &Path, out: &Path, pass: &str, yes: bool) -> Result<bool> {
-    if !confirm_overwrite(out, yes)? {
-        return Ok(false);
-    }
+    // Decrypt first so a wrong password never prompts or touches the output.
     let text =
         std::fs::read_to_string(enc).with_context(|| format!("reading {}", enc.display()))?;
     let plain = crypto::decrypt(&text, pass)?;
+    if !confirm_overwrite(out, yes)? {
+        return Ok(false);
+    }
     fsutil::write_atomic(out, &plain)?;
     eprintln!("\x1b[1;32mDECRYPTED FILE:\x1b[0m {}", out.display());
     Ok(true)
@@ -60,13 +61,21 @@ pub fn cmd_encrypt(file: &Path, yes: bool) -> Result<()> {
     Ok(())
 }
 
-/// `fsr decrypt <file.encrypted>` → strip `.encrypted`.
-pub fn cmd_decrypt(file: &Path, yes: bool) -> Result<()> {
+/// Where `fsr decrypt` writes: `--out`, else strip `.encrypted`, else in place.
+pub fn decrypt_target(file: &Path, out: Option<&Path>) -> PathBuf {
+    if let Some(o) = out {
+        return o.to_path_buf();
+    }
     let s = file.to_string_lossy();
-    let Some(out) = s.strip_suffix(".encrypted") else {
-        bail!("expected a *.encrypted file")
-    };
-    decrypt_file(file, Path::new(out), &get_pass()?, yes)?;
+    match s.strip_suffix(".encrypted") {
+        Some(o) if !o.is_empty() => PathBuf::from(o),
+        _ => file.to_path_buf(),
+    }
+}
+
+/// `fsr decrypt <file> [-o out]`: any file name; in place when no `.encrypted`.
+pub fn cmd_decrypt(file: &Path, out: Option<&Path>, yes: bool) -> Result<()> {
+    decrypt_file(file, &decrypt_target(file, out), &get_pass()?, yes)?;
     Ok(())
 }
 
@@ -137,5 +146,25 @@ mod tests {
         assert_eq!(p, Path::new("/r/conf/config.json"));
         let (e, _) = configured_paths(Path::new("/r"), "config.json");
         assert_eq!(e, Path::new("/r/.config.json"));
+    }
+}
+
+#[cfg(test)]
+mod decrypt_target_tests {
+    use super::*;
+    #[test]
+    fn targets() {
+        assert_eq!(
+            decrypt_target(Path::new("a.json.encrypted"), None),
+            PathBuf::from("a.json")
+        );
+        assert_eq!(
+            decrypt_target(Path::new("secret.bin"), None),
+            PathBuf::from("secret.bin")
+        );
+        assert_eq!(
+            decrypt_target(Path::new("x"), Some(Path::new("y"))),
+            PathBuf::from("y")
+        );
     }
 }

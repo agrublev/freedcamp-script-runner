@@ -63,9 +63,12 @@ enum Cmd {
         #[arg(short, long)]
         yes: bool,
     },
-    /// Decrypt a <file>.encrypted file
+    /// Decrypt any encrypted file (strips .encrypted if present, else in place)
     Decrypt {
         file: PathBuf,
+        /// Write the decrypted output here instead
+        #[arg(short, long)]
+        out: Option<PathBuf>,
         #[arg(short, long)]
         yes: bool,
     },
@@ -253,7 +256,10 @@ fn real_main() -> Result<i32> {
             | Cmd::RunP { .. }
             | Cmd::External(_)
     ) {
-        match pre_host.take().unwrap_or_else(|| fsr::plugins::Host::start(&cwd)) {
+        match pre_host
+            .take()
+            .unwrap_or_else(|| fsr::plugins::Host::start(&cwd))
+        {
             Ok(Some(h)) => {
                 let h = std::sync::Arc::new(h);
                 _host_keep = Some(h.listing.clone());
@@ -373,7 +379,9 @@ fn real_main() -> Result<i32> {
         Cmd::Upgrade => release::cmd_upgrade(&cwd).map(|_| 0),
         Cmd::Bump { kind, skip_git } => release::cmd_bump(&cwd, kind, skip_git).map(|_| 0),
         Cmd::Encrypt { file, yes } => encryption::cmd_encrypt(&file, yes).map(|_| 0),
-        Cmd::Decrypt { file, yes } => encryption::cmd_decrypt(&file, yes).map(|_| 0),
+        Cmd::Decrypt { file, out, yes } => {
+            encryption::cmd_decrypt(&file, out.as_deref(), yes).map(|_| 0)
+        }
         Cmd::Encryption { direction, yes } => {
             encryption::cmd_encryption(&cwd, direction.as_deref(), yes).map(|_| 0)
         }
