@@ -535,6 +535,27 @@ _⚡ Built by the [Freedcamp](https://freedcamp.com) team. Battle-tested on our 
 ### Similar
 - https://github.com/egoist/maid
 - https://github.com/joerdav/xc
+## Installing the Rust version
+
+Prebuilt binaries for macOS (Apple Silicon and Intel), Linux (x64 and arm64, static) and Windows (x64) are attached to every [GitHub Release](https://github.com/agrublev/freedcamp-script-runner/releases).
+
+macOS / Linux:
+
+```sh
+# pick: fsr-macos-arm64, fsr-macos-x64, fsr-linux-x64, fsr-linux-arm64
+curl -fsSL https://github.com/agrublev/freedcamp-script-runner/releases/latest/download/fsr-macos-arm64.tar.gz | tar xz
+sudo mv fsr-macos-arm64/fsr /usr/local/bin/fsr
+fsr --version
+```
+
+Windows: download `fsr-windows-x64.zip` from the release, unzip, and put `fsr.exe` on your `PATH`.
+
+From source (needs Rust): `cargo install --git https://github.com/agrublev/freedcamp-script-runner --branch feature/rust`
+
+Plugins still need Node 22+ installed; nothing else is required.
+
+Maintainers: pushing a `v*` tag runs `.github/workflows/release-rust.yml`, which builds all platforms and publishes the release with SHA-256 checksums.
+
 ## Building the Rust version (`feature/rust`)
 
 Requires Rust stable (install via [rustup](https://rustup.rs)).
