@@ -1,0 +1,93 @@
+name: Release (Rust binaries)
+
+# Push a tag like v7.7.0 to build every platform and attach the binaries to a
+# GitHub Release. "Run workflow" (manual) builds them as downloadable artifacts only.
+on:
+  push:
+    tags: ["v*"]            # builds + GitHub Release
+    branches: [feature/rust] # builds only (artifacts), while the port lives here
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    name: ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { target: x86_64-unknown-linux-musl,  os: ubuntu-latest,    name: fsr-linux-x64 }
+          - { target: aarch64-unknown-linux-musl, os: ubuntu-24.04-arm, name: fsr-linux-arm64 }
+          - { target: x86_64-apple-darwin,        os: macos-13,         name: fsr-macos-x64 }
+          - { target: aarch64-apple-darwin,       os: macos-latest,     name: fsr-macos-arm64 }
+          - { target: x86_64-pc-windows-msvc,     os: windows-latest,   name: fsr-windows-x64 }
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.target }}
+
+      - name: Install musl tools
+        if: contains(matrix.target, 'musl')
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq musl-tools
+
+      - name: Test
+        if: matrix.target == 'x86_64-unknown-linux-musl' || matrix.target == 'aarch64-apple-darwin'
+        run: cargo test
+
+      - name: Build
+        run: cargo build --release --locked --target ${{ matrix.target }}
+
+      - name: Package (unix)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          mkdir -p dist/${{ matrix.name }}
+          cp target/${{ matrix.target }}/release/fsr dist/${{ matrix.name }}/
+          cp Readme.md dist/${{ matrix.name }}/ 2>/dev/null || true
+          tar -C dist -czf dist/${{ matrix.name }}.tar.gz ${{ matrix.name }}
+          cd dist && shasum -a 256 ${{ matrix.name }}.tar.gz > ${{ matrix.name }}.tar.gz.sha256
+
+      - name: Package (windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force dist/${{ matrix.name }} | Out-Null
+          Copy-Item target/${{ matrix.target }}/release/fsr.exe dist/${{ matrix.name }}/
+          Copy-Item Readme.md dist/${{ matrix.name }}/ -ErrorAction SilentlyContinue
+          Compress-Archive -Path dist/${{ matrix.name }}/* -DestinationPath dist/${{ matrix.name }}.zip
+          $h = (Get-FileHash dist/${{ matrix.name }}.zip -Algorithm SHA256).Hash.ToLower()
+          "$h  ${{ matrix.name }}.zip" | Out-File -Encoding ascii dist/${{ matrix.name }}.zip.sha256
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.name }}
+          path: |
+            dist/*.tar.gz
+            dist/*.zip
+            dist/*.sha256
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: true
