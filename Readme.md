@@ -537,18 +537,19 @@ _⚡ Built by the [Freedcamp](https://freedcamp.com) team. Battle-tested on our 
 - https://github.com/joerdav/xc
 ## Installing the Rust version
 
-Prebuilt binaries for macOS (Apple Silicon and Intel), Linux (x64 and arm64, static) and Windows (x64) are attached to every [GitHub Release](https://github.com/agrublev/freedcamp-script-runner/releases).
-
 macOS / Linux:
 
 ```sh
-# pick: fsr-macos-arm64, fsr-macos-x64, fsr-linux-x64, fsr-linux-arm64
-curl -fsSL https://github.com/agrublev/freedcamp-script-runner/releases/latest/download/fsr-macos-arm64.tar.gz | tar xz
-sudo mv fsr-macos-arm64/fsr /usr/local/bin/fsr
-fsr --version
+curl -fsSL https://raw.githubusercontent.com/agrublev/freedcamp-script-runner/feature/rust/install.sh | sh
 ```
 
-Windows: download `fsr-windows-x64.zip` from the release, unzip, and put `fsr.exe` on your `PATH`.
+Windows (PowerShell):
+
+```powershell
+irm https://raw.githubusercontent.com/agrublev/freedcamp-script-runner/feature/rust/install.ps1 | iex
+```
+
+The installer picks the right binary for your OS/CPU from the latest [GitHub Release](https://github.com/agrublev/freedcamp-script-runner/releases), verifies its SHA-256, and installs to `~/.local/bin` (Windows: `%LOCALAPPDATA%\Programs\fsr`, added to PATH). Pin a version with `FSR_VERSION=v7.7.0`, change the folder with `FSR_INSTALL_DIR`. Re-run it to upgrade.
 
 From source (needs Rust): `cargo install --git https://github.com/agrublev/freedcamp-script-runner --branch feature/rust`
 
