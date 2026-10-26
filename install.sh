@@ -1,513 +1,81 @@
-#!/usr/bin/env bash
-set -euo pipefail
-APP=fsr
+#!/bin/sh
+# fsr installer for macOS and Linux.
+#   curl -fsSL https://raw.githubusercontent.com/agrublev/freedcamp-script-runner/feature/rust/install.sh | sh
+# Options (env): FSR_VERSION=v7.7.0 (default: latest), FSR_INSTALL_DIR=~/.local/bin
+set -eu
 
-MUTED='\033[0;2m'
-RED='\033[0;31m'
-ORANGE='\033[38;5;214m'
-NC='\033[0m' # No Color
+REPO="agrublev/freedcamp-script-runner"
+VERSION="${FSR_VERSION:-latest}"
+DIR="${FSR_INSTALL_DIR:-$HOME/.local/bin}"
 
-usage() {
-    cat <<EOF
-fsr Installer
+err() { printf '\033[31merror:\033[0m %s\n' "$1" >&2; exit 1; }
+need() { command -v "$1" >/dev/null 2>&1 || err "$1 is required"; }
 
-Usage: install.sh [options]
-
-Options:
-    -h, --help              Display this help message
-    -v, --version <version> Install a specific version (e.g., 7.4.0)
-    -b, --binary <path>     Install from a local binary instead of downloading
-        --no-modify-path    Don't modify shell config files (.zshrc, .bashrc, etc.)
-
-Examples:
-    curl -fsSL https://fsr.ai/install | bash
-    curl -fsSL https://fsr.ai/install | bash -s -- --version 7.4.0
-    ./install --binary /path/to/fsr
-EOF
-}
-
-requested_version=${VERSION:-}
-no_modify_path=false
-binary_path=""
-
-while [[ $# -gt 0 ]]; do
-    case "$1" in
-        -h|--help)
-            usage
-            exit 0
-            ;;
-        -v|--version)
-            if [[ -n "${2:-}" ]]; then
-                requested_version="$2"
-                shift 2
-            else
-                echo -e "${RED}Error: --version requires a version argument${NC}"
-                exit 1
-            fi
-            ;;
-        -b|--binary)
-            if [[ -n "${2:-}" ]]; then
-                binary_path="$2"
-                shift 2
-            else
-                echo -e "${RED}Error: --binary requires a path argument${NC}"
-                exit 1
-            fi
-            ;;
-        --no-modify-path)
-            no_modify_path=true
-            shift
-            ;;
-        *)
-            echo -e "${ORANGE}Warning: Unknown option '$1'${NC}" >&2
-            shift
-            ;;
-    esac
-done
-
-INSTALL_DIR=$HOME/.fsr/bin
-mkdir -p "$INSTALL_DIR"
-
-# If --binary is provided, skip all download/detection logic
-if [ -n "$binary_path" ]; then
-    if [ ! -f "$binary_path" ]; then
-        echo -e "${RED}Error: Binary not found at ${binary_path}${NC}"
-        exit 1
-    fi
-    specific_version="local"
-else
-    raw_os=$(uname -s)
-    os=$(echo "$raw_os" | tr '[:upper:]' '[:lower:]')
-    case "$raw_os" in
-      Darwin*) os="darwin" ;;
-      Linux*) os="linux" ;;
-      MINGW*|MSYS*|CYGWIN*) os="windows" ;;
-    esac
-
-    arch=$(uname -m)
-    if [[ "$arch" == "aarch64" ]]; then
-      arch="arm64"
-    fi
-    if [[ "$arch" == "x86_64" ]]; then
-      arch="x64"
-    fi
-
-    if [ "$os" = "darwin" ] && [ "$arch" = "x64" ]; then
-      rosetta_flag=$(sysctl -n sysctl.proc_translated 2>/dev/null || echo 0)
-      if [ "$rosetta_flag" = "1" ]; then
-        arch="arm64"
-      fi
-    fi
-
-    combo="$os-$arch"
-    case "$combo" in
-      linux-x64|linux-arm64|darwin-x64|darwin-arm64|windows-x64)
-        ;;
-      *)
-        echo -e "${RED}Unsupported OS/Arch: $os/$arch${NC}"
-        exit 1
-        ;;
-    esac
-
-    archive_ext=".zip"
-    if [ "$os" = "linux" ]; then
-      archive_ext=".tar.gz"
-    fi
-
-    is_musl=false
-    if [ "$os" = "linux" ]; then
-      if [ -f /etc/alpine-release ]; then
-        is_musl=true
-      fi
-
-      if command -v ldd >/dev/null 2>&1; then
-        if ldd --version 2>&1 | grep -qi musl; then
-          is_musl=true
-        fi
-      fi
-    fi
-
-    needs_baseline=false
-    if [ "$arch" = "x64" ]; then
-      if [ "$os" = "linux" ]; then
-        if ! grep -qwi avx2 /proc/cpuinfo 2>/dev/null; then
-          needs_baseline=true
-        fi
-      fi
-
-      if [ "$os" = "darwin" ]; then
-        avx2=$(sysctl -n hw.optional.avx2_0 2>/dev/null || echo 0)
-        if [ "$avx2" != "1" ]; then
-          needs_baseline=true
-        fi
-      fi
-
-      if [ "$os" = "windows" ]; then
-        ps="(Add-Type -MemberDefinition \"[DllImport(\"\"kernel32.dll\"\")] public static extern bool IsProcessorFeaturePresent(int ProcessorFeature);\" -Name Kernel32 -Namespace Win32 -PassThru)::IsProcessorFeaturePresent(40)"
-        out=""
-        if command -v powershell.exe >/dev/null 2>&1; then
-          out=$(powershell.exe -NoProfile -NonInteractive -Command "$ps" 2>/dev/null || true)
-        elif command -v pwsh >/dev/null 2>&1; then
-          out=$(pwsh -NoProfile -NonInteractive -Command "$ps" 2>/dev/null || true)
-        fi
-        out=$(echo "$out" | tr -d '\r' | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')
-        if [ "$out" != "true" ] && [ "$out" != "1" ]; then
-          needs_baseline=true
-        fi
-      fi
-    fi
-
-    target="$os-$arch"
-    if [ "$needs_baseline" = "true" ]; then
-      target="$target-baseline"
-    fi
-    if [ "$is_musl" = "true" ]; then
-      target="$target-musl"
-    fi
-
-    filename="$APP-$target$archive_ext"
-
-
-    if [ "$os" = "linux" ]; then
-        if ! command -v tar >/dev/null 2>&1; then
-             echo -e "${RED}Error: 'tar' is required but not installed.${NC}"
-             exit 1
-        fi
-    else
-        if ! command -v unzip >/dev/null 2>&1; then
-            echo -e "${RED}Error: 'unzip' is required but not installed.${NC}"
-            exit 1
-        fi
-    fi
-
-    if [ -z "$requested_version" ]; then
-        url="https://github.com/agrublev/freedcamp-script-runner/releases/latest/download/$filename"
-        specific_version=$(curl -s https://api.github.com/repos/agrublev/freedcamp-script-runner/releases/latest | sed -n 's/.*"tag_name": *"v\([^"]*\)".*/\1/p')
-
-        if [[ $? -ne 0 || -z "$specific_version" ]]; then
-            echo -e "${RED}Failed to fetch version information${NC}"
-            exit 1
-        fi
-    else
-        # Strip leading 'v' if present
-        requested_version="${requested_version#v}"
-        url="https://github.com/agrublev/freedcamp-script-runner/releases/download/v${requested_version}/$filename"
-        specific_version=$requested_version
-
-        # Verify the release exists before downloading
-        http_status=$(curl -sI -o /dev/null -w "%{http_code}" "https://github.com/agrublev/freedcamp-script-runner/releases/tag/v${requested_version}")
-        if [ "$http_status" = "404" ]; then
-            echo -e "${RED}Error: Release v${requested_version} not found${NC}"
-            echo -e "${MUTED}Available releases: https://github.com/agrublev/freedcamp-script-runner/releases${NC}"
-            exit 1
-        fi
-    fi
+case "$(uname -s)" in
+  Darwin) os=macos ;;
+  Linux) os=linux ;;
+  *) err "unsupported OS $(uname -s) (on Windows use install.ps1)" ;;
+esac
+case "$(uname -m)" in
+  x86_64 | amd64) arch=x64 ;;
+  arm64 | aarch64) arch=arm64 ;;
+  *) err "unsupported CPU $(uname -m)" ;;
+esac
+# Apple Silicon running under Rosetta reports x86_64; prefer the native build.
+if [ "$os" = macos ] && [ "$arch" = x64 ] && [ "$(sysctl -n sysctl.proc_translated 2>/dev/null || echo 0)" = 1 ]; then
+  arch=arm64
 fi
 
-print_message() {
-    local level=$1
-    local message=$2
-    local color=""
-
-    case $level in
-        info) color="${NC}" ;;
-        warning) color="${NC}" ;;
-        error) color="${RED}" ;;
-    esac
-
-    echo -e "${color}${message}${NC}"
-}
-
-check_version() {
-    if command -v fsr >/dev/null 2>&1; then
-        fsr_path=$(which fsr)
-
-        ## Check the installed version
-        installed_version=$(fsr --version 2>/dev/null || echo "")
-
-        if [[ "$installed_version" != "$specific_version" ]]; then
-            print_message info "${MUTED}Installed version: ${NC}$installed_version."
-        else
-            print_message info "${MUTED}Version ${NC}$specific_version${MUTED} already installed"
-            exit 0
-        fi
-    fi
-}
-
-unbuffered_sed() {
-    if echo | sed -u -e "" >/dev/null 2>&1; then
-        sed -nu "$@"
-    elif echo | sed -l -e "" >/dev/null 2>&1; then
-        sed -nl "$@"
-    else
-        local pad="$(printf "\n%512s" "")"
-        sed -ne "s/$/\\${pad}/" "$@"
-    fi
-}
-
-print_progress() {
-    local bytes="$1"
-    local length="$2"
-    [ "$length" -gt 0 ] || return 0
-
-    local width=50
-    local percent=$(( bytes * 100 / length ))
-    [ "$percent" -gt 100 ] && percent=100
-    local on=$(( percent * width / 100 ))
-    local off=$(( width - on ))
-
-    local filled=$(printf "%*s" "$on" "")
-    filled=${filled// /■}
-    local empty=$(printf "%*s" "$off" "")
-    empty=${empty// /･}
-
-    printf "\r${ORANGE}%s%s %3d%%${NC}" "$filled" "$empty" "$percent" >&4
-}
-
-download_with_progress() {
-    local url="$1"
-    local output="$2"
-
-    if [ -t 2 ]; then
-        exec 4>&2
-    else
-        exec 4>/dev/null
-    fi
-
-    local tmp_dir=${TMPDIR:-/tmp}
-    local basename="${tmp_dir}/fsr_install_$$"
-    local tracefile="${basename}.trace"
-
-    rm -f "$tracefile"
-    mkfifo "$tracefile"
-
-    # Hide cursor
-    printf "\033[?25l" >&4
-
-    trap "trap - RETURN; rm -f \"$tracefile\"; printf '\033[?25h' >&4; exec 4>&-" RETURN
-
-    (
-        curl --trace-ascii "$tracefile" -s -L -o "$output" "$url"
-    ) &
-    local curl_pid=$!
-
-    unbuffered_sed \
-        -e 'y/ACDEGHLNORTV/acdeghlnortv/' \
-        -e '/^0000: content-length:/p' \
-        -e '/^<= recv data/p' \
-        "$tracefile" | \
-    {
-        local length=0
-        local bytes=0
-
-        while IFS=" " read -r -a line; do
-            [ "${#line[@]}" -lt 2 ] && continue
-            local tag="${line[0]} ${line[1]}"
-
-            if [ "$tag" = "0000: content-length:" ]; then
-                length="${line[2]}"
-                length=$(echo "$length" | tr -d '\r')
-                bytes=0
-            elif [ "$tag" = "<= recv" ]; then
-                local size="${line[3]}"
-                bytes=$(( bytes + size ))
-                if [ "$length" -gt 0 ]; then
-                    print_progress "$bytes" "$length"
-                fi
-            fi
-        done
-    }
-
-    wait $curl_pid
-    local ret=$?
-    echo "" >&4
-    return $ret
-}
-
-download_and_install() {
-    print_message info "\n${MUTED}Installing ${NC}fsr ${MUTED}version: ${NC}$specific_version"
-    local tmp_dir="${TMPDIR:-/tmp}/fsr_install_$$"
-    mkdir -p "$tmp_dir"
-
-    if [[ "$os" == "windows" ]] || ! [ -t 2 ] || ! download_with_progress "$url" "$tmp_dir/$filename"; then
-        # Fallback to standard curl on Windows, non-TTY environments, or if custom progress fails
-        curl -# -L -o "$tmp_dir/$filename" "$url"
-    fi
-
-    if [ "$os" = "linux" ]; then
-        tar -xzf "$tmp_dir/$filename" -C "$tmp_dir"
-    else
-        unzip -q "$tmp_dir/$filename" -d "$tmp_dir"
-    fi
-
-    mv "$tmp_dir/fsr" "$INSTALL_DIR"
-    chmod 755 "${INSTALL_DIR}/fsr"
-    rm -rf "$tmp_dir"
-}
-
-install_from_binary() {
-    print_message info "\n${MUTED}Installing ${NC}fsr ${MUTED}from: ${NC}$binary_path"
-    cp "$binary_path" "${INSTALL_DIR}/fsr"
-    chmod 755 "${INSTALL_DIR}/fsr"
-}
-
-if [ -n "$binary_path" ]; then
-    install_from_binary
+name="fsr-$os-$arch"
+if [ -n "${FSR_BASE_URL:-}" ]; then
+  base="$FSR_BASE_URL"
+elif [ "$VERSION" = latest ]; then
+  base="https://github.com/$REPO/releases/latest/download"
 else
-    check_version
-    download_and_install
+  base="https://github.com/$REPO/releases/download/$VERSION"
 fi
 
-# Detect where npm (or the user's package manager) puts global binaries.
-# This is the standard location used by `npm install -g`.
-get_npm_global_bin() {
-    if command -v npm >/dev/null 2>&1; then
-        local prefix
-        prefix=$(npm config get prefix 2>/dev/null || true)
-        if [ -n "$prefix" ] && [ "$prefix" != "undefined" ]; then
-            echo "$prefix/bin"
-            return 0
-        fi
-    fi
-    return 1
-}
+if command -v curl >/dev/null 2>&1; then
+  fetch() { curl -fsSL "$1" -o "$2"; }
+elif command -v wget >/dev/null 2>&1; then
+  fetch() { wget -qO "$2" "$1"; }
+else
+  err "curl or wget is required"
+fi
+need tar
 
-# Register fsr in the user's bin folder, preferring the exact same location
-# that `npm install -g` would use on this machine.
-register_user_bin() {
-    local target_bin=""
-    local source_desc=""
+tmp="$(mktemp -d)"
+trap 'rm -rf "$tmp"' EXIT INT TERM
 
-    if target_bin=$(get_npm_global_bin); then
-        source_desc="npm global bin (from 'npm config get prefix')"
-    else
-        target_bin="$HOME/.local/bin"
-        source_desc="~/.local/bin (standard user bin fallback)"
-    fi
+printf 'Downloading %s (%s)...\n' "$name" "$VERSION"
+fetch "$base/$name.tar.gz" "$tmp/$name.tar.gz" || err "download failed: $base/$name.tar.gz"
 
-    mkdir -p "$target_bin" 2>/dev/null || true
+if fetch "$base/$name.tar.gz.sha256" "$tmp/sum" 2>/dev/null; then
+  want="$(cut -d' ' -f1 <"$tmp/sum")"
+  if command -v sha256sum >/dev/null 2>&1; then
+    got="$(sha256sum "$tmp/$name.tar.gz" | cut -d' ' -f1)"
+  else
+    got="$(shasum -a 256 "$tmp/$name.tar.gz" | cut -d' ' -f1)"
+  fi
+  [ "$want" = "$got" ] || err "checksum mismatch (expected $want, got $got)"
+else
+  echo "warning: no checksum file found, skipping verification" >&2
+fi
 
-    if [ -w "$target_bin" ]; then
-        ln -sf "${INSTALL_DIR}/fsr" "$target_bin/fsr"
-        print_message info "${MUTED}Registered fsr → ${NC}$target_bin/fsr"
-        print_message info "${MUTED}  (using $source_desc)${NC}"
-    else
-        print_message warning "Could not write symlink into $target_bin"
-        print_message info "Binary lives at: ${INSTALL_DIR}/fsr"
-        print_message info "Manual link:"
-        print_message info "  ln -sf ${INSTALL_DIR}/fsr $target_bin/fsr"
-    fi
-}
+tar -xzf "$tmp/$name.tar.gz" -C "$tmp"
+mkdir -p "$DIR"
+install -m 755 "$tmp/$name/fsr" "$DIR/fsr" 2>/dev/null || { cp "$tmp/$name/fsr" "$DIR/fsr"; chmod 755 "$DIR/fsr"; }
+# Downloaded binaries can carry macOS quarantine; clear it so Gatekeeper doesn't block.
+[ "$os" = macos ] && xattr -d com.apple.quarantine "$DIR/fsr" 2>/dev/null || true
 
-# Always attempt registration (symlink only).
-# This happens even with --no-modify-path.
-register_user_bin
-
-
-add_to_path() {
-    local config_file=$1
-    local command=$2
-
-    if grep -Fxq "$command" "$config_file"; then
-        print_message info "Command already exists in $config_file, skipping write."
-    elif [[ -w $config_file ]]; then
-        echo -e "\n# fsr" >> "$config_file"
-        echo "$command" >> "$config_file"
-        print_message info "${MUTED}Successfully added ${NC}fsr ${MUTED}to \$PATH in ${NC}$config_file"
-    else
-        print_message warning "Manually add the directory to $config_file (or similar):"
-        print_message info "  $command"
-    fi
-}
-
-XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
-
-current_shell=$(basename "$SHELL")
-case $current_shell in
-    fish)
-        config_files="$HOME/.config/fish/config.fish"
-    ;;
-    zsh)
-        config_files="${ZDOTDIR:-$HOME}/.zshrc ${ZDOTDIR:-$HOME}/.zshenv $XDG_CONFIG_HOME/zsh/.zshrc $XDG_CONFIG_HOME/zsh/.zshenv"
-    ;;
-    bash)
-        config_files="$HOME/.bashrc $HOME/.bash_profile $HOME/.profile $XDG_CONFIG_HOME/bash/.bashrc $XDG_CONFIG_HOME/bash/.bash_profile"
-    ;;
-    ash)
-        config_files="$HOME/.ashrc $HOME/.profile /etc/profile"
-    ;;
-    sh)
-        config_files="$HOME/.ashrc $HOME/.profile /etc/profile"
-    ;;
-    *)
-        # Default case if none of the above matches
-        config_files="$HOME/.bashrc $HOME/.bash_profile $XDG_CONFIG_HOME/bash/.bashrc $XDG_CONFIG_HOME/bash/.bash_profile"
+printf '\033[32m✓\033[0m installed %s\n' "$("$DIR/fsr" --version 2>/dev/null || echo fsr) -> $DIR/fsr"
+case ":$PATH:" in
+  *":$DIR:"*) ;;
+  *)
+    echo
+    echo "$DIR is not on your PATH. Add it:"
+    echo "  bash/zsh: echo 'export PATH=\"$DIR:\$PATH\"' >> ~/.zshrc   (or ~/.bashrc)"
+    echo "  fish:     fish_add_path $DIR"
     ;;
 esac
-
-if [[ "$no_modify_path" != "true" ]]; then
-    config_file=""
-    for file in $config_files; do
-        if [[ -f $file ]]; then
-            config_file=$file
-            break
-        fi
-    done
-
-    if [[ -z $config_file ]]; then
-        print_message warning "No config file found for $current_shell. You may need to manually add to PATH:"
-        print_message info "  export PATH=$INSTALL_DIR:\$PATH"
-    elif [[ ":$PATH:" != *":$INSTALL_DIR:"* ]]; then
-        case $current_shell in
-            fish)
-                add_to_path "$config_file" "fish_add_path $INSTALL_DIR"
-            ;;
-            zsh)
-                add_to_path "$config_file" "export PATH=$INSTALL_DIR:\$PATH"
-            ;;
-            bash)
-                add_to_path "$config_file" "export PATH=$INSTALL_DIR:\$PATH"
-            ;;
-            ash)
-                add_to_path "$config_file" "export PATH=$INSTALL_DIR:\$PATH"
-            ;;
-            sh)
-                add_to_path "$config_file" "export PATH=$INSTALL_DIR:\$PATH"
-            ;;
-            *)
-                export PATH=$INSTALL_DIR:$PATH
-                print_message warning "Manually add the directory to $config_file (or similar):"
-                print_message info "  export PATH=$INSTALL_DIR:\$PATH"
-            ;;
-        esac
-    fi
-fi
-
-if [ -n "${GITHUB_ACTIONS-}" ] && [ "${GITHUB_ACTIONS}" == "true" ]; then
-    echo "$INSTALL_DIR" >> $GITHUB_PATH
-    print_message info "Added $INSTALL_DIR to \$GITHUB_PATH"
-fi
-
-# Final check — show the user where fsr ended up
-echo ""
-if command -v fsr >/dev/null 2>&1; then
-    fsr_path=$(command -v fsr)
-    print_message info "${MUTED}✓ fsr is now available${NC}"
-    print_message info "  ${fsr_path}"
-else
-    print_message warning "fsr installed to ${INSTALL_DIR}/fsr but not yet in this shell's PATH."
-    print_message info "Start a new terminal session, or run:"
-    print_message info "  source ~/.zshrc   # (or equivalent for your shell)"
-fi
-
-echo -e ""
-echo -e "${MUTED}fsr installed!${NC}"
-echo -e ""
-echo -e "Get started:"
-echo -e ""
-echo -e "  cd <project>   ${MUTED}# Go to your project${NC}"
-echo -e "  fsr generate   ${MUTED}# Import package.json scripts to fscripts.md${NC}"
-echo -e "  fsr            ${MUTED}# Interactive task picker${NC}"
-echo -e ""
-echo -e "${MUTED}Docs: ${NC}https://fsr.ai"
-echo -e ""
+command -v node >/dev/null 2>&1 || echo "note: plugins need Node 22+ (core fsr works without it)"
