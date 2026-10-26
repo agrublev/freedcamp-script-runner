@@ -10,7 +10,8 @@
         "start": "yarn fsr",
         "test": "vitest run",
         "list": "yarn fsr start",
-        "test:coverage": "vitest run --coverage"
+        "test:coverage": "vitest run --coverage",
+        "release": "sh scripts/release.sh"
     },
     "fscripts": {
         "encryptedFiles": [
