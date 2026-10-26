@@ -170,14 +170,18 @@ fn real_main() -> Result<i32> {
     let cli = Cli::parse_from(std::iter::once(argv[0].clone()).chain(rest));
     let cwd = std::env::current_dir()?;
     let cache = Cache::new(fsr::cache::default_dir());
+    // One Node host per run: the menu reuses it instead of a separate `list` spawn.
+    let mut pre_host: Option<Result<Option<fsr::plugins::Host>>> = None;
     let cmd = match cli.cmd {
         Some(c) => c,
         None if !tty() => Cmd::List { plain: true },
         None => match {
-            let listing = fsr::plugins::list(&cwd).unwrap_or_else(|e| {
-                eprintln!("[fsr] plugins disabled: {e:#}");
-                Default::default()
-            });
+            let h = fsr::plugins::Host::start(&cwd);
+            let listing = match &h {
+                Ok(Some(h)) => h.listing.clone(),
+                _ => Default::default(),
+            };
+            pre_host = Some(h);
             let builtin = fsr::ui::menu::MenuItem {
                 name: "plugin:deployment".into(),
                 message: "Deploy your application to various environments".into(),
@@ -249,7 +253,7 @@ fn real_main() -> Result<i32> {
             | Cmd::RunP { .. }
             | Cmd::External(_)
     ) {
-        match fsr::plugins::Host::start(&cwd) {
+        match pre_host.take().unwrap_or_else(|| fsr::plugins::Host::start(&cwd)) {
             Ok(Some(h)) => {
                 let h = std::sync::Arc::new(h);
                 _host_keep = Some(h.listing.clone());
