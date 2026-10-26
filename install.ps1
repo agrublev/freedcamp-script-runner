@@ -17,7 +17,11 @@ try {
   $zip = Join-Path $tmp "$name.zip"
   Invoke-WebRequest "$base/$name.zip" -OutFile $zip -UseBasicParsing
   try {
-    $want = ((Invoke-WebRequest "$base/$name.zip.sha256" -UseBasicParsing).Content -split '\s+')[0].Trim()
+    # Save to a file: GitHub serves .sha256 as octet-stream, so .Content would be
+    # a byte[] on Windows PowerShell 5.1 and never match.
+    $sumFile = Join-Path $tmp "$name.zip.sha256"
+    Invoke-WebRequest "$base/$name.zip.sha256" -OutFile $sumFile -UseBasicParsing
+    $want = ((Get-Content $sumFile -Raw).Trim() -split '\s+')[0].ToLower()
     $got = (Get-FileHash $zip -Algorithm SHA256).Hash.ToLower()
     if ($want -ne $got) { throw "checksum mismatch (expected $want, got $got)" }
   } catch [System.Net.WebException] { Write-Warning "no checksum file found, skipping verification" }
