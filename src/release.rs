@@ -60,6 +60,53 @@ pub fn cmd_branch(cwd: &Path) -> Result<()> {
     Ok(())
 }
 
+/// Set `[package] version` in Cargo.toml (and the package's Cargo.lock entry)
+/// to match package.json. Returns false when there is no Cargo.toml.
+pub fn sync_cargo_version(cwd: &Path, version: &str) -> Result<bool> {
+    let toml_path = cwd.join("Cargo.toml");
+    let Ok(toml) = std::fs::read_to_string(&toml_path) else {
+        return Ok(false);
+    };
+    let (mut in_pkg, mut name, mut done) = (false, None::<String>, false);
+    let mut out = String::with_capacity(toml.len());
+    for line in toml.split_inclusive('\n') {
+        let t = line.trim();
+        if t.starts_with('[') {
+            in_pkg = t == "[package]";
+        } else if in_pkg {
+            if let Some(v) = t
+                .strip_prefix("name")
+                .map(str::trim_start)
+                .and_then(|r| r.strip_prefix('='))
+            {
+                name = Some(v.trim().trim_matches('"').to_string());
+            } else if !done && t.starts_with("version") && t[7..].trim_start().starts_with('=') {
+                let nl = if line.ends_with('\n') { "\n" } else { "" };
+                out.push_str(&format!("version = \"{version}\"{nl}"));
+                done = true;
+                continue;
+            }
+        }
+        out.push_str(line);
+    }
+    if !done {
+        return Ok(false);
+    }
+    fsutil::write_atomic(&toml_path, out.as_bytes())?;
+    let lock_path = cwd.join("Cargo.lock");
+    if let (Some(name), Ok(lock)) = (name, std::fs::read_to_string(&lock_path)) {
+        let needle = format!("name = \"{name}\"\nversion = \"");
+        if let Some(i) = lock.find(&needle) {
+            let start = i + needle.len();
+            if let Some(end) = lock[start..].find('"') {
+                let new = format!("{}{version}{}", &lock[..start], &lock[start + end..]);
+                fsutil::write_atomic(&lock_path, new.as_bytes())?;
+            }
+        }
+    }
+    Ok(true)
+}
+
 /// `fsr bump [type] [--skip-git]` (bump.js).
 pub fn cmd_bump(cwd: &Path, kind: Option<String>, skip_git: bool) -> Result<()> {
     let pkg = cwd.join("package.json");
@@ -96,6 +143,9 @@ pub fn cmd_bump(cwd: &Path, kind: Option<String>, skip_git: bool) -> Result<()> 
         .as_str()
         .unwrap_or("")
         .to_string();
+    if sync_cargo_version(cwd, &version)? {
+        println!("Cargo.toml version -> {version}");
+    }
     if tag {
         let desc: String = Input::new()
             .with_prompt("Describe what was changed (optional)")
@@ -194,6 +244,27 @@ pub fn cmd_commit(cwd: &Path, yes: bool) -> Result<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn sync_cargo_version_updates_toml_and_lock() {
+        let d = tempfile::tempdir().unwrap();
+        std::fs::write(
+            d.path().join("Cargo.toml"),
+            "[package]\nname = \"fsr\"\nversion = \"1.0.0\"\n\n[dependencies]\nfoo = { version = \"2\" }\n",
+        )
+        .unwrap();
+        std::fs::write(
+            d.path().join("Cargo.lock"),
+            "[[package]]\nname = \"foo\"\nversion = \"2.0.0\"\n\n[[package]]\nname = \"fsr\"\nversion = \"1.0.0\"\n",
+        )
+        .unwrap();
+        assert!(sync_cargo_version(d.path(), "1.2.3").unwrap());
+        let t = std::fs::read_to_string(d.path().join("Cargo.toml")).unwrap();
+        assert!(t.contains("version = \"1.2.3\"") && t.contains("foo = { version = \"2\" }"));
+        let l = std::fs::read_to_string(d.path().join("Cargo.lock")).unwrap();
+        assert!(l.contains("name = \"fsr\"\nversion = \"1.2.3\"") && l.contains("2.0.0"));
+        assert!(!sync_cargo_version(tempfile::tempdir().unwrap().path(), "1.0.0").unwrap());
+    }
+
     #[test]
     fn upgrade_plan_respects_ignore() {
         let pkg = serde_json::json!({"dependencies": {"a": "1", "b": "1"}, "devDependencies": {"c": "1"}, "fscripts": {"ignore-upgrade": ["b", "c"]}});
