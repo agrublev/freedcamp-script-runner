@@ -540,24 +540,24 @@ _⚡ Built by the [Freedcamp](https://freedcamp.com) team. Battle-tested on our 
 macOS / Linux:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/agrublev/freedcamp-script-runner/feature/rust/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/agrublev/freedcamp-script-runner/Development/install.sh | sh
 ```
 
 Windows (PowerShell):
 
 ```powershell
-irm https://raw.githubusercontent.com/agrublev/freedcamp-script-runner/feature/rust/install.ps1 | iex
+irm https://raw.githubusercontent.com/agrublev/freedcamp-script-runner/Development/install.ps1 | iex
 ```
 
 The installer picks the right binary for your OS/CPU from the latest [GitHub Release](https://github.com/agrublev/freedcamp-script-runner/releases), verifies its SHA-256, and installs to `~/.local/bin` (Windows: `%LOCALAPPDATA%\Programs\fsr`, added to PATH). Pin a version with `FSR_VERSION=v7.7.0`, change the folder with `FSR_INSTALL_DIR`. Re-run it to upgrade.
 
-From source (needs Rust): `cargo install --git https://github.com/agrublev/freedcamp-script-runner --branch feature/rust`
+From source (needs Rust): `cargo install --git https://github.com/agrublev/freedcamp-script-runner --branch Development`
 
 Plugins still need Node 22+ installed; nothing else is required.
 
 Maintainers: pushing a `v*` tag runs `.github/workflows/release-rust.yml`, which builds all platforms and publishes the release with SHA-256 checksums.
 
-## Building the Rust version (`feature/rust`)
+## Building the Rust version
 
 Requires Rust stable (install via [rustup](https://rustup.rs)).
 

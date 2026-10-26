@@ -1,6 +1,6 @@
 #!/bin/sh
 # fsr installer for macOS and Linux.
-#   curl -fsSL https://raw.githubusercontent.com/agrublev/freedcamp-script-runner/feature/rust/install.sh | sh
+#   curl -fsSL https://raw.githubusercontent.com/agrublev/freedcamp-script-runner/Development/install.sh | sh
 # Options (env): FSR_VERSION=v7.7.0 (default: latest), FSR_INSTALL_DIR=~/.local/bin
 set -eu
 

@@ -1,5 +1,5 @@
 # fsr installer for Windows.
-#   irm https://raw.githubusercontent.com/agrublev/freedcamp-script-runner/feature/rust/install.ps1 | iex
+#   irm https://raw.githubusercontent.com/agrublev/freedcamp-script-runner/Development/install.ps1 | iex
 # Options (env): $env:FSR_VERSION = "v7.7.0" (default latest), $env:FSR_INSTALL_DIR
 $ErrorActionPreference = "Stop"
 $repo = "agrublev/freedcamp-script-runner"
