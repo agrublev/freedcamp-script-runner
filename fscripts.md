@@ -26,15 +26,16 @@
 ## awesome
 
 ```bash
+echo "Start Awesome:"
 sleep 2
-echo "----"
+echo "End Awesome"
 ```
 
 ## env:test
 
 ```javascript
 import "dotenv";
-console.log(process.env.NODE_ENV);
+console.log(`The process.env.NODE_ENV is ${process.env.NODE_ENV}`);
 ```
 
 # Build
