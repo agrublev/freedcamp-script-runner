@@ -1,6 +1,6 @@
 [package]
 name = "fsr"
-version = "7.7.2"
+version = "7.7.3"
 description = "Runs scripts documented in fscripts.md (Rust port)"
 license = "MIT"
 edition = "2024"
