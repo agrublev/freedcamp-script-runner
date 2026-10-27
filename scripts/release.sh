@@ -1,7 +1,7 @@
 #!/bin/sh
-# Release fsr: bump Cargo.toml + Cargo.lock, commit, tag vX.Y.Z, push. The tag
-# push triggers .github/workflows/release-rust.yml, which builds all platforms
-# and publishes the GitHub Release the installers download from.
+# Release fsr: bump Cargo.toml + Cargo.lock + package.json, commit, tag vX.Y.Z,
+# and push. The tag push triggers .github/workflows/release-rust.yml, which
+# builds all platforms and publishes the GitHub Release the installers download.
 #
 #   scripts/release.sh patch|minor|major|X.Y.Z [--yes] [--no-test] [--watch] [--dry-run]
 set -eu
@@ -47,6 +47,7 @@ git ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null 2>&1 && err 
 
 echo "Release $tag on $branch"
 echo "  Cargo.toml   $cur -> $new"
+echo "  package.json $cur -> $new"
 [ "$dry" = 1 ] && { echo "(dry run, nothing changed)"; exit 0; }
 if [ "$yes" != 1 ]; then
   printf 'Continue? [y/N] '
@@ -54,24 +55,26 @@ if [ "$yes" != 1 ]; then
   case "$ans" in y | Y | yes) ;; *) echo "Aborted."; exit 1 ;; esac
 fi
 
-# Bump the two files (perl: same behaviour on macOS and Linux).
+# Bump every version source (perl: same behaviour on macOS and Linux).
 command -v perl >/dev/null 2>&1 || err "perl is required"
 export NEW="$new"
 perl -0pi -e 's/(\[package\][^\[]*?\nversion\s*=\s*")[^"]*"/${1}$ENV{NEW}"/' Cargo.toml
 name="$(perl -0ne 'print $1 if /\[package\][^\[]*?\nname\s*=\s*"([^"]*)"/' Cargo.toml)"
 export NAME="$name"
 [ -f Cargo.lock ] && perl -0pi -e 's/(\nname = "\Q$ENV{NAME}\E"\nversion = ")[^"]*"/${1}$ENV{NEW}"/' Cargo.lock
+[ -f package.json ] && perl -0pi -e 's/("version"\s*:\s*")[^"]*"/${1}$ENV{NEW}"/' package.json
 
 grep -q "^version = \"$new\"" Cargo.toml || err "failed to update Cargo.toml"
+[ -f package.json ] && grep -q "\"version\": \"$new\"" package.json || err "failed to update package.json"
 
-restore() { git checkout -- Cargo.toml Cargo.lock 2>/dev/null; }
+restore() { git checkout -- Cargo.toml Cargo.lock package.json 2>/dev/null; }
 if [ "$test" = 1 ]; then
   echo "Running cargo test..."
   cargo test --quiet || { restore; err "tests failed; versions restored"; }
 fi
 cargo metadata --locked --format-version 1 >/dev/null || { restore; err "Cargo.lock out of date; versions restored"; }
 
-git add Cargo.toml Cargo.lock
+git add Cargo.toml Cargo.lock package.json
 git commit -q -m "VERSION $new"
 git tag -a "$tag" -m "VERSION $new"
 git push -q origin "$branch"
