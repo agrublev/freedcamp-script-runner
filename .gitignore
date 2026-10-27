@@ -4,6 +4,10 @@
 # Amp orb portal registrations
 .amp/portals/*
 
+# Landing page build output and deps (vite)
+website/dist/
+website/node_modules/
+
 # Environment
 .env
 .env.local
