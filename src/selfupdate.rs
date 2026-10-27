@@ -199,15 +199,16 @@ pub fn cmd_selfupdate(yes: bool) -> Result<i32> {
         bail!("extraction failed with code {}", crate::runner::exit_code(status));
     }
     let inner = if ext == "zip" { "fsr.exe" } else { "fsr" };
-    let new_bin = out_dir.join(os).join("fsr").join(inner);
-    let new_bin = if new_bin.exists() {
-        new_bin
-    } else {
-        out_dir.join(inner)
-    };
-    if !new_bin.exists() {
+    // The archive nests the binary under an asset-named folder (e.g.
+    // fsr-linux-x64/fsr); find it wherever it sits.
+    let new_bin = walkdir::WalkDir::new(&out_dir)
+        .into_iter()
+        .filter_map(|e| e.ok())
+        .find(|e| e.file_type().is_file() && e.file_name().to_string_lossy() == inner)
+        .map(|e| e.into_path());
+    let Some(new_bin) = new_bin else {
         bail!("archive did not contain the expected binary ({inner})");
-    }
+    };
 
     let exe = std::env::current_exe().context("locating the running fsr binary")?;
     if !yes {
