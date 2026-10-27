@@ -372,8 +372,8 @@ your-command --here
 
 ```javascript
 // 🟨 full Node.js — executed directly
-import { something } from "./lib/index.js";
-await something();
+import { deploy } from "./scripts/deploy.js";
+await deploy("staging");
 ```
 
 -   🗂️ **Groups** = top-level `#` headings
