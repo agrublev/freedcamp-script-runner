@@ -25,6 +25,23 @@ import commit from "./lib/git/commit.js";
 const taskName = chalk.rgb(39, 173, 96).bold.underline;
 const textDescription = chalk.rgb(159, 161, 181);
 
+// Shared positional + options for `encrypt` / `decrypt`; omitting the file falls
+// back to the file picker. Nothing prompts, so --pass (or $FSR_PASS) is required.
+const encryptionOptions = (y, describe) =>
+    y
+        .positional("file", { describe, type: "string" })
+        .option("pass", {
+            alias: "p",
+            type: "string",
+            description: "Password — required, or set $FSR_PASS instead"
+        })
+        .option("force", {
+            alias: "f",
+            type: "boolean",
+            description: "Overwrite the target without asking",
+            default: false
+        });
+
 /**
  * Single source of truth for all built-in fsr commands.
  *
@@ -115,20 +132,20 @@ const COMMANDS = [
         menu: true
     },
     {
-        cmd: "encryption",
-        desc: "Encrypt or decrypt secret files interactively",
-        handler: async () => encrypt.init(),
-        menu: true
+        cmd: "encrypt [file]",
+        desc: "Encrypt a secret file with a password",
+        builder: (y) => encryptionOptions(y, "file to encrypt"),
+        handler: async (argv) =>
+            encrypt.run({ file: argv.file, pass: argv.pass, force: argv.force }),
+        examples: [["$0 encrypt .env --pass s3cret", "Encrypt .env into .env.encrypted"]]
     },
     {
-        cmd: "encrypt",
-        desc: "Encrypt secret files",
-        handler: async () => encrypt.encrypt()
-    },
-    {
-        cmd: "decrypt",
-        desc: "Decrypt secret files",
-        handler: async () => encrypt.decrypt()
+        cmd: "decrypt [file]",
+        desc: "Decrypt a secret file with a password",
+        builder: (y) => encryptionOptions(y, "file to decrypt"),
+        handler: async (argv) =>
+            encrypt.run({ file: argv.file, pass: argv.pass, force: argv.force, decrypt: true }),
+        examples: [["$0 decrypt .env --pass s3cret", "Decrypt .env.encrypted back into .env"]]
     },
     {
         cmd: "clear",

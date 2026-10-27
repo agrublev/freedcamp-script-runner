@@ -95,9 +95,8 @@ Real Node.js. Executed directly. Documented inline. No extra files. 💥
 | ✨ `fsr generate`    | import `package.json` scripts → `fscripts.md`                       |
 | 📋 `fsr toc`         | generate / update Table of Contents in `fscripts.md`                |
 | 📦 `fsr scripts`     | interactive picker for `package.json` scripts only                  |
-| 🔐 `fsr encrypt`     | password-protect secret file(s)                                     |
-| 🔓 `fsr decrypt`     | decrypt secret file(s)                                              |
-| 🔒 `fsr encryption`  | interactive encrypt/decrypt menu                                    |
+| 🔐 `fsr encrypt <file> --pass` | password-protect a secret file (`--force` to replace)      |
+| 🔓 `fsr decrypt <file> --pass` | decrypt it again (`--force` to replace)                    |
 | 🚀 `fsr bump`        | bump version in `package.json` + beautify it                        |
 | ⬆️ `fsr upgrade`     | upgrade all packages (respects `ignore-upgrade` list)               |
 | 🩺 `fsr doctor`      | run diagnostics & health check                                      |
@@ -132,8 +131,35 @@ No extra config. No setup. Just works. ✅
 Keep secrets safe without a third-party vault 🔒:
 
 ```bash
-fsr encrypt    # 🔐 password-protect any file(s)
-fsr decrypt    # 🔓 unlock them when you need them
+fsr encrypt .env --pass s3cret            # 🔐 .env  →  .env.encrypted
+fsr decrypt .env --pass s3cret            # 🔓 .env.encrypted  →  .env
+```
+
+Nothing prompts — the password is always a parameter, so it works unattended in
+CI, hooks, and scripts. Drop the file to pick one with the file picker instead:
+
+```bash
+fsr encrypt --pass s3cret    # 🔐 pick the file, password still comes from the flag
+```
+
+An existing target is never clobbered silently; add `--force` / `-f` when you
+mean to replace it. ⚠️
+
+> 🔑 `--pass` lands in your shell history and is visible to `ps`. For anything
+> sensitive, export `FSR_PASS` instead — it is picked up automatically.
+
+It also runs **standalone**, with no `fsr` and no arguments parsing on top:
+
+```bash
+node lib/encryption/encryption.js .env --pass s3cret
+node lib/encryption/encryption.js .env --pass s3cret --decrypt
+```
+
+Files are AES-256-CBC in the standard OpenSSL container, so a secret is always
+recoverable with nothing but a password — even without this tool: 🛡️
+
+```bash
+openssl enc -aes-256-cbc -md md5 -base64 -A -d -pass pass:s3cret -in .env.encrypted
 ```
 
 Perfect for `.env` files, credentials, config secrets. Built right in. No extra tools needed. 🛡️

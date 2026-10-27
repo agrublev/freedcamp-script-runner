@@ -1,72 +1,36 @@
 /**
  * Tests for lib/encryption/encryption.js
  *
- * Default export object: { encrypt, decrypt, init, getPass, toEncrypt, encryptedFiles }
+ * Default export object: { encrypt, decrypt, run, cli }
  *
- * Strategy: real AES round-trip through real temp files (the underlying
- * lib/utils/encryption.js crypto is exercised for real). Only the interactive
- * bits are mocked: `inquirer` (password / confirm / select prompts) and
- * `fc-filepick` (file picker). When a password and explicit file paths are
- * passed, neither the password prompt nor the picker is invoked.
+ * Nothing in this module prompts — the password is always a parameter, and an
+ * existing target is an error unless `force` is set. Real AES round-trips run
+ * through real temp files (lib/utils/encryption.js is exercised for real); only
+ * `fc-filepick` is mocked, and it is reached solely when no file is supplied.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import fs from "fs";
 import os from "os";
 import path from "path";
-import { encrypt as realEncrypt } from "../../lib/utils/encryption.js";
+import { encrypt as realEncrypt, decrypt as realDecrypt } from "../../lib/utils/encryption.js";
 
-const promptMock = vi.fn();
-
-vi.mock("inquirer", () => ({
-    default: { prompt: (...args) => promptMock(...args) }
-}));
-
-// fc-filepick is only reached when file args are null; mock it so import is safe
-// and so any accidental invocation is observable rather than opening a real picker.
 vi.mock("fc-filepick", () => ({
     default: { default: vi.fn() }
 }));
 
 let encryption;
 let tmpDir;
-// Files the source forces into process.cwd() (it rejoins picked basenames to
-// scriptsDir = cwd). Tracked here so they are always cleaned up.
-let cwdArtifacts = [];
 
 beforeEach(async () => {
-    promptMock.mockReset();
-    cwdArtifacts = [];
     tmpDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), "fsr-enc-test-"));
     encryption = (await import("../../lib/encryption/encryption.js")).default;
+    delete process.env.FSR_PASS;
 });
 
 afterEach(async () => {
     await fs.promises.rm(tmpDir, { recursive: true, force: true });
-    for (const f of cwdArtifacts) {
-        try { fs.rmSync(f, { force: true }); } catch { /* best-effort */ }
-    }
+    delete process.env.FSR_PASS;
     vi.clearAllMocks();
-});
-
-describe("getPass", () => {
-    it("resolves the password entered at the prompt", async () => {
-        promptMock.mockResolvedValueOnce({ pass: "super-secret" });
-        const pass = await encryption.getPass();
-        expect(pass).toBe("super-secret");
-        expect(promptMock).toHaveBeenCalledTimes(1);
-    });
-});
-
-describe("toEncrypt", () => {
-    it("returns true when the user selects 'encrypt'", async () => {
-        promptMock.mockResolvedValueOnce({ encryptDecrypt: "encrypt" });
-        expect(await encryption.toEncrypt()).toBe(true);
-    });
-
-    it("returns false when the user selects 'decrypt'", async () => {
-        promptMock.mockResolvedValueOnce({ encryptDecrypt: "decrypt" });
-        expect(await encryption.toEncrypt()).toBe(false);
-    });
 });
 
 describe("encrypt + decrypt round-trip", () => {
@@ -77,279 +41,292 @@ describe("encrypt + decrypt round-trip", () => {
         const restoredFile = path.join(tmpDir, "config.restored.env");
         fs.writeFileSync(decryptedFile, plaintext);
 
-        // explicit pass + paths => no prompt, no file picker
         await encryption.encrypt("pw123", encryptedFile, decryptedFile);
 
         expect(fs.existsSync(encryptedFile)).toBe(true);
-        const ciphertext = fs.readFileSync(encryptedFile, "utf8");
-        expect(ciphertext).not.toContain("postgres://"); // actually encrypted
+        expect(fs.readFileSync(encryptedFile, "utf8")).not.toContain("postgres://");
 
         await encryption.decrypt("pw123", encryptedFile, restoredFile);
 
         expect(fs.readFileSync(restoredFile, "utf8")).toBe(plaintext);
-        // pure path: neither prompt nor picker was used
-        expect(promptMock).not.toHaveBeenCalled();
+    });
+
+    it("preserves binary content byte-for-byte", async () => {
+        const binary = Buffer.from([0x00, 0xff, 0x50, 0x4b, 0x03, 0x04, 0x00, 0x7f]);
+        const decryptedFile = path.join(tmpDir, "archive.zip");
+        const encryptedFile = path.join(tmpDir, "archive.zip.encrypted");
+        const restoredFile = path.join(tmpDir, "archive.restored.zip");
+        fs.writeFileSync(decryptedFile, binary);
+
+        await encryption.encrypt("pw123", encryptedFile, decryptedFile);
+        await encryption.decrypt("pw123", encryptedFile, restoredFile);
+
+        expect(fs.readFileSync(restoredFile).equals(binary)).toBe(true);
     });
 });
 
-describe("encrypt overwrite guard", () => {
-    it("does NOT overwrite an existing encrypted file when the user declines", async () => {
+// ────────────────────────────────────────────────────────────────────────────
+// Password is a parameter, never a prompt.
+// ────────────────────────────────────────────────────────────────────────────
+describe("password handling", () => {
+    it("refuses to encrypt without a password", async () => {
+        const file = path.join(tmpDir, "nopass.env");
+        fs.writeFileSync(file, "A=1\n");
+
+        await expect(encryption.encrypt(null, `${file}.encrypted`, file)).rejects.toThrow(
+            /password is required/
+        );
+        expect(fs.existsSync(`${file}.encrypted`)).toBe(false);
+    });
+
+    it("refuses to decrypt without a password", async () => {
+        const file = path.join(tmpDir, "nopass2.env");
+        fs.writeFileSync(`${file}.encrypted`, realEncrypt(Buffer.from("A=1\n"), "pw"));
+
+        await expect(encryption.decrypt("", `${file}.encrypted`, file)).rejects.toThrow(
+            /password is required/
+        );
+    });
+
+    it("falls back to $FSR_PASS when no password is passed", async () => {
+        const file = path.join(tmpDir, "envpass.env");
+        fs.writeFileSync(file, "FROM=env\n");
+        process.env.FSR_PASS = "env-pw";
+
+        await encryption.run({ file });
+
+        expect(realDecrypt(fs.readFileSync(`${file}.encrypted`, "utf8"), "env-pw").toString()).toBe(
+            "FROM=env\n"
+        );
+    });
+
+    it("throws on the wrong password and leaves no decrypted file behind", async () => {
+        const encryptedFile = path.join(tmpDir, "wrong.env.encrypted");
+        const decryptedFile = path.join(tmpDir, "wrong.env");
+        fs.writeFileSync(encryptedFile, realEncrypt(Buffer.from("TOP=secret\n"), "right-pw"));
+
+        await expect(encryption.decrypt("wrong-pw", encryptedFile, decryptedFile)).rejects.toThrow(
+            /wrong password or corrupted file/
+        );
+        expect(fs.existsSync(decryptedFile)).toBe(false);
+    });
+});
+
+// ────────────────────────────────────────────────────────────────────────────
+// Overwrite protection — no confirmation prompt, so it is refuse-by-default.
+// ────────────────────────────────────────────────────────────────────────────
+describe("overwrite protection", () => {
+    it("refuses to clobber an existing encrypted file", async () => {
         const decryptedFile = path.join(tmpDir, "secret.txt");
         const encryptedFile = path.join(tmpDir, "secret.txt.encrypted");
         fs.writeFileSync(decryptedFile, "new plaintext");
         fs.writeFileSync(encryptedFile, "PRE-EXISTING-CIPHERTEXT");
 
-        // existing file -> confirm prompt -> user says no
-        promptMock.mockResolvedValueOnce({ sure: false });
-
-        await encryption.encrypt("pw123", encryptedFile, decryptedFile);
-
-        expect(promptMock).toHaveBeenCalledTimes(1);
-        // untouched because the user declined
+        await expect(encryption.encrypt("pw123", encryptedFile, decryptedFile)).rejects.toThrow(
+            /already exists.*--force/
+        );
         expect(fs.readFileSync(encryptedFile, "utf8")).toBe("PRE-EXISTING-CIPHERTEXT");
     });
 
-    it("overwrites the existing encrypted file when the user confirms", async () => {
+    it("overwrites the encrypted file when force is set", async () => {
         const decryptedFile = path.join(tmpDir, "secret2.txt");
         const encryptedFile = path.join(tmpDir, "secret2.txt.encrypted");
         fs.writeFileSync(decryptedFile, "fresh plaintext");
         fs.writeFileSync(encryptedFile, "OLD");
 
-        promptMock.mockResolvedValueOnce({ sure: true });
+        await encryption.encrypt("pw123", encryptedFile, decryptedFile, true);
 
-        await encryption.encrypt("pw123", encryptedFile, decryptedFile);
-
-        const ciphertext = fs.readFileSync(encryptedFile, "utf8");
-        expect(ciphertext).not.toBe("OLD");
-        // round-trips back to the new plaintext
+        expect(fs.readFileSync(encryptedFile, "utf8")).not.toBe("OLD");
         const restored = path.join(tmpDir, "secret2.restored.txt");
         await encryption.decrypt("pw123", encryptedFile, restored);
         expect(fs.readFileSync(restored, "utf8")).toBe("fresh plaintext");
     });
-});
 
-// ────────────────────────────────────────────────────────────────────────────
-// encrypt()/decrypt() with NO explicit args — exercises the `pass === null`
-// (password prompt) and `*File === null` (file-picker) branches. The source
-// keeps only the picked file's basename and rejoins it to scriptsDir (cwd), so
-// the backing files must live in cwd for the real fs read/write to resolve.
-// ────────────────────────────────────────────────────────────────────────────
-describe("encrypt with no explicit args (prompt + picker)", () => {
-    it("prompts for a password, picks the file, and encrypts it", async () => {
-        const fcFilepicker = (await import("fc-filepick")).default;
-        const base = `__fsr_enc_pick_${Date.now()}_${Math.random().toString(36).slice(2)}.env`;
-        const decryptedPath = path.join(process.cwd(), base);
-        const encryptedPath = `${decryptedPath}.encrypted`;
-        cwdArtifacts.push(decryptedPath, encryptedPath);
-        fs.writeFileSync(decryptedPath, "TOKEN=abc\n");
-
-        // only the basename survives the rejoin to cwd
-        fcFilepicker.default.mockResolvedValueOnce(`/picked/from/anywhere/${base}`);
-        // pass === null -> the password prompt fires
-        promptMock.mockResolvedValueOnce({ pass: "pw-picked" });
-
-        await encryption.encrypt();
-
-        expect(fcFilepicker.default).toHaveBeenCalledTimes(1);
-        expect(promptMock).toHaveBeenCalledTimes(1);
-        expect(fs.existsSync(encryptedPath)).toBe(true);
-        const ciphertext = fs.readFileSync(encryptedPath, "utf8");
-        // genuinely encrypted with the prompted password
-        const { decrypt: realDecrypt } = await import("../../lib/utils/encryption.js");
-        expect(realDecrypt(ciphertext, "pw-picked").toString()).toBe("TOKEN=abc\n");
-    });
-});
-
-describe("decrypt with no explicit args (prompt + picker)", () => {
-    it("prompts for a password, picks the file, and decrypts it", async () => {
-        const fcFilepicker = (await import("fc-filepick")).default;
-        const { decrypt: _d, encrypt: _e } = await import("../../lib/utils/encryption.js");
-        const base = `__fsr_dec_pick_${Date.now()}_${Math.random().toString(36).slice(2)}.env`;
-        const encryptedPath = path.join(process.cwd(), `${base}.encrypted`);
-        const decryptedPath = path.join(process.cwd(), base);
-        cwdArtifacts.push(encryptedPath, decryptedPath);
-        fs.writeFileSync(encryptedPath, realEncrypt(Buffer.from("VALUE=42\n"), "pw-dec"));
-
-        fcFilepicker.default.mockResolvedValueOnce(`/anywhere/${base}.encrypted`);
-        promptMock.mockResolvedValueOnce({ pass: "pw-dec" });
-
-        await encryption.decrypt();
-
-        expect(fcFilepicker.default).toHaveBeenCalledTimes(1);
-        expect(promptMock).toHaveBeenCalledTimes(1);
-        expect(fs.readFileSync(decryptedPath, "utf8")).toBe("VALUE=42\n");
-    });
-});
-
-// ────────────────────────────────────────────────────────────────────────────
-// decrypt() overwrite guard — the target (decrypted) file already exists, so
-// the confirm prompt fires; decline skips the write, confirm performs it.
-// ────────────────────────────────────────────────────────────────────────────
-describe("decrypt overwrite guard", () => {
-    it("does NOT overwrite an existing decrypted file when the user declines", async () => {
+    it("refuses to clobber an existing decrypted file", async () => {
         const decryptedFile = path.join(tmpDir, "out.env");
         const encryptedFile = path.join(tmpDir, "out.env.encrypted");
         fs.writeFileSync(decryptedFile, "ORIGINAL");
         fs.writeFileSync(encryptedFile, realEncrypt(Buffer.from("NEW-PLAINTEXT"), "pw"));
 
-        promptMock.mockResolvedValueOnce({ sure: false });
-
-        await encryption.decrypt("pw", encryptedFile, decryptedFile);
-
-        expect(promptMock).toHaveBeenCalledTimes(1);
+        await expect(encryption.decrypt("pw", encryptedFile, decryptedFile)).rejects.toThrow(
+            /already exists.*--force/
+        );
         expect(fs.readFileSync(decryptedFile, "utf8")).toBe("ORIGINAL");
     });
 
-    it("overwrites the existing decrypted file when the user confirms", async () => {
+    it("overwrites the decrypted file when force is set", async () => {
         const decryptedFile = path.join(tmpDir, "out2.env");
         const encryptedFile = path.join(tmpDir, "out2.env.encrypted");
         fs.writeFileSync(decryptedFile, "ORIGINAL");
         fs.writeFileSync(encryptedFile, realEncrypt(Buffer.from("NEW-PLAINTEXT"), "pw"));
 
-        promptMock.mockResolvedValueOnce({ sure: true });
+        await encryption.decrypt("pw", encryptedFile, decryptedFile, true);
 
-        await encryption.decrypt("pw", encryptedFile, decryptedFile);
-
-        expect(promptMock).toHaveBeenCalledTimes(1);
         expect(fs.readFileSync(decryptedFile, "utf8")).toBe("NEW-PLAINTEXT");
     });
 });
 
 // ────────────────────────────────────────────────────────────────────────────
-// init() — reads package.json fscripts.encryptedFiles + .gitignore, then runs
-// the encrypt or decrypt loop and appends newly-encrypted files to .gitignore.
-//
-// init() calls the module-local `encrypted.{getPass,toEncrypt,encrypt,decrypt}`
-// closures (the default export is a `{...encrypted}` copy, so stubbing the
-// export is a no-op). We therefore drive it purely through mocked deps:
-//   helpers (readJson/readFile/ensureFile/writeFile/appendToFile/boxInform),
-//   utils/encryption (encrypt/decrypt), console (fsrLog), and fs.
-// inquirer/fc-filepick stay globally mocked; getPass/toEncrypt resolve via them.
+// File picker — reached only when no file argument is supplied. The picked path
+// is used verbatim, so a file anywhere on disk resolves correctly.
 // ────────────────────────────────────────────────────────────────────────────
-describe("init", () => {
-    async function loadInit({ packageJson = {}, gitignore = "", readJsonThrows = false } = {}) {
-        vi.resetModules();
-        const helperMocks = {
-            readJson: readJsonThrows
-                ? vi.fn().mockRejectedValue(new Error("boom"))
-                : vi.fn().mockResolvedValue(packageJson),
-            readFile: vi.fn().mockResolvedValue(gitignore),
-            ensureFile: vi.fn().mockResolvedValue(false),
-            writeFile: vi.fn().mockResolvedValue(undefined),
-            appendToFile: vi.fn().mockResolvedValue(undefined),
-            boxInform: vi.fn()
-        };
-        const cryptoMocks = {
-            encrypt: vi.fn(() => "CIPHER"),
-            decrypt: vi.fn(() => "PLAIN")
-        };
-        const consoleMock = { log: vi.fn(), warn: vi.fn(), error: vi.fn() };
-        const fsMock = { readFileSync: vi.fn(() => Buffer.from("data")), writeFileSync: vi.fn() };
+describe("file picker fallback", () => {
+    it("encrypts the picked file in place", async () => {
+        const fcFilepicker = (await import("fc-filepick")).default;
+        const decryptedPath = path.join(tmpDir, "picked.env");
+        fs.writeFileSync(decryptedPath, "TOKEN=abc\n");
+        fcFilepicker.default.mockResolvedValueOnce(decryptedPath);
 
-        vi.doMock("../../lib/utils/helpers.js", () => helperMocks);
-        vi.doMock("../../lib/utils/encryption.js", () => cryptoMocks);
-        vi.doMock("../../lib/utils/console.js", () => ({ default: consoleMock }));
-        vi.doMock("fs", () => ({ ...fsMock, default: fsMock }));
+        await encryption.encrypt("pw-picked");
 
-        const mod = await import("../../lib/encryption/encryption.js");
-        return { init: mod.default.init, helperMocks, cryptoMocks, consoleMock, fsMock };
-    }
-
-    afterEach(() => {
-        vi.doUnmock("../../lib/utils/helpers.js");
-        vi.doUnmock("../../lib/utils/encryption.js");
-        vi.doUnmock("../../lib/utils/console.js");
-        vi.doUnmock("fs");
-        vi.resetModules();
+        expect(fcFilepicker.default).toHaveBeenCalledTimes(1);
+        const ciphertext = fs.readFileSync(`${decryptedPath}.encrypted`, "utf8");
+        expect(realDecrypt(ciphertext, "pw-picked").toString()).toBe("TOKEN=abc\n");
     });
 
-    it("encrypts each listed file and appends the not-yet-ignored ones to .gitignore", async () => {
-        const { init, cryptoMocks, helperMocks } = await loadInit({
-            packageJson: { fscripts: { encryptedFiles: ["secret/.env", "already.ignored"] } },
-            gitignore: "node_modules\nalready.ignored"
-        });
-        // getPass prompt, then toEncrypt prompt -> "encrypt"
-        promptMock.mockResolvedValueOnce({ pass: "k" });
-        promptMock.mockResolvedValueOnce({ encryptDecrypt: "encrypt" });
+    it("decrypts the picked file in place", async () => {
+        const fcFilepicker = (await import("fc-filepick")).default;
+        const encryptedPath = path.join(tmpDir, "picked2.env.encrypted");
+        fs.writeFileSync(encryptedPath, realEncrypt(Buffer.from("VALUE=42\n"), "pw-dec"));
+        fcFilepicker.default.mockResolvedValueOnce(encryptedPath);
 
-        await init();
+        await encryption.decrypt("pw-dec");
 
-        expect(cryptoMocks.encrypt).toHaveBeenCalledTimes(2);
-        expect(cryptoMocks.decrypt).not.toHaveBeenCalled();
-        expect(helperMocks.appendToFile).toHaveBeenCalledTimes(1);
-        const [, appended] = helperMocks.appendToFile.mock.calls[0];
-        expect(appended).toContain("secret/.env");
-        // already present in .gitignore -> not re-added
-        expect(appended).not.toContain("already.ignored");
-        expect(helperMocks.boxInform).toHaveBeenCalledTimes(1);
+        expect(fs.readFileSync(path.join(tmpDir, "picked2.env"), "utf8")).toBe("VALUE=42\n");
     });
 
-    it("decrypts each listed file when the user chooses 'decrypt'", async () => {
-        const { init, cryptoMocks, helperMocks } = await loadInit({
-            packageJson: { fscripts: { encryptedFiles: ["config/.app.env"] } },
-            gitignore: ""
-        });
-        promptMock.mockResolvedValueOnce({ pass: "k" });
-        promptMock.mockResolvedValueOnce({ encryptDecrypt: "decrypt" });
+    it("never writes back over the picked file when the .encrypted suffix is missing", async () => {
+        const fcFilepicker = (await import("fc-filepick")).default;
+        const pickedPath = path.join(tmpDir, "no-suffix.bin");
+        const ciphertext = realEncrypt(Buffer.from("STILL=safe\n"), "pw-sfx");
+        fs.writeFileSync(pickedPath, ciphertext);
+        fcFilepicker.default.mockResolvedValueOnce(pickedPath);
 
-        await init();
+        await encryption.decrypt("pw-sfx");
 
-        expect(cryptoMocks.decrypt).toHaveBeenCalledTimes(1);
-        expect(cryptoMocks.encrypt).not.toHaveBeenCalled();
-        expect(helperMocks.appendToFile).toHaveBeenCalledTimes(1);
-        expect(helperMocks.boxInform).toHaveBeenCalledTimes(1);
+        expect(fs.readFileSync(pickedPath, "utf8")).toBe(ciphertext);
+        expect(fs.readFileSync(`${pickedPath}.decrypted`, "utf8")).toBe("STILL=safe\n");
+    });
+});
+
+// ────────────────────────────────────────────────────────────────────────────
+// run() — the shared entry behind both the standalone CLI and `fsr encrypt`.
+// ────────────────────────────────────────────────────────────────────────────
+describe("run", () => {
+    it("encrypts <file> into <file>.encrypted", async () => {
+        const file = path.join(tmpDir, ".env");
+        fs.writeFileSync(file, "A=1\n");
+
+        await encryption.run({ file, pass: "pw" });
+
+        expect(realDecrypt(fs.readFileSync(`${file}.encrypted`, "utf8"), "pw").toString()).toBe("A=1\n");
     });
 
-    it("does not touch .gitignore when every listed file is already ignored", async () => {
-        const { init, cryptoMocks, helperMocks } = await loadInit({
-            packageJson: { fscripts: { encryptedFiles: ["dup.env"] } },
-            gitignore: "dup.env"
-        });
-        promptMock.mockResolvedValueOnce({ pass: "k" });
-        promptMock.mockResolvedValueOnce({ encryptDecrypt: "encrypt" });
+    it("decrypts <file>.encrypted back into <file> when given the plain name", async () => {
+        const file = path.join(tmpDir, ".env");
+        fs.writeFileSync(`${file}.encrypted`, realEncrypt(Buffer.from("B=2\n"), "pw"));
 
-        await init();
+        await encryption.run({ file, pass: "pw", decrypt: true });
 
-        expect(cryptoMocks.encrypt).toHaveBeenCalledTimes(1);
-        expect(helperMocks.appendToFile).not.toHaveBeenCalled();
-        expect(helperMocks.boxInform).not.toHaveBeenCalled();
+        expect(fs.readFileSync(file, "utf8")).toBe("B=2\n");
     });
 
-    it("does nothing when package.json has no fscripts section", async () => {
-        const { init, cryptoMocks, helperMocks } = await loadInit({
-            packageJson: { name: "x" }
-        });
-        promptMock.mockResolvedValueOnce({ pass: "k" });
-        promptMock.mockResolvedValueOnce({ encryptDecrypt: "encrypt" });
+    it("also accepts the .encrypted path directly when decrypting", async () => {
+        const file = path.join(tmpDir, "conf.json");
+        fs.writeFileSync(`${file}.encrypted`, realEncrypt(Buffer.from('{"k":1}'), "pw"));
 
-        await init();
+        await encryption.run({ file: `${file}.encrypted`, pass: "pw", decrypt: true });
 
-        expect(cryptoMocks.encrypt).not.toHaveBeenCalled();
-        expect(cryptoMocks.decrypt).not.toHaveBeenCalled();
-        expect(helperMocks.appendToFile).not.toHaveBeenCalled();
+        expect(fs.readFileSync(file, "utf8")).toBe('{"k":1}');
     });
 
-    it("does nothing when fscripts exists but has no encryptedFiles", async () => {
-        const { init, cryptoMocks, helperMocks } = await loadInit({
-            packageJson: { fscripts: {} }
-        });
-        promptMock.mockResolvedValueOnce({ pass: "k" });
-        promptMock.mockResolvedValueOnce({ encryptDecrypt: "encrypt" });
+    it("round-trips through both directions with the same file argument", async () => {
+        const file = path.join(tmpDir, "secret.txt");
+        fs.writeFileSync(file, "round=trip\n");
 
-        await init();
+        await encryption.run({ file, pass: "pw" });
+        fs.rmSync(file);
+        await encryption.run({ file, pass: "pw", decrypt: true });
 
-        expect(cryptoMocks.encrypt).not.toHaveBeenCalled();
-        expect(helperMocks.appendToFile).not.toHaveBeenCalled();
+        expect(fs.readFileSync(file, "utf8")).toBe("round=trip\n");
     });
 
-    it("logs the error and swallows it when reading package.json fails", async () => {
-        const { init, consoleMock, helperMocks } = await loadInit({ readJsonThrows: true });
-        promptMock.mockResolvedValueOnce({ pass: "k" });
-        promptMock.mockResolvedValueOnce({ encryptDecrypt: "encrypt" });
+    it("throws a clear error when the file is missing", async () => {
+        await expect(
+            encryption.run({ file: path.join(tmpDir, "nope.env"), pass: "pw" })
+        ).rejects.toThrow(/File not found/);
+    });
 
-        await expect(init()).resolves.toBeUndefined();
+    it("requires a password", async () => {
+        const file = path.join(tmpDir, "x.env");
+        fs.writeFileSync(file, "A=1\n");
 
-        expect(consoleMock.error).toHaveBeenCalledTimes(1);
-        expect(helperMocks.appendToFile).not.toHaveBeenCalled();
+        await expect(encryption.run({ file })).rejects.toThrow(/password is required/);
+    });
+});
+
+// ────────────────────────────────────────────────────────────────────────────
+// cli() — argv parsing for `node lib/encryption/encryption.js <file> [options]`
+// ────────────────────────────────────────────────────────────────────────────
+describe("cli", () => {
+    it("encrypts with `<file> --pass <pw>`", async () => {
+        const file = path.join(tmpDir, "cli.env");
+        fs.writeFileSync(file, "CLI=yes\n");
+
+        const code = await encryption.cli([file, "--pass", "pw"]);
+
+        expect(code).toBe(0);
+        expect(realDecrypt(fs.readFileSync(`${file}.encrypted`, "utf8"), "pw").toString()).toBe(
+            "CLI=yes\n"
+        );
+    });
+
+    it("decrypts with `<file> --pass <pw> --decrypt`", async () => {
+        const file = path.join(tmpDir, "cli2.env");
+        fs.writeFileSync(`${file}.encrypted`, realEncrypt(Buffer.from("BACK=1\n"), "pw"));
+
+        const code = await encryption.cli([file, "--pass", "pw", "--decrypt"]);
+
+        expect(code).toBe(0);
+        expect(fs.readFileSync(file, "utf8")).toBe("BACK=1\n");
+    });
+
+    it("accepts short flags, --pass= form, and any flag order", async () => {
+        const file = path.join(tmpDir, "cli3.env");
+        fs.writeFileSync(file, "SHORT=1\n");
+        fs.writeFileSync(`${file}.encrypted`, "PRE-EXISTING");
+
+        const code = await encryption.cli(["-f", "--pass=pw", file]);
+
+        expect(code).toBe(0);
+        expect(realDecrypt(fs.readFileSync(`${file}.encrypted`, "utf8"), "pw").toString()).toBe(
+            "SHORT=1\n"
+        );
+    });
+
+    it("prints usage and exits non-zero on a bare invocation", async () => {
+        const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+        try {
+            expect(await encryption.cli([])).toBe(1);
+            expect(logSpy.mock.calls.flat().join(" ")).toContain("--decrypt");
+        } finally {
+            logSpy.mockRestore();
+        }
+    });
+
+    it("prints usage and exits zero for --help", async () => {
+        const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+        try {
+            expect(await encryption.cli(["--help"])).toBe(0);
+        } finally {
+            logSpy.mockRestore();
+        }
+    });
+
+    it("errors when a file is given without any password", async () => {
+        const file = path.join(tmpDir, "cli4.env");
+        fs.writeFileSync(file, "ASKED=1\n");
+
+        await expect(encryption.cli([file])).rejects.toThrow(/password is required/);
     });
 });

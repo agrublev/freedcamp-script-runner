@@ -28,7 +28,7 @@ const h = vi.hoisted(() => ({
     parseTask: vi.fn((x) => x),
     selectPlugin: vi.fn(),
     validateNotInDev: vi.fn(),
-    encrypt: { init: vi.fn(), encrypt: vi.fn(), decrypt: vi.fn() },
+    encrypt: { encrypt: vi.fn(), decrypt: vi.fn(), run: vi.fn() },
     clear: vi.fn(),
     doctor: vi.fn(),
     completion: vi.fn(),
@@ -252,19 +252,26 @@ describe("command dispatch — remaining handlers", () => {
         expect(h.runSequence.mock.calls[0][0]).toEqual([]);
     });
 
-    it("`encryption` invokes encrypt.init()", async () => {
-        await runCli(["encryption"]);
-        expect(h.encrypt.init).toHaveBeenCalledTimes(1);
-    });
-
-    it("`encrypt` invokes encrypt.encrypt()", async () => {
+    it("`encrypt` with no file falls through to the interactive run", async () => {
         await runCli(["encrypt"]);
-        expect(h.encrypt.encrypt).toHaveBeenCalledTimes(1);
+        expect(h.encrypt.run).toHaveBeenCalledTimes(1);
+        const [args] = h.encrypt.run.mock.calls[0];
+        expect(args.file).toBeUndefined();
+        expect(args.decrypt).toBeFalsy();
     });
 
-    it("`decrypt` invokes encrypt.decrypt()", async () => {
-        await runCli(["decrypt"]);
-        expect(h.encrypt.decrypt).toHaveBeenCalledTimes(1);
+    it("`encrypt <file> --pass` forwards the file and password", async () => {
+        await runCli(["encrypt", ".env", "--pass", "s3cret"]);
+        expect(h.encrypt.run).toHaveBeenCalledWith(
+            expect.objectContaining({ file: ".env", pass: "s3cret", force: false })
+        );
+    });
+
+    it("`decrypt <file> --pass -f` forwards the decrypt direction and force flag", async () => {
+        await runCli(["decrypt", ".env", "-p", "s3cret", "-f"]);
+        expect(h.encrypt.run).toHaveBeenCalledWith(
+            expect.objectContaining({ file: ".env", pass: "s3cret", force: true, decrypt: true })
+        );
     });
 
     it("`clear` invokes clearRecent()", async () => {
