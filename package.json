@@ -1,6 +1,6 @@
 {
     "name": "fscr",
-    "version": "7.7.3",
+    "version": "7.7.4",
     "description": "Runs the fscripts.md file (Rust binary; install via install.sh/install.ps1 or cargo)",
     "scripts": {
         "find-scripts-in-fscripts": "you can find all scripts in fscripts.md",
