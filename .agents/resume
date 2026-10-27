@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Orb resume for fsr. Nothing to authenticate or reconnect: the repo is a
+# self-contained Rust CLI and the toolchain lives in the snapshot. Keep this
+# near-instant; only guard that the PATH hook survives profile rewrites.
+set -euo pipefail
+
+hook='# fsr orb: Rust toolchain on PATH'
+if ! grep -Fqx "$hook" "$HOME/.bash_profile" 2>/dev/null; then
+  {
+    echo ""
+    echo "$hook"
+    echo 'export PATH="$HOME/.cargo/bin:$PATH"'
+  } >> "$HOME/.bash_profile"
+fi
+
+exit 0

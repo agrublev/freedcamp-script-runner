@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+# Orb setup for fsr (freedcamp-script-runner).
+#
+# The repo is a pure Rust CLI (edition 2024). Node is only needed to exercise
+# the JS plugin host (src/plugins/host.mjs) in tests. No databases, no env
+# templates, no dev servers.
+set -euo pipefail
+
+step() {
+  printf '\n[setup] %s\n' "$1"
+}
+
+t0=0
+start=0
+step_time() {
+  local now
+  now=$(date +%s)
+  printf '[setup] %s took %ss\n' "$1" "$((now - t0))"
+  t0=$now
+}
+t0=$(date +%s)
+start=$t0
+
+cd "$(dirname "$0")/.."
+echo "[setup] repo root: $(pwd)"
+
+# ---------------------------------------------------------------
+# 1. Rust toolchain (stable) — install only when missing so warm
+#    snapshots skip the download entirely.
+# ---------------------------------------------------------------
+step "Rust toolchain"
+if ! command -v cargo >/dev/null 2>&1 && [ ! -x "$HOME/.cargo/bin/cargo" ]; then
+  echo "[setup] installing rustup (stable, minimal profile)..."
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
+    | sh -s -- -y --default-toolchain stable --profile minimal
+else
+  echo "[setup] rustup/cargo already present, skipping install"
+fi
+# The installer cannot update this running script's environment.
+if [ -f "$HOME/.cargo/env" ]; then
+  # shellcheck disable=SC1091
+  source "$HOME/.cargo/env"
+else
+  export PATH="$HOME/.cargo/bin:$PATH"
+fi
+command -v cargo >/dev/null 2>&1 || { echo "[setup] cargo missing after install" >&2; exit 1; }
+echo "[setup] $(cargo --version)"
+step_time "rust toolchain"
+
+# ---------------------------------------------------------------
+# 2. Put the toolchain on PATH for every future non-interactive
+#    login shell (Amp, supervised services). Idempotent via marker.
+# ---------------------------------------------------------------
+step "PATH hook in shell profiles"
+hook='# fsr orb: Rust toolchain on PATH'
+for profile in "$HOME/.bash_profile" "$HOME/.profile"; do
+  if ! grep -Fqx "$hook" "$profile" 2>/dev/null; then
+    {
+      echo ""
+      echo "$hook"
+      echo 'export PATH="$HOME/.cargo/bin:$PATH"'
+    } >> "$profile"
+    echo "[setup] added PATH hook to $profile"
+  else
+    echo "[setup] PATH hook already in $profile"
+  fi
+done
+step_time "path hook"
+
+# ---------------------------------------------------------------
+# 3. Node for the plugin-host tests. The orb base template ships
+#    Node; install via apt only if it is somehow missing.
+# ---------------------------------------------------------------
+step "Node.js (plugin host tests)"
+if command -v node >/dev/null 2>&1; then
+  echo "[setup] $(node --version) already present"
+else
+  echo "[setup] node missing, installing via apt..."
+  apt-get update -qq
+  apt-get install -y -qq nodejs >/dev/null
+  command -v node >/dev/null 2>&1 || { echo "[setup] node install failed" >&2; exit 1; }
+  echo "[setup] $(node --version)"
+fi
+step_time "node"
+
+# ---------------------------------------------------------------
+# 4. Warm the cargo registry cache from the lockfile.
+# ---------------------------------------------------------------
+step "cargo fetch"
+cargo fetch --locked
+step_time "cargo fetch"
+
+# ---------------------------------------------------------------
+# 5. Prebuild the debug binary and test helpers so the first
+#    cargo test in a fresh orb starts from a warm target/.
+#    A no-op on a warm snapshot.
+# ---------------------------------------------------------------
+step "cargo build (debug)"
+cargo build --quiet
+step_time "cargo build"
+
+step "done"
+printf '[setup] total took %ss\n' "$(( $(date +%s) - start ))"
