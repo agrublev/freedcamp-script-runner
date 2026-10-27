@@ -50,6 +50,13 @@ enum Cmd {
     },
     /// Upgrade all packages except those listed in 'ignore-upgrade'
     Upgrade,
+    /// Update fsr itself to the latest GitHub release
+    #[command(name = "self-update", visible_alias = "update")]
+    SelfUpdate {
+        /// Skip the confirmation prompt
+        #[arg(short, long)]
+        yes: bool,
+    },
     /// Bump the version in package.json
     Bump {
         #[arg(long = "type")]
@@ -377,6 +384,7 @@ fn real_main() -> Result<i32> {
         Cmd::Branch => release::cmd_branch(&cwd).map(|_| 0),
         Cmd::Commit { yes } => release::cmd_commit(&cwd, yes).map(|_| 0),
         Cmd::Upgrade => release::cmd_upgrade(&cwd).map(|_| 0),
+        Cmd::SelfUpdate { yes } => fsr::selfupdate::cmd_selfupdate(yes),
         Cmd::Bump { kind, skip_git } => release::cmd_bump(&cwd, kind, skip_git).map(|_| 0),
         Cmd::Encrypt { file, yes } => encryption::cmd_encrypt(&file, yes).map(|_| 0),
         Cmd::Decrypt { file, out, yes } => {

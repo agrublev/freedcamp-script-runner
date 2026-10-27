@@ -14,6 +14,7 @@ pub mod picker;
 pub mod plugins;
 pub mod release;
 pub mod runner;
+pub mod selfupdate;
 pub mod task;
 pub mod toc;
 pub mod ui;
