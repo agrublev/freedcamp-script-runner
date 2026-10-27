@@ -9,7 +9,8 @@ use sha2::{Digest, Sha256};
 use std::io::Write;
 use std::path::Path;
 
-const API_URL: &str = "https://api.github.com/repos/agrublev/freedcamp-script-runner/releases/latest";
+const API_URL: &str =
+    "https://api.github.com/repos/agrublev/freedcamp-script-runner/releases/latest";
 const USER_AGENT: &str = "fsr-selfupdate";
 
 /// Semver-ish triple parsed from a tag like "v7.7.3" (the `v` is optional).
@@ -71,11 +72,9 @@ fn replace_binary(new_bin: &Path, exe: &Path) -> Result<()> {
     if std::env::consts::OS == "windows" {
         let old = exe.with_extension("exe.old");
         let _ = std::fs::remove_file(&old);
-        std::fs::rename(exe, &old)
-            .with_context(|| format!("moving {} aside", exe.display()))?;
+        std::fs::rename(exe, &old).with_context(|| format!("moving {} aside", exe.display()))?;
     }
-    std::fs::rename(new_bin, exe)
-        .with_context(|| format!("replacing {}", exe.display()))
+    std::fs::rename(new_bin, exe).with_context(|| format!("replacing {}", exe.display()))
 }
 
 /// Remove a leftover `.old` backup from a previous Windows update (best effort).
@@ -160,7 +159,8 @@ pub fn cmd_selfupdate(yes: bool) -> Result<i32> {
         if !resp.status().is_success() {
             bail!("download failed: {} {}", resp.status(), bin_url);
         }
-        let mut file = std::fs::File::create(&archive).with_context(|| format!("create {}", archive.display()))?;
+        let mut file = std::fs::File::create(&archive)
+            .with_context(|| format!("create {}", archive.display()))?;
         resp.copy_to(&mut file)
             .with_context(|| format!("downloading {bin_url}"))?;
         file.flush().ok();
@@ -196,7 +196,10 @@ pub fn cmd_selfupdate(yes: bool) -> Result<i32> {
         .status()
         .context("spawning tar")?;
     if !status.success() {
-        bail!("extraction failed with code {}", crate::runner::exit_code(status));
+        bail!(
+            "extraction failed with code {}",
+            crate::runner::exit_code(status)
+        );
     }
     let inner = if ext == "zip" { "fsr.exe" } else { "fsr" };
     // The archive nests the binary under an asset-named folder (e.g.

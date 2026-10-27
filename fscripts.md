@@ -2,17 +2,18 @@
   * [awesome](#awesome)
   * [env:test](#envtest)
 - [Build](#build)
-  * [build](#build-1)
-  * [watch](#watch-1)
+  * [build](#build)
+  * [watch](#watch)
 - [Development](#development)
-  * [fsr](#fsr-1)
-  * [start](#start-1)
+  * [fsr](#fsr)
+  * [start](#start)
 - [Release](#release)
-  * [release](#release-1)
+  * [release](#release)
   * [release:tag](#releasetag)
+  * [self-update](#self-update)
 - [Testing](#testing)
-  * [test](#test-1)
-  * [test:watch](#testwatch-1)
+  * [test](#test)
+  * [test:watch](#testwatch)
 <!-- end toc -->
 
 # Fun
@@ -89,6 +90,16 @@ Alias for `release` — same as above, spelled for muscle memory.
 
 ```bash
 sh scripts/release.sh minor
+```
+
+## self-update
+
+Checks GitHub Releases for a newer fsr binary for the current OS and CPU. The
+download is SHA-256 verified before it replaces the installed binary. Add
+`--yes` to skip the confirmation prompt in automation.
+
+```bash
+fsr self-update
 ```
 
 # Testing

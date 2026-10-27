@@ -151,6 +151,7 @@ Real Node.js. Executed directly. Documented inline. No extra files. 💥
 | 🔒 `fsr encryption`  | interactive encrypt/decrypt menu                                    |
 | 🚀 `fsr bump`        | bump version in `package.json` + beautify it                        |
 | ⬆️ `fsr upgrade`     | upgrade all packages (respects `ignore-upgrade` list)               |
+| 🔄 `fsr self-update` | download, verify, and install the latest fsr release                |
 | 🩺 `fsr doctor`      | run diagnostics & health check                                      |
 | 💻 `fsr completion`  | shell completions for bash, zsh, fish, powershell                   |
 | 🌿 `fsr branch`      | validate you're not on dev, create a new branch                     |
@@ -548,7 +549,7 @@ _⚡ Built by the [Freedcamp](https://freedcamp.com) team. Battle-tested on our 
 ### Similar
 - https://github.com/egoist/maid
 - https://github.com/joerdav/xc
-## Installing the Rust version
+## Installation reference
 
 macOS / Linux:
 
@@ -562,11 +563,19 @@ Windows (PowerShell):
 irm https://raw.githubusercontent.com/agrublev/freedcamp-script-runner/Development/install.ps1 | iex
 ```
 
-The installer picks the right binary for your OS/CPU from the latest [GitHub Release](https://github.com/agrublev/freedcamp-script-runner/releases), verifies its SHA-256, and installs to `~/.local/bin` (Windows: `%LOCALAPPDATA%\Programs\fsr`, added to PATH). Pin a version with `FSR_VERSION=v7.7.0`, change the folder with `FSR_INSTALL_DIR`. Re-run it to upgrade.
+The installer downloads the right binary from the latest [GitHub Release](https://github.com/agrublev/freedcamp-script-runner/releases), verifies its SHA-256, and installs to `~/.local/bin` (Windows: `%LOCALAPPDATA%\Programs\fsr`, added to PATH). It supports Intel and Apple Silicon Macs, Linux x64 and ARM64, and Windows x64 and ARM64. Pin a version with `FSR_VERSION=v7.7.3`, set a custom install directory with `FSR_INSTALL_DIR`, or re-run the same command to upgrade.
+
+Existing installs can update themselves without re-running an installer:
+
+```bash
+fsr self-update
+```
+
+Use `fsr self-update --yes` for non-interactive automation. It downloads the matching release asset, verifies its SHA-256 checksum, and replaces the current binary in place.
 
 From source (needs Rust): `cargo install --git https://github.com/agrublev/freedcamp-script-runner --branch Development`
 
-Plugins still need Node 22+ installed; nothing else is required.
+The core CLI needs no Node runtime. Plugins run in Node and need Node 22+ installed.
 
 Maintainers: pushing a `v*` tag runs `.github/workflows/release-rust.yml`, which builds all platforms and publishes the release with SHA-256 checksums.
 
@@ -581,4 +590,4 @@ cargo clippy -- -D warnings  # lint
 ./target/release/fsr --help
 ```
 
-Optional: `cargo install --path .` puts `fsr` on your PATH. Set `FSR_SECRET` to skip the encryption password prompt. Plugins still run on Node (not yet bridged from Rust).
+Optional: `cargo install --path .` puts `fsr` on your PATH. Set `FSR_SECRET` to skip the encryption password prompt. Plugins use the embedded JavaScript host and still require Node 22+.

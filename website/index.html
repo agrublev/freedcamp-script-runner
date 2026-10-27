@@ -10,7 +10,7 @@
         </title>
         <meta
             name="description"
-            content="fsr is a free, open-source CLI that replaces cryptic package.json scripts with a single documented Markdown file (fscripts.md). Interactive picker, full JavaScript blocks, parallel execution, plugin hooks, and built-in file encryption. Install in seconds: npm i -g fscr."
+            content="fsr is a free, open-source Rust CLI that replaces cryptic package.json scripts with a single documented Markdown file (fscripts.md). Install verified binaries on macOS, Linux, or Windows in one command."
         />
         <meta
             name="keywords"
@@ -61,15 +61,15 @@
                 "applicationCategory": "DeveloperApplication",
                 "operatingSystem": "Windows, macOS, Linux",
                 "isAccessibleForFree": true,
-                "dateModified": "2026-06-20",
+                "dateModified": "2026-10-27",
                 "offers": {
                     "@type": "Offer",
                     "price": "0",
                     "priceCurrency": "USD"
                 },
-                "installUrl": "https://www.npmjs.com/package/fscr",
-                "downloadUrl": "https://www.npmjs.com/package/fscr",
-                "softwareVersion": "latest",
+                "installUrl": "https://github.com/agrublev/freedcamp-script-runner/releases/latest",
+                "downloadUrl": "https://github.com/agrublev/freedcamp-script-runner/releases/latest",
+                "softwareVersion": "7.7.3",
                 "license": "https://opensource.org/licenses/MIT",
                 "author": {
                     "@type": "Organization",
@@ -102,7 +102,8 @@
                     "Shell tab completions (fsr completion)",
                     "Git branch validation (fsr branch)",
                     "Clear task history (fsr clear)",
-                    "Environment profiles — filter tasks by deployment target (fsr --env)"
+                    "Environment profiles — filter tasks by deployment target (fsr --env)",
+                    "Verified self-update from GitHub Releases (fsr self-update)"
                 ]
             }
         </script>
@@ -115,17 +116,17 @@
                 "name": "How to replace package.json scripts with fsr in 3 steps",
                 "description": "Replace cryptic package.json scripts with a documented, runnable Markdown file in under 2 minutes using fsr.",
                 "totalTime": "PT2M",
-                "dateModified": "2026-06-20",
-                "tool": [{ "@type": "HowToTool", "name": "Node.js (with npm or yarn)" }],
+                "dateModified": "2026-10-27",
+                "tool": [{ "@type": "HowToTool", "name": "Terminal or PowerShell" }],
                 "step": [
                     {
                         "@type": "HowToStep",
                         "position": 1,
                         "name": "Install fsr globally",
-                        "text": "Run 'npm i -g fscr' to install fsr globally. One command. Done.",
+                        "text": "Run the macOS/Linux installer or the Windows PowerShell installer. It downloads the right verified binary for your OS and CPU.",
                         "itemListElement": {
                             "@type": "HowToDirection",
-                            "text": "npm i -g fscr"
+                            "text": "curl -fsSL https://raw.githubusercontent.com/agrublev/freedcamp-script-runner/Development/install.sh | sh"
                         }
                     },
                     {
@@ -161,7 +162,7 @@
                         "name": "What is fsr?",
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "fsr (Freedcamp Script Runner) is a free, open-source CLI tool installed as the npm package 'fscr'. It replaces your package.json scripts with a single Markdown file called fscripts.md that serves simultaneously as documentation and as a script runner. Run 'npm i -g fscr' to install it."
+                            "text": "fsr (Freedcamp Script Runner) is a free, open-source Rust CLI. It replaces your package.json scripts with a single Markdown file called fscripts.md that serves simultaneously as documentation and as a script runner. Install a verified binary from GitHub Releases on macOS, Linux, or Windows."
                         }
                     },
                     {
@@ -169,7 +170,7 @@
                         "name": "How do I install fsr?",
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "Install fsr globally with npm: 'npm i -g fscr'. After installation, run 'fsr generate' in any Node.js project to automatically import your existing package.json scripts into fscripts.md with documentation stubs."
+                            "text": "On macOS or Linux, run 'curl -fsSL https://raw.githubusercontent.com/agrublev/freedcamp-script-runner/Development/install.sh | sh'. On Windows PowerShell, run 'irm https://raw.githubusercontent.com/agrublev/freedcamp-script-runner/Development/install.ps1 | iex'. The installer selects and verifies the right binary."
                         }
                     },
                     {
@@ -209,7 +210,7 @@
                         "name": "Is fsr free and open source?",
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "Yes. fsr is completely free and open source, licensed under MIT. You can install it with 'npm i -g fscr' or view the source on GitHub at https://github.com/agrublev/freedcamp-script-runner and the npm package at https://www.npmjs.com/package/fscr."
+                            "text": "Yes. fsr is completely free and open source, licensed under MIT. Download verified binaries or view the source at https://github.com/agrublev/freedcamp-script-runner."
                         }
                     }
                 ]
@@ -224,8 +225,7 @@
                 "name": "Freedcamp",
                 "url": "https://freedcamp.com",
                 "sameAs": [
-                    "https://github.com/agrublev/freedcamp-script-runner",
-                    "https://www.npmjs.com/package/fscr"
+                    "https://github.com/agrublev/freedcamp-script-runner"
                 ]
             }
         </script>
@@ -293,7 +293,7 @@
             <header class="hero" aria-label="fsr — Freedcamp Script Runner hero">
                 <div class="hero__copy">
                     <div class="hero__badge">
-                        <span class="hero__badge-cmd">npm i -g fscr</span>
+                        <span class="hero__badge-cmd">v7.7.3 · Rust native</span>
                         <span class="hero__badge-dot"></span>
                         <span class="hero__badge-label">free &amp; open source</span>
                     </div>
@@ -314,12 +314,12 @@
                     </p>
                     <div class="hero__actions">
                         <a
-                            href="https://www.npmjs.com/package/fscr"
+                            href="https://github.com/agrublev/freedcamp-script-runner/releases/latest"
                             class="hero__btn-primary"
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            <span>npm i -g fscr</span>
+                            <span>Download fsr</span>
                         </a>
                         <a
                             href="https://github.com/agrublev/freedcamp-script-runner"
@@ -336,14 +336,14 @@
                     </p>
                     <!-- AI-extractable definition block: readable by search engines and AI crawlers -->
                     <p class="visually-hidden" aria-hidden="true">
-                        fsr (Freedcamp Script Runner, installed as the npm package fscr) is a free
-                        open-source CLI that replaces package.json scripts with fscripts.md — a
+                        fsr (Freedcamp Script Runner) is a free open-source Rust CLI that replaces
+                        package.json scripts with fscripts.md — a
                         single Markdown file that is simultaneously documentation and a script
                         runner. Features include an interactive picker (fsr / fsr start / fsr scripts / fsr list),
                         full JavaScript blocks, parallel execution (fsr run-p), sequential execution (fsr run-s),
                         plugin hooks (fsr plugins), built-in file encryption (fsr encrypt / fsr decrypt / fsr encryption),
                         AI-powered commits (fsr commit), environment profiles (fsr --env &lt;name&gt;),
-                        and system diagnostics (fsr doctor).
+                        system diagnostics (fsr doctor), and verified self-updates (fsr self-update).
                     </p>
                 </div>
 
@@ -726,8 +726,8 @@
                                 <span class="step-card__badge">STEP 1</span>
                                 <span class="step-card__emoji">✨</span>
                             </div>
-                            <div class="step-card__cmd">npm i -g fscr</div>
-                            <p class="step-card__desc">Install fsr globally. One command. Done.</p>
+                            <div class="step-card__cmd">curl …/install.sh | sh</div>
+                            <p class="step-card__desc">Install a verified native binary. Windows has its own PowerShell command below.</p>
                         </div>
                         <div class="step-card">
                             <div class="step-card__header">
@@ -1055,16 +1055,16 @@ console.<span style="color:#60a5fa;">log</span>(<span style="color:var(--accent,
                         <h2 class="cta-card__heading">Three commands. That&rsquo;s it. 🎯</h2>
                         <pre
                             class="code-block--cta"
-                        ><span style="color:var(--accent,#27AD60);">$</span> npm i -g fscr   <span style="color:#6b6c75;"># install</span><br/>
+                        ><span style="color:var(--accent,#27AD60);">$</span> curl -fsSL https://raw.githubusercontent.com/agrublev/freedcamp-script-runner/Development/install.sh | sh<br/>
 <span style="color:var(--accent,#27AD60);">$</span> fsr generate    <span style="color:#6b6c75;"># import your existing scripts</span><br/>
 <span style="color:var(--accent,#27AD60);">$</span> fsr             <span style="color:#6b6c75;"># pick one and run it 🚀</span></pre>
                         <div class="cta-card__actions">
                             <a
-                                href="https://www.npmjs.com/package/fscr"
+                                href="https://github.com/agrublev/freedcamp-script-runner/releases/latest"
                                 class="cta-card__btn-primary"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                >📦 npm i -g fscr</a
+                                >⬇️ Download fsr</a
                             >
                             <a
                                 href="https://github.com/agrublev/freedcamp-script-runner"
@@ -1099,11 +1099,10 @@ console.<span style="color:#60a5fa;">log</span>(<span style="color:var(--accent,
                     <h3 itemprop="name">What is fsr?</h3>
                     <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
                         <p itemprop="text">
-                            fsr (Freedcamp Script Runner) is a free, open-source CLI tool installed
-                            as the npm package <code>fscr</code>. It replaces your
+                            fsr (Freedcamp Script Runner) is a free, open-source Rust CLI. It replaces your
                             <code>package.json</code> scripts with a single Markdown file called
                             <code>fscripts.md</code> that serves simultaneously as documentation and
-                            as a script runner. Run <code>npm i -g fscr</code> to install it.
+                            as a script runner. Download a verified binary from GitHub Releases to install it.
                         </p>
                     </div>
                 </div>
@@ -1112,8 +1111,7 @@ console.<span style="color:#60a5fa;">log</span>(<span style="color:var(--accent,
                     <h3 itemprop="name">How do I install fsr?</h3>
                     <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
                         <p itemprop="text">
-                            Install fsr globally with npm: <code>npm i -g fscr</code>. After
-                            installation, run <code>fsr generate</code> in any Node.js project to
+                            On macOS or Linux, run <code>curl -fsSL https://raw.githubusercontent.com/agrublev/freedcamp-script-runner/Development/install.sh | sh</code>. On Windows PowerShell, run <code>irm https://raw.githubusercontent.com/agrublev/freedcamp-script-runner/Development/install.ps1 | iex</code>. Then run <code>fsr generate</code> in any project to
                             automatically import your existing package.json scripts into fscripts.md
                             with documentation stubs. Then run <code>fsr</code> to open the
                             interactive script picker.
@@ -1172,7 +1170,7 @@ console.<span style="color:#60a5fa;">log</span>(<span style="color:var(--accent,
                         <p itemprop="text">
                             Yes. fsr is completely free and open source, licensed under MIT. There
                             are no paid plans, no usage limits, and no enterprise tiers. Install it
-                            with <code>npm i -g fscr</code>.
+                            from the GitHub Release installer.
                         </p>
                     </div>
                 </div>
@@ -1193,7 +1191,7 @@ console.<span style="color:#60a5fa;">log</span>(<span style="color:var(--accent,
                     </div>
                     <div class="footer__right">
                         <div class="footer__links">
-                            <span class="footer__install-cmd">npm i -g fscr</span>
+                            <span class="footer__install-cmd">fsr self-update</span>
                             <a
                                 href="https://github.com/agrublev/freedcamp-script-runner"
                                 class="footer__link"
@@ -1202,11 +1200,11 @@ console.<span style="color:#60a5fa;">log</span>(<span style="color:var(--accent,
                                 >GitHub</a
                             >
                             <a
-                                href="https://www.npmjs.com/package/fscr"
+                                href="https://github.com/agrublev/freedcamp-script-runner/releases/latest"
                                 class="footer__link"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                >npm</a
+                                >Downloads</a
                             >
                             <a
                                 href="https://github.com/agrublev/freedcamp-script-runner#readme"
