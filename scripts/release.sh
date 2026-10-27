@@ -3,24 +3,25 @@
 # push triggers .github/workflows/release-rust.yml, which builds all platforms
 # and publishes the GitHub Release the installers download from.
 #
-#   scripts/release.sh patch|minor|major|X.Y.Z [--yes] [--no-test] [--dry-run]
+#   scripts/release.sh patch|minor|major|X.Y.Z [--yes] [--no-test] [--watch] [--dry-run]
 set -eu
 REPO="agrublev/freedcamp-script-runner"
 cd "$(dirname "$0")/.."
 
 err() { printf '\033[31merror:\033[0m %s\n' "$1" >&2; exit 1; }
-kind="" yes=0 test=1 dry=0
+kind="" yes=0 test=1 dry=0 watch=0
 for a in "$@"; do
   case "$a" in
     --yes | -y) yes=1 ;;
     --no-test) test=0 ;;
     --dry-run) dry=1 ;;
+    --watch) watch=1 ;;
     patch | minor | major) kind="$a" ;;
     [0-9]*.[0-9]*.[0-9]*) kind="$a" ;;
     *) err "unknown argument: $a" ;;
   esac
 done
-[ -n "$kind" ] || err "usage: scripts/release.sh patch|minor|major|X.Y.Z [--yes] [--no-test] [--dry-run]"
+[ -n "$kind" ] || err "usage: scripts/release.sh patch|minor|major|X.Y.Z [--yes] [--no-test] [--watch] [--dry-run]"
 
 cur="$(perl -0ne 'print $1 if /\[package\][^\[]*?\nversion\s*=\s*"([^"]*)"/' Cargo.toml)"
 [ -n "$cur" ] || err "no version in Cargo.toml"
@@ -42,6 +43,7 @@ if git rev-parse -q --verify "origin/$branch" >/dev/null &&
   err "origin/$branch has commits you don't; pull first"
 fi
 git ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null 2>&1 && err "tag $tag already exists on origin"
+[ -f .github/workflows/release-rust.yml ] || err ".github/workflows/release-rust.yml is missing; the tag push would build nothing"
 
 echo "Release $tag on $branch"
 echo "  Cargo.toml   $cur -> $new"
@@ -78,3 +80,24 @@ git push -q origin "$tag"
 printf '\033[32m✓\033[0m pushed %s\n' "$tag"
 echo "  build:   https://github.com/$REPO/actions/workflows/release-rust.yml"
 echo "  release: https://github.com/$REPO/releases/tag/$tag (ready in ~10 min)"
+
+if [ "$watch" = 1 ]; then
+  command -v gh >/dev/null 2>&1 || err "--watch needs the gh CLI (https://cli.github.com)"
+  echo "  watching the release build..."
+  # Poll until the run for this tag completes (cap ~30 min).
+  for _ in $(seq 1 90); do
+    state="$(gh run list --repo "$REPO" --workflow release-rust.yml --limit 20 \
+      --json headBranch,status,conclusion \
+      --jq "[.[] | select(.headBranch == \"$tag\")][0] | .status + \":\" + (.conclusion // \"-\")" 2>/dev/null || echo "?")"
+    case "$state" in
+      completed:success)
+        printf '\033[32m✓\033[0m release %s is live with binaries + checksums for macOS (x64/arm64), Linux (x64/arm64) and Windows (x64/arm64)\n' "$tag"
+        echo "  https://github.com/$REPO/releases/tag/$tag"
+        exit 0 ;;
+      completed:*)
+        err "release build failed: https://github.com/$REPO/actions/workflows/release-rust.yml" ;;
+    esac
+    sleep 20
+  done
+  err "timed out waiting for the release build (~30 min); check https://github.com/$REPO/actions"
+fi

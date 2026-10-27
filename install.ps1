@@ -5,7 +5,9 @@ $ErrorActionPreference = "Stop"
 $repo = "agrublev/freedcamp-script-runner"
 $version = if ($env:FSR_VERSION) { $env:FSR_VERSION } else { "latest" }
 $dir = if ($env:FSR_INSTALL_DIR) { $env:FSR_INSTALL_DIR } else { Join-Path $env:LOCALAPPDATA "Programs\fsr" }
-$name = "fsr-windows-x64"
+# Pick the build for this CPU: native ARM64 (Surface, Snapdragon laptops) or x64.
+$arch = if ($env:PROCESSOR_ARCHITECTURE -eq "ARM64") { "arm64" } else { "x64" }
+$name = "fsr-windows-$arch"
 $base = if ($env:FSR_BASE_URL) { $env:FSR_BASE_URL }
         elseif ($version -eq "latest") { "https://github.com/$repo/releases/latest/download" }
         else { "https://github.com/$repo/releases/download/$version" }

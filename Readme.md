@@ -49,7 +49,9 @@ You know the drill 😤: you clone a repo, there's a `README.md` that vaguely ge
 
 ## 📦 install
 
-macOS / Linux:
+One line for every OS — the installer picks the right build, verifies its SHA-256, and puts `fsr` on your PATH:
+
+macOS / Linux (bash, zsh, fish):
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/agrublev/freedcamp-script-runner/Development/install.sh | sh
@@ -61,7 +63,10 @@ Windows (PowerShell):
 irm https://raw.githubusercontent.com/agrublev/freedcamp-script-runner/Development/install.ps1 | iex
 ```
 
-> 💡 Command: `fsr`. Needs no Node — unless you use plugins. 😄
+> ✅ Native builds for **Apple Silicon & Intel Macs, Linux x64 & ARM64 (static musl — works on any distro), Windows x64 & ARM64**.
+> Re-run the same line to upgrade. Verify with `fsr -v`. No Node needed — unless you use plugins. 😄
+
+Prefer building from source? `cargo install --git https://github.com/agrublev/freedcamp-script-runner --branch Development`
 
 ---
 
