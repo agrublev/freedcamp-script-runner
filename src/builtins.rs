@@ -229,7 +229,7 @@ const ZSH_SNIPPET: &str = r#"
 _fscr_greet() {
   if [[ -f "fscripts.md" ]]; then
     echo ""
-    echo "\033[1;32m👋  fscripts.md found!\033[0m  Run \033[1;36myarn fsr\033[0m to launch the script runner."
+    echo "\033[1;32m👋  fscripts.md found!\033[0m  Run \033[1;36mfsr\033[0m to launch the script runner."
     echo ""
   fi
 }
@@ -241,7 +241,7 @@ const BASH_SNIPPET: &str = r#"
 _fscr_greet() {
   if [[ -f "fscripts.md" ]]; then
     echo ""
-    echo -e "\033[1;32m👋  fscripts.md found!\033[0m  Run \033[1;36myarn fsr\033[0m to launch the script runner."
+    echo -e "\033[1;32m👋  fscripts.md found!\033[0m  Run \033[1;36mfsr\033[0m to launch the script runner."
     echo ""
   fi
 }

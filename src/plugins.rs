@@ -1,5 +1,5 @@
 //! JS plugin support for the Rust binary. User plugins stay JavaScript and run
-//! inside `lib/plugins/host.mjs` (embedded here), which mirrors
+//! inside `src/plugins/host.mjs` (embedded here), which mirrors the original
 //! `lib/plugins/loader.js`: `.fsr/plugins/<name>/index.js`,
 //! `node_modules/fscr-plugin-*/index.js` and extra roots in `FSR_PLUGIN_DIRS`.
 //! Storage is the same `<cwd>/.fscr/<plugin>/storage.json`.
@@ -15,7 +15,7 @@ use std::sync::Mutex;
 use std::sync::mpsc::{Receiver, RecvTimeoutError, channel};
 use std::time::Duration;
 
-pub const HOST_SRC: &str = include_str!("../lib/plugins/host.mjs");
+pub const HOST_SRC: &str = include_str!("plugins/host.mjs");
 const MARK: &str = "\u{1e}FSR ";
 
 #[derive(Debug, Clone, Default, PartialEq)]

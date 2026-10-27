@@ -49,18 +49,26 @@ You know the drill 😤: you clone a repo, there's a `README.md` that vaguely ge
 
 ## 📦 install
 
+macOS / Linux:
+
 ```bash
-npm i -g fscr
+curl -fsSL https://raw.githubusercontent.com/agrublev/freedcamp-script-runner/Development/install.sh | sh
 ```
 
-> 💡 Package name: `fscr`. Command: `fsr`. Yes, on purpose. 😄
+Windows (PowerShell):
+
+```powershell
+irm https://raw.githubusercontent.com/agrublev/freedcamp-script-runner/Development/install.ps1 | iex
+```
+
+> 💡 Command: `fsr`. Needs no Node — unless you use plugins. 😄
 
 ---
 
 ## 🚀 get started in 3 commands
 
 ```bash
-npm i -g fscr        # 📦 install fsr globally
+# 1️⃣ install fsr (see 📦 install above)
 fsr generate         # ✨ imports your package.json scripts → fscripts.md
 fsr                  # 🎯 interactive picker — choose and run
 ```
@@ -144,7 +152,7 @@ Real Node.js. Executed directly. Documented inline. No extra files. 💥
 | 🧹 `fsr clear`       | clear recent task history                                           |
 | 💬 `fsr commit`      | stage + commit with AI-generated conventional commit messages        |
 | 🔌 `fsr plugins`     | list all installed plugins (built-in and npm `fscr-plugin-*`)       |
-| 👋 `fsr greet`       | install a shell greeting that reminds you to use `yarn fsr` when `fscripts.md` is present |
+| 👋 `fsr greet`       | install a shell greeting that reminds you to run `fsr` when `fscripts.md` is present |
 
 > ℹ️ `fsr -v` / `fsr --version` prints the installed `fscr` version.
 

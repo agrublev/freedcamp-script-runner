@@ -1,7 +1,7 @@
 #!/bin/sh
-# Release fsr: bump package.json + Cargo.toml + Cargo.lock, commit, tag vX.Y.Z,
-# push. The tag push triggers .github/workflows/release-rust.yml, which builds
-# all platforms and publishes the GitHub Release the installers download from.
+# Release fsr: bump Cargo.toml + Cargo.lock, commit, tag vX.Y.Z, push. The tag
+# push triggers .github/workflows/release-rust.yml, which builds all platforms
+# and publishes the GitHub Release the installers download from.
 #
 #   scripts/release.sh patch|minor|major|X.Y.Z [--yes] [--no-test] [--dry-run]
 set -eu
@@ -22,9 +22,8 @@ for a in "$@"; do
 done
 [ -n "$kind" ] || err "usage: scripts/release.sh patch|minor|major|X.Y.Z [--yes] [--no-test] [--dry-run]"
 
-cur="$(perl -0ne 'print $1 if /"version":\s*"([^"]*)"/' package.json)"
-[ -n "$cur" ] || err "no version in package.json"
-cargo_cur="$(perl -0ne 'print $1 if /\[package\][^\[]*?\nversion\s*=\s*"([^"]*)"/' Cargo.toml)"
+cur="$(perl -0ne 'print $1 if /\[package\][^\[]*?\nversion\s*=\s*"([^"]*)"/' Cargo.toml)"
+[ -n "$cur" ] || err "no version in Cargo.toml"
 case "$kind" in
   patch | minor | major)
     new="$(echo "${cur%%-*}" | awk -F. -v k="$kind" '{
@@ -45,8 +44,7 @@ fi
 git ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null 2>&1 && err "tag $tag already exists on origin"
 
 echo "Release $tag on $branch"
-echo "  package.json $cur -> $new"
-echo "  Cargo.toml   $cargo_cur -> $new"
+echo "  Cargo.toml   $cur -> $new"
 [ "$dry" = 1 ] && { echo "(dry run, nothing changed)"; exit 0; }
 if [ "$yes" != 1 ]; then
   printf 'Continue? [y/N] '
@@ -54,26 +52,24 @@ if [ "$yes" != 1 ]; then
   case "$ans" in y | Y | yes) ;; *) echo "Aborted."; exit 1 ;; esac
 fi
 
-# Bump the three files (perl: same behaviour on macOS and Linux).
+# Bump the two files (perl: same behaviour on macOS and Linux).
 command -v perl >/dev/null 2>&1 || err "perl is required"
 export NEW="$new"
-perl -0pi -e 's/("version":\s*")[^"]*"/${1}$ENV{NEW}"/' package.json
 perl -0pi -e 's/(\[package\][^\[]*?\nversion\s*=\s*")[^"]*"/${1}$ENV{NEW}"/' Cargo.toml
 name="$(perl -0ne 'print $1 if /\[package\][^\[]*?\nname\s*=\s*"([^"]*)"/' Cargo.toml)"
 export NAME="$name"
 [ -f Cargo.lock ] && perl -0pi -e 's/(\nname = "\Q$ENV{NAME}\E"\nversion = ")[^"]*"/${1}$ENV{NEW}"/' Cargo.lock
 
-grep -q "\"version\": \"$new\"" package.json || err "failed to update package.json"
 grep -q "^version = \"$new\"" Cargo.toml || err "failed to update Cargo.toml"
 
-restore() { git checkout -- package.json Cargo.toml Cargo.lock 2>/dev/null; }
+restore() { git checkout -- Cargo.toml Cargo.lock 2>/dev/null; }
 if [ "$test" = 1 ]; then
   echo "Running cargo test..."
   cargo test --quiet || { restore; err "tests failed; versions restored"; }
 fi
 cargo metadata --locked --format-version 1 >/dev/null || { restore; err "Cargo.lock out of date; versions restored"; }
 
-git add package.json Cargo.toml Cargo.lock
+git add Cargo.toml Cargo.lock
 git commit -q -m "VERSION $new"
 git tag -a "$tag" -m "VERSION $new"
 git push -q origin "$branch"

@@ -122,7 +122,7 @@ enum Cmd {
         #[arg(short, long)]
         status: bool,
     },
-    /// Install a shell greeting that reminds you to use yarn fsr when fscripts.md is present
+    /// Install a shell greeting that reminds you to run fsr when fscripts.md is present
     Greet {
         /// install | uninstall | status
         action: Option<String>,

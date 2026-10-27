@@ -1,6 +1,6 @@
-//! Cross-implementation tests: the JS module `lib/utils/encryption.js` (pure
-//! Node `crypto`, no npm deps) and the Rust port must read each other's output.
-//! Skipped (pass) when `node` is not installed.
+//! Cross-implementation tests: the JS module `tests/support/encryption.mjs`
+//! (pure Node `crypto`, no npm deps) and the Rust port must read each other's
+//! output. Skipped (pass) when `node` is not installed.
 use std::process::Command;
 
 fn node(script: &str) -> Option<String> {
@@ -23,7 +23,7 @@ fn node(script: &str) -> Option<String> {
 #[test]
 fn js_encrypt_rust_decrypt() {
     let Some(ct) = node(
-        "import {encrypt} from './lib/utils/encryption.js'; process.stdout.write(encrypt(Buffer.from('héllo\\n{\"a\":1}'), 'p@ss'))",
+        "import {encrypt} from './tests/support/encryption.mjs'; process.stdout.write(encrypt(Buffer.from('héllo\\n{\"a\":1}'), 'p@ss'))",
     ) else {
         return;
     };
@@ -37,7 +37,7 @@ fn js_encrypt_rust_decrypt() {
 fn rust_encrypt_js_decrypt() {
     let ct = fsr::crypto::encrypt("secret ✓".as_bytes(), "pw");
     let Some(pt) = node(&format!(
-        "import {{decrypt}} from './lib/utils/encryption.js'; process.stdout.write(decrypt('{ct}', 'pw'))"
+        "import {{decrypt}} from './tests/support/encryption.mjs'; process.stdout.write(decrypt('{ct}', 'pw'))"
     )) else {
         return;
     };

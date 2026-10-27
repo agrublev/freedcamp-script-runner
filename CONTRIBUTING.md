@@ -1,6 +1,6 @@
 # Contributing to fsr
 
-Thanks for wanting to help! `fsr` is intentionally small and focused — a script runner that lives in a Markdown file. Contributions that keep it sharp and simple are very welcome.
+Thanks for helping! `fsr` is intentionally small — a script runner that lives in a Markdown file. Since the Rust rewrite, the whole CLI is one Rust binary; the only JavaScript left is the user-plugin host.
 
 ---
 
@@ -9,37 +9,36 @@ Thanks for wanting to help! `fsr` is intentionally small and focused — a scrip
 ```bash
 git clone https://github.com/agrublev/freedcamp-script-runner.git
 cd freedcamp-script-runner
-yarn          # install deps
-yarn test     # make sure everything passes before you touch anything
+cargo build --release        # binary at target/release/fsr
+cargo test                   # make sure everything passes before you touch anything
 ```
+
+Requirements: Rust (stable), and Node 22+ only if you want to exercise the plugin host.
 
 ---
 
 ## How the project is structured
 
 ```
-index.js              # CLI entry — all yargs commands live here
-lib/
-  parsers/            # markdown → task data
-  running/            # execute tasks (sequence, parallel, CLI command)
-  generators/         # fscripts.md / TOC generation
-  cache/              # parse result caching with TTL + file watching
-  completions/        # shell tab-completion (bash, zsh, fish, powershell)
-  commands/           # doctor, diagnostics
-  encryption/         # encrypt / decrypt secret files
-  plugins/            # plugin loader + hook system
-  release/            # version bumping + publishing
-  git/                # git branch validation
-  utils/              # shared helpers (encryption primitives, console, etc.)
-tests/                # vitest unit tests, mirrors lib/ structure
+src/
+  main.rs            # CLI entry — all clap commands live here
+  parse.rs           # fscripts.md → tasks (headings + fenced code blocks)
+  runner.rs          # task execution (bash + JS blocks, run-s / run-p)
+  plugins.rs         # user-plugin host (spawns src/plugins/host.mjs via Node)
+  ui/                # ratatui pickers (task, fuzzy, autocomplete)
+  encryption.rs      # encrypt/decrypt (OpenSSL/CryptoJS-compatible)
+  release.rs         # bump + upgrade
+  ai_commit.rs       # AI-powered commit grouping (Anthropic API)
+  ...
+src/plugins/host.mjs  # JSON-lines plugin host, embedded into the binary
+tests/                # cargo tests + golden fixtures from the JS era
 ```
 
-**Key rules the codebase already follows — don't break them:**
+**Key rules:**
 
-- **JS only, no TypeScript.** No `.ts` files, no type annotations, no `tsconfig`.
-- **ESM throughout.** Every file uses `import`/`export`. No `require()`.
-- **`yarn`, not `npm`.** Don't commit `package-lock.json`.
-- **No new dependencies unless necessary.** Ask first if you think you need one.
+- **Rust for the binary.** Everything `fsr` ships as a command is implemented in `src/`. No new JavaScript runtime modules.
+- **Plugins stay JavaScript.** A plugin is a directory with an `index.js`; the Rust binary embeds `src/plugins/host.mjs` and talks to it over JSON lines.
+- **Port parity.** `src/` mirrors the old JS implementation (`lib/`) — keep names and behaviour aligned when touching a ported module.
 
 ---
 
@@ -47,109 +46,78 @@ tests/                # vitest unit tests, mirrors lib/ structure
 
 ### 1. Branch off `Development`
 
-```bash
-git checkout Development
-git pull
-git checkout -b feat/my-thing
-```
+Never commit directly to `Development` — `fsr branch` creates a branch to prevent it.
 
-Never commit directly to `Development` or `master` — `fsr branch` will even warn you about this.
+```bash
+git checkout -b feat/my-change Development
+```
 
 ### 2. Write the code
 
-- Keep files under ~400 lines. If a file is growing, extract a helper.
-- Route side effects (file I/O, network, spawning processes) through `lib/` modules, not inline in `index.js`.
-- If you add a new yargs command to `index.js`, put the implementation in `lib/`.
+- Keep files under ~400 lines; split larger concerns into their own module.
+- Route side effects (file I/O, network, process spawning) through dedicated modules, not inline in `main.rs`.
+- Prefer `anyhow::Result` for fallible paths and keep user-facing errors actionable.
 
-### 3. Write or update tests
-
-Every change to `lib/` should have a corresponding test in `tests/`. The project uses [Vitest](https://vitest.dev/).
+### 3. Test
 
 ```bash
-yarn test             # run tests (fast, no coverage)
-yarn test:coverage    # run tests + coverage report
+cargo test                 # run tests (fast, no coverage)
+cargo test --test rust_ui  # snapshot tests for the pickers
+cargo clippy               # lint
 ```
 
-Coverage thresholds (enforced in CI):
-
-| Metric     | Threshold |
-|------------|-----------|
-| Statements | 75%       |
-| Functions  | 75%       |
-| Lines      | 75%       |
-| Branches   | 65%       |
-
-Test files go in `tests/<same-path-as-lib-file>.test.js`. For example, a change to `lib/running/runSequence.js` gets tests in `tests/running/runSequence.test.js`.
-
-**Mocking guidelines:**
-- Mock external I/O (filesystem, child_process, git) — don't rely on the real filesystem in unit tests.
-- Use `vi.mock()` at the top of the test file; avoid `vi.resetModules()` inside `beforeEach` (it breaks v8 coverage tracking).
-- Use `vi.clearAllMocks()` in `beforeEach` to reset call counts between tests.
+Every change to `src/` should have a corresponding test. Golden fixtures in `tests/rust_fixtures/` are frozen snapshots of the JS-era parser; don't regenerate them unless you deliberately change parser behaviour.
 
 ### 4. Commit
 
-Follow [Conventional Commits](https://www.conventionalcommits.org/):
+Use [Conventional Commits](https://www.conventionalcommits.org/):
 
+```text
+feat: add fsr deploy:staging
+fix: handle empty fscripts.md gracefully
+chore: bump rust to 1.90
 ```
-feat: add --dry-run flag to bump command
-fix: handle empty fscripts.md without crashing
-chore: bump vitest to 4.2
-docs: update CONTRIBUTING with plugin guide
-test: add coverage for runParallel env var parsing
-```
-
-### 5. Open a pull request
-
-- Target the `Development` branch.
-- Describe **what** you changed and **why** — not a list of files touched.
-- CI must be green before a review. Fix any failing tests or coverage drops first.
 
 ---
 
 ## Adding a new command
 
-1. Add the yargs `.command(...)` block in `index.js`.
-2. Put the implementation in `lib/<your-feature>/`.
-3. Add tests in `tests/<your-feature>/`.
-4. Run `yarn test:coverage` to make sure thresholds still pass.
-5. Update `fscripts.md` with a new task entry if your command is useful for contributors.
+1. Add a `#[derive(Subcommand)]` variant in `src/main.rs`.
+2. Implement the behaviour in `src/` (a new module or an existing one).
+3. Add tests in `tests/`.
+4. Update `Readme.md` and `fscripts.md` if the command is user-facing.
 
 ---
 
-## Adding a plugin
+## Plugins
 
-Plugins live in `lib/plugins/` and are auto-discovered at startup. A plugin is a directory with an `index.js` that exports:
+Plugins are JavaScript and live in one of these places:
 
-```js
-export const name = "my-plugin";
-export const description = "What this plugin does";
-export async function run() { /* ... */ }
-```
+- `examples/plugins/` — shipped examples (`hello-world`, `task-timer`, `task-notifier`, `deployment`)
+- `.fsr/plugins/<name>/` — project-local plugins
+- `node_modules/fscr-plugin-*/` — npm plugins
 
-Drop it in `lib/plugins/` and `fsr` will pick it up. You can also fire lifecycle hooks:
+A plugin is a directory with an `index.js` that exports a default object:
 
 ```js
-import { fireHook } from "../plugins/hooks.js";
-await fireHook("post-task", { taskName: "my-plugin", duration: 500, success: true });
+export default {
+    name: "my-plugin",
+    description: "What it does",
+    async init(context) {
+        context.registerHook("pre-task", ({ taskName }) => {
+            context.logger.info(`About to run: ${taskName}`);
+        });
+    },
+};
 ```
+
+Drop it in `.fsr/plugins/my-plugin/` and `fsr` will pick it up. See `examples/plugins/README.md` for the full contract.
 
 ---
 
 ## Reporting bugs
 
-Open a GitHub issue with:
-- `node --version` and OS
-- The command you ran
-- What you expected vs what happened
-- A minimal `fscripts.md` that reproduces it (if relevant)
-
----
-
-## What we probably won't accept
-
-- TypeScript, CSS-in-JS, or any bundler that isn't already here
-- Dependencies that replicate functionality already in Node.js built-ins
-- Interactive UI changes that break headless / non-TTY environments
-- Changes that lower test coverage below the thresholds
-
-When in doubt, open an issue first and discuss before writing code.
+Open an issue with:
+- `fsr --version`
+- OS
+- A minimal `fscripts.md` that reproduces the problem

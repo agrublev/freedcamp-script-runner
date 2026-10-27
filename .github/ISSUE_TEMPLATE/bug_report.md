@@ -25,7 +25,7 @@ What you expected to happen instead.
 
 **Environment**
 
-- `node --version`:
+- `node --version` (only needed for plugins):
 - OS:
 - fsr version:
 

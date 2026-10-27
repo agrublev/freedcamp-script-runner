@@ -1,4 +1,5 @@
-//! fsr — Rust port of freedcamp-script-runner (see `lib/` for the JS original).
+//! fsr — Rust port of freedcamp-script-runner (the JS implementation was
+//! removed; `tests/support/encryption.mjs` is the only remaining JS original).
 pub mod ai_commit;
 pub mod builtins;
 pub mod cache;
@@ -17,4 +18,4 @@ pub mod task;
 pub mod toc;
 pub mod ui;
 
-// User plugins stay JavaScript and run in `lib/plugins/host.mjs` (see `plugins`).
+// User plugins stay JavaScript and run in `src/plugins/host.mjs` (see `plugins`).

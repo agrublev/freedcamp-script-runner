@@ -1,12 +1,8 @@
-# Dependencies
-node_modules/
+# Rust build output
+/target/
 
-# Build output
-dist/
-
-# Test coverage
-coverage/
-.nyc_output/
+# Amp orb portal registrations
+.amp/portals/*
 
 # Environment
 .env
@@ -25,21 +21,16 @@ Thumbs.db
 
 # Logs
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 # Temporary files
 *.tmp
 .temp/
 temp/
 
+# Encryption demo: encrypted form of config.json
 config.json
-
-website/.firebase/*.cache
+config.json.encrypted
 
 # AI tool analysis caches — ephemeral, not for VCS
 .understand-anything/intermediate/
 .understand-anything/tmp/
-# Rust build output
-/target/

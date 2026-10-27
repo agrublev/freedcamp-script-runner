@@ -8,7 +8,7 @@ Steps a reviewer can follow to verify the change locally.
 
 ## Checklist
 
-- [ ] Tests pass (`yarn test`)
+- [ ] Tests pass (`cargo test`)
 - [ ] Added or updated tests for the change
 - [ ] Targeted the `Development` branch
 - [ ] Followed [Conventional Commits](https://www.conventionalcommits.org/)
