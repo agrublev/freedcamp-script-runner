@@ -209,12 +209,12 @@ Perfect for:
 
 Plugins show up right alongside built-in commands in the **interactive picker**. No extra steps. No ceremony. 🎉
 
-### built-in plugins
+### the plugin contract
 
-Drop a folder into `lib/plugins/` with an `index.js` that exports a default plugin object:
+A plugin is a folder with an `index.js` that exports a default plugin object:
 
 ```js
-// lib/plugins/my-plugin/index.js
+// .fsr/plugins/my-plugin/index.js
 export default {
     name: "my-plugin",
     version: "1.0.0",
@@ -252,7 +252,7 @@ my-repo/
   .fsr/
     plugins/
       cache-cleaner/
-        index.js   ← same export contract as built-in plugins
+        index.js   ← same export contract as above
 ```
 
 Useful for repo-specific automation you don't want to publish. Committed to the repo alongside your code.
@@ -265,7 +265,7 @@ Any npm package named `fscr-plugin-*` is **auto-discovered** at startup — no c
 npm i fscr-plugin-notify
 ```
 
-`fsr` picks it up automatically on next run. Same plugin contract as built-in plugins.
+`fsr` picks it up automatically on next run. Same plugin contract.
 
 ### plugin storage
 

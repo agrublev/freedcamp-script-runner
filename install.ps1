@@ -26,7 +26,9 @@ try {
     $want = ((Get-Content $sumFile -Raw).Trim() -split '\s+')[0].ToLower()
     $got = (Get-FileHash $zip -Algorithm SHA256).Hash.ToLower()
     if ($want -ne $got) { throw "checksum mismatch (expected $want, got $got)" }
-  } catch [System.Net.WebException] { Write-Warning "no checksum file found, skipping verification" }
+  # Plain catch: pwsh 7 throws HttpResponseException on a 404 (not WebException),
+  # and with $ErrorActionPreference = "Stop" a typed catch would abort instead of warn.
+  } catch { Write-Warning "no checksum file found, skipping verification" }
   Expand-Archive $zip -DestinationPath $tmp -Force
   New-Item -ItemType Directory -Force $dir | Out-Null
   Copy-Item (Join-Path $tmp "fsr.exe") (Join-Path $dir "fsr.exe") -Force

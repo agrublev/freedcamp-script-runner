@@ -77,7 +77,7 @@ Scripts for cutting and publishing new versions of the binary.
 
 ## release
 
-Bumps the version in `Cargo.toml` + `Cargo.lock` (and the metadata version in `package.json`), runs `cargo test`, then commits, tags `vX.Y.Z` and pushes. The tag triggers `.github/workflows/release-rust.yml`, which builds every platform and publishes the GitHub Release the installers download from.
+Bumps the version in `Cargo.toml` + `Cargo.lock`, runs `cargo test`, then commits, tags `vX.Y.Z` and pushes. The tag triggers `.github/workflows/release-rust.yml`, which builds every platform and publishes the GitHub Release the installers download from.
 
 ```bash
 sh scripts/release.sh patch
