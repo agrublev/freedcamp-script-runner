@@ -24,5 +24,11 @@ jobs:
           components: rustfmt
       - name: Check formatting
         run: cargo fmt --all -- --check
-      - name: Run tests
+      - name: Compile on every supported host
+        run: cargo check --locked
+      - name: Build Unix terminal-test helper
+        if: runner.os == 'Linux'
+        run: cargo build --locked --example ui_panic
+      - name: Run test suite
+        if: runner.os == 'Linux'
         run: cargo test --locked --all-targets
