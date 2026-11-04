@@ -174,7 +174,13 @@ fn non_interactive_commands() {
     assert_eq!(out(&["run", "ok"]).0, 0, "toc'd file still runs");
     let (c, s) = out(&["doctor", "--json"]);
     assert_eq!(c, 1, "no package.json is a critical failure");
-    assert!(s.contains("\"fscriptsFile\""));
+    assert!(s.contains("\"fscriptsFile\""), "{s}");
+    assert!(s.contains("\"summary\""), "{s}");
+    assert!(s.contains("fscripts.md file"), "{s}");
+    let (c, s) = out(&["doctor", "--verbose"]);
+    assert_eq!(c, 1);
+    assert!(s.contains("Node.js version"), "{s}");
+    assert_eq!(out(&["doctor", "-f"]).0, 1);
     std::fs::write(d.path().join("package.json"), r#"{"scripts":{"b":"tsc"}}"#).unwrap();
     assert_eq!(out(&["scripts"]).1.trim(), "b  tsc");
     assert_eq!(out(&["clear"]).0, 0);

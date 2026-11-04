@@ -10,7 +10,7 @@ use crate::ui::{
     menu::Menu,
     task_picker::TaskPicker,
 };
-use anyhow::Result;
+use anyhow::{Result, bail};
 use serde_json::{Value, json};
 use std::path::{Path, PathBuf};
 
@@ -152,6 +152,43 @@ pub fn markdown_files(root: &Path) -> Vec<PathBuf> {
     v
 }
 
+/// Regular files under `root` (skips node_modules, .git, target, dist).
+pub fn candidate_files(root: &Path) -> Vec<PathBuf> {
+    let mut v: Vec<PathBuf> = walkdir::WalkDir::new(root)
+        .max_depth(6)
+        .into_iter()
+        .filter_entry(|e| {
+            !matches!(
+                e.file_name().to_str(),
+                Some("node_modules" | ".git" | "target" | "dist")
+            )
+        })
+        .filter_map(|e| e.ok())
+        .filter(|e| e.file_type().is_file())
+        .map(|e| {
+            e.path()
+                .strip_prefix(root)
+                .unwrap_or(e.path())
+                .to_path_buf()
+        })
+        .collect();
+    v.sort();
+    v
+}
+
+/// `fc-filepick` stand-in used when `encrypt` / `decrypt` omit a path.
+pub fn pick_file(root: &Path) -> Result<Option<PathBuf>> {
+    let files = candidate_files(root);
+    if files.is_empty() {
+        bail!("no files to pick under {}", root.display());
+    }
+    let items = files
+        .iter()
+        .map(|p| AcItem::from_opt(&p.display().to_string()))
+        .collect();
+    Ok(ui::run(AutoComplete::new(items, "Choose a file"))?.map(|i| root.join(i.value)))
+}
+
 pub fn pick_markdown(root: &Path) -> Result<Option<PathBuf>> {
     let items = markdown_files(root)
         .iter()
@@ -189,5 +226,9 @@ mod tests {
         std::fs::write(d.path().join("A.MD"), "").unwrap();
         std::fs::write(d.path().join("b.txt"), "").unwrap();
         assert_eq!(markdown_files(d.path()), [PathBuf::from("A.MD")]);
+        assert_eq!(
+            candidate_files(d.path()),
+            [PathBuf::from("A.MD"), PathBuf::from("b.txt")]
+        );
     }
 }
