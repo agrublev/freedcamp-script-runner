@@ -3,6 +3,7 @@
 pub mod ai_commit;
 pub mod builtins;
 pub mod cache;
+pub mod completions;
 pub mod crypto;
 pub mod doctor;
 pub mod encryption;

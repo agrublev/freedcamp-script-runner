@@ -1,6 +1,7 @@
 //! Port of `lib/encryption/encryption.js` (the `encrypt`, `decrypt` and
 //! `encryption` commands). Differences from JS, on purpose:
-//! * the file is given as an argument instead of the fc-filepick picker,
+//! * a path skips the picker; with no path, a terminal opens the file picker
+//!   and a non-terminal exits with an error instead of hanging,
 //! * writes are atomic, the password and plaintext are zeroized,
 //! * errors produce a non-zero exit code (JS logged and exited 0),
 //! * `FSR_SECRET` env var can supply the password non-interactively (new).

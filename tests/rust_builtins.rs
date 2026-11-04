@@ -156,7 +156,7 @@ fn greet_install_status_uninstall() {
 #[test]
 fn publish_shells_out_to_npm() {
     let d = tempfile::tempdir().unwrap();
-    assert_eq!(fsr(d.path(), &["publish", "--tag", "next", "-y"]).0, 1);
+    assert_eq!(fsr(d.path(), &["npm-publish", "--tag", "next", "-y"]).0, 1);
     std::fs::write(
         d.path().join("package.json"),
         r#"{"name":"pkg","version":"1.2.3"}"#,
@@ -169,7 +169,7 @@ fn publish_shells_out_to_npm() {
     );
     let (code, out) = fsr_env(
         d.path(),
-        &["publish", "--tag", "next", "-y"],
+        &["npm-publish", "--tag", "next", "-y"],
         &[("PATH", path)],
     );
     assert_eq!(code, 0, "{out}");
@@ -181,4 +181,104 @@ fn publish_shells_out_to_npm() {
         std::fs::read_to_string(d.path().join("npm.log")).unwrap(),
         "npm whoami\nnpm publish --tag next --access public\n"
     );
+}
+
+#[test]
+fn publish_is_the_surge_alias() {
+    let d = tempfile::tempdir().unwrap();
+    let (code, out) = fsr(d.path(), &["publish", "--help"]);
+    assert_eq!(code, 0, "{out}");
+    assert!(out.contains("--subdomain"), "{out}");
+    assert!(out.contains("surge") || out.contains("Deploy"), "{out}");
+    let (code, out) = fsr(d.path(), &["publish"]);
+    assert_eq!(code, 0, "{out}");
+    assert!(
+        out.contains("Usage: fsr deploy --files") || out.contains("--subdomain"),
+        "{out}"
+    );
+    let (code, out) = fsr(d.path(), &["npm-publish", "--help"]);
+    assert_eq!(code, 0, "{out}");
+    assert!(out.contains("dist-tag") || out.contains("npm"), "{out}");
+}
+
+#[test]
+fn version_accepts_node_short_flag() {
+    let d = tempfile::tempdir().unwrap();
+    for flag in ["-v", "-V", "--version"] {
+        let (code, out) = fsr(d.path(), &[flag]);
+        assert_eq!(code, 0, "{flag}: {out}");
+        assert!(out.contains("fsr "), "{flag}: {out}");
+    }
+}
+
+#[test]
+fn completion_install_status_uninstall() {
+    let d = tempfile::tempdir().unwrap();
+    let (code, out) = fsr_env(
+        d.path(),
+        &["completion", "install", "--shell", "bash"],
+        &[("SHELL", "/bin/bash".into())],
+    );
+    assert_eq!(code, 0, "{out}");
+    let rc = std::fs::read_to_string(d.path().join(".bashrc")).unwrap();
+    assert!(rc.contains("# FSCR completion"), "{rc}");
+    assert!(rc.contains("run-p"), "{rc}");
+    assert!(rc.contains("# End FSCR completion"), "{rc}");
+    let (code, out) = fsr_env(
+        d.path(),
+        &["completion", "install", "--shell", "bash"],
+        &[("SHELL", "/bin/bash".into())],
+    );
+    assert_eq!(code, 0, "{out}");
+    assert!(out.contains("already installed"), "{out}");
+    assert_eq!(
+        std::fs::read_to_string(d.path().join(".bashrc"))
+            .unwrap()
+            .matches("# FSCR completion")
+            .count(),
+        1
+    );
+    let (code, out) = fsr_env(
+        d.path(),
+        &["completion", "status"],
+        &[("SHELL", "/bin/bash".into())],
+    );
+    assert_eq!(code, 0, "{out}");
+    assert!(out.contains("bash") && out.contains("Installed"), "{out}");
+    let (code, out) = fsr_env(
+        d.path(),
+        &["completion", "generate", "--shell", "zsh"],
+        &[("SHELL", "/bin/bash".into())],
+    );
+    assert_eq!(code, 0, "{out}");
+    assert!(out.contains("run-p"), "{out}");
+    let (code, out) = fsr_env(
+        d.path(),
+        &["completion", "install", "--shell", "fish"],
+        &[("SHELL", "/bin/bash".into())],
+    );
+    assert_eq!(code, 0, "{out}");
+    let fish = d.path().join(".config/fish/completions/fsr.fish");
+    assert!(
+        std::fs::read_to_string(&fish).unwrap().contains("run-p"),
+        "fish completion missing"
+    );
+    let (code, out) = fsr_env(
+        d.path(),
+        &["completion", "uninstall", "--shell", "bash"],
+        &[("SHELL", "/bin/bash".into())],
+    );
+    assert_eq!(code, 0, "{out}");
+    assert!(
+        !std::fs::read_to_string(d.path().join(".bashrc"))
+            .unwrap()
+            .contains("# FSCR completion")
+    );
+    let (code, _) = fsr_env(
+        d.path(),
+        &["completion", "uninstall", "--shell", "fish"],
+        &[("SHELL", "/bin/bash".into())],
+    );
+    assert_eq!(code, 0);
+    assert!(!fish.exists());
 }

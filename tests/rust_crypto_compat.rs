@@ -84,6 +84,14 @@ fn cli_encrypt_decrypt_roundtrip() {
         .status()
         .unwrap();
     assert_ne!(st.code(), Some(0));
+    let missing = Command::new(env!("CARGO_BIN_EXE_fsr"))
+        .args(["encrypt"])
+        .current_dir(d.path())
+        .output()
+        .unwrap();
+    assert_ne!(missing.status.code(), Some(0));
+    let err = String::from_utf8_lossy(&missing.stderr);
+    assert!(err.contains("terminal") || err.contains("file"), "{err}");
     assert_eq!(
         std::fs::read_to_string(d.path().join("config.json")).unwrap(),
         "{\"k\":1}"

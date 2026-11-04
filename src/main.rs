@@ -10,9 +10,18 @@ use std::process::ExitCode;
     name = "fsr",
     version,
     about = "Runs the fscripts.md file",
-    after_help = "Global: --env <name> | -e <name> | --prod | --dev"
+    after_help = "Global: --env <name> | -e <name> | --prod | --dev",
+    disable_version_flag = true
 )]
 struct Cli {
+    /// Print version (`fsr -v`, same as the Node CLI; `-V` still works)
+    #[arg(
+        short = 'v',
+        short_alias = 'V',
+        long = "version",
+        action = clap::ArgAction::Version
+    )]
+    show_version: (),
     #[command(subcommand)]
     cmd: Option<Cmd>,
 }
@@ -64,15 +73,15 @@ enum Cmd {
         #[arg(long)]
         skip_git: bool,
     },
-    /// Encrypt a file to <file>.encrypted
+    /// Encrypt a file to <file>.encrypted (prompts for a file when omitted on a terminal)
     Encrypt {
-        file: PathBuf,
+        file: Option<PathBuf>,
         #[arg(short, long)]
         yes: bool,
     },
     /// Decrypt any encrypted file (strips .encrypted if present, else in place)
     Decrypt {
-        file: PathBuf,
+        file: Option<PathBuf>,
         /// Write the decrypted output here instead
         #[arg(short, long)]
         out: Option<PathBuf>,
@@ -100,15 +109,31 @@ enum Cmd {
     TocFile,
     /// Run diagnostics and check system health
     Doctor {
-        #[arg(long)]
+        /// Auto-fix issues when possible
+        #[arg(short, long)]
         fix: bool,
+        /// Output results as JSON
         #[arg(long)]
         json: bool,
+        /// Show check ids, paths, and versions
+        #[arg(long)]
+        verbose: bool,
     },
-    /// Print a shell completion script (bash, zsh, fish, powershell, elvish)
-    Completion { shell: clap_complete::Shell },
+    /// Manage shell tab completions
+    Completion {
+        /// install | uninstall | status | generate, or a shell name to print its script
+        action: Option<String>,
+        /// Target shell (bash, zsh, fish, powershell)
+        #[arg(short, long)]
+        shell: Option<String>,
+        /// Reinstall even when a completion block is already present
+        #[arg(short, long)]
+        force: bool,
+        #[arg(short, long)]
+        yes: bool,
+    },
     /// Deploy to a specific surge domain (built-in deployment plugin)
-    #[command(visible_alias = "ship")]
+    #[command(visible_alias = "ship", visible_alias = "publish")]
     Deploy {
         /// Location of files to publish
         #[arg(long)]
@@ -141,8 +166,9 @@ enum Cmd {
         #[arg(short, long)]
         yes: bool,
     },
-    /// Publish the package to npm (lib/release/publish.js)
-    Publish {
+    /// Publish the package to npm (lib/release/publish.js). `fsr publish` is surge deploy.
+    #[command(name = "npm-publish")]
+    NpmPublish {
         /// dist-tag (prompted when omitted)
         #[arg(long)]
         tag: Option<String>,
@@ -230,6 +256,13 @@ fn real_main() -> Result<i32> {
             Some("doctor") => Cmd::Doctor {
                 fix: false,
                 json: false,
+                verbose: false,
+            },
+            Some("completion") => Cmd::Completion {
+                action: None,
+                shell: None,
+                force: false,
+                yes: false,
             },
             Some("plugins") => Cmd::Plugins,
             Some("greet") => Cmd::Greet {
@@ -386,8 +419,18 @@ fn real_main() -> Result<i32> {
         Cmd::Upgrade => release::cmd_upgrade(&cwd).map(|_| 0),
         Cmd::SelfUpdate { yes } => fsr::selfupdate::cmd_selfupdate(yes),
         Cmd::Bump { kind, skip_git } => release::cmd_bump(&cwd, kind, skip_git).map(|_| 0),
-        Cmd::Encrypt { file, yes } => encryption::cmd_encrypt(&file, yes).map(|_| 0),
+        Cmd::Encrypt { file, yes } => {
+            let Some(file) = resolve_file(&cwd, file, "encrypt")? else {
+                println!("Cancelled — no file selected.");
+                return Ok(0);
+            };
+            encryption::cmd_encrypt(&file, yes).map(|_| 0)
+        }
         Cmd::Decrypt { file, out, yes } => {
+            let Some(file) = resolve_file(&cwd, file, "decrypt")? else {
+                println!("Cancelled — no file selected.");
+                return Ok(0);
+            };
             encryption::cmd_decrypt(&file, out.as_deref(), yes).map(|_| 0)
         }
         Cmd::Encryption { direction, yes } => {
@@ -405,7 +448,9 @@ fn real_main() -> Result<i32> {
                 Ok(0)
             }
         },
-        Cmd::Doctor { fix, json } => fsr::doctor::cmd_doctor(&cwd, &cache, fix, json),
+        Cmd::Doctor { fix, json, verbose } => {
+            fsr::doctor::cmd_doctor(&cwd, &cache, fix, json, verbose)
+        }
         Cmd::Plugins => cmd_plugins(&cwd),
         Cmd::Plugin { name } if name == "deployment" => {
             with_hooks("deployment", &|| fsr::builtins::run_deployment(&cwd))
@@ -430,7 +475,7 @@ fn real_main() -> Result<i32> {
             force,
             yes,
         } => fsr::builtins::cmd_greet(action.as_deref(), shell, force, yes),
-        Cmd::Publish { tag, yes } => fsr::builtins::cmd_publish(&cwd, tag, yes),
+        Cmd::NpmPublish { tag, yes } => fsr::builtins::cmd_publish(&cwd, tag, yes),
         Cmd::External(args) => {
             let name = &args[0];
             let listing = _host_keep.clone().unwrap_or_default();
@@ -448,11 +493,49 @@ fn real_main() -> Result<i32> {
             }
             runner::run_one(&load()?.all_tasks, name, &opts, &sig)
         }
-        Cmd::Completion { shell } => {
-            clap_complete::generate(shell, &mut Cli::command(), "fsr", &mut std::io::stdout());
-            Ok(0)
-        }
+        Cmd::Completion {
+            action,
+            shell,
+            force,
+            yes,
+        } => fsr::completions::cmd_completion(
+            action.as_deref(),
+            shell.as_deref(),
+            force,
+            yes,
+            tty(),
+            completion_script,
+        ),
     }
+}
+
+/// A path argument, or the file picker on a terminal. `Ok(None)` is cancel.
+fn resolve_file(
+    cwd: &std::path::Path,
+    file: Option<PathBuf>,
+    what: &str,
+) -> Result<Option<PathBuf>> {
+    if let Some(f) = file {
+        return Ok(Some(f));
+    }
+    if !tty() {
+        anyhow::bail!("pass a file to {what} (no terminal for the file picker)");
+    }
+    picker::pick_file(cwd)
+}
+
+fn completion_script(shell: &str) -> Result<String> {
+    let sh = match shell {
+        "bash" => clap_complete::Shell::Bash,
+        "zsh" => clap_complete::Shell::Zsh,
+        "fish" => clap_complete::Shell::Fish,
+        "powershell" | "pwsh" => clap_complete::Shell::PowerShell,
+        "elvish" => clap_complete::Shell::Elvish,
+        other => anyhow::bail!("unknown shell '{other}' (bash, zsh, fish, powershell, elvish)"),
+    };
+    let mut buf = Vec::new();
+    clap_complete::generate(sh, &mut Cli::command(), "fsr", &mut buf);
+    String::from_utf8(buf).context("completion script is not utf-8")
 }
 
 fn cmd_plugins(cwd: &std::path::Path) -> Result<i32> {
